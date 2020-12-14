@@ -1,12 +1,3 @@
-------------------------------------------------------------------------------
---	FILE:	 Archipelago.lua
---	AUTHOR:  Bob Thomas
---	PURPOSE: Global map script - Produces a world full of islands.
---           This is one of Civ5's featured map scripts.
-------------------------------------------------------------------------------
---	Copyright (c) 2010 Firaxis Games, Inc. All rights reserved.
-------------------------------------------------------------------------------
-
 include("HBMapGenerator");
 include("HBFractalWorld");
 include("HBFeatureGenerator");
@@ -16,13 +7,10 @@ include("MultilayeredFractal");
 
 ------------------------------------------------------------------------------
 function GetMapScriptInfo()
-	local world_age, temperature, rainfall, sea_level, resources = GetCoreMapOptions()
 	return {
 		Name = "Archipelago feat. Izydor",
 		Description = "TXT_KEY_MAP_ARCHIPELAGO_HELP",
-		IsAdvancedMap = false,
-		IconIndex = 2,
-		SortIndex = 3,
+		IconIndex = 2, --Archipelago Icon
 		SupportsMultiplayer = true,
 		CustomOptions = {
 			{
@@ -36,6 +24,7 @@ function GetMapScriptInfo()
 				DefaultValue = 2,
 				SortPriority = -96,
 			},
+
 			{
 				Name = "TXT_KEY_MAP_OPTION_RAINFALL",	-- 2 add rainfall defaults to random
 				Values = {
@@ -47,6 +36,7 @@ function GetMapScriptInfo()
 				DefaultValue = 2,
 				SortPriority = -97,
 			},
+
 			{
 				Name = "Start Locations",	-- 3 add resources defaults to random
 				Values = {
@@ -223,7 +213,7 @@ function GetMapScriptInfo()
 			},
 			
 			{
-				Name = "Islands size",	-- add setting for resources (10)
+				Name = "Islands size",	-- chance of land in area of island (10)
 				Values = {
 					"small",
 					"normal",
@@ -234,37 +224,30 @@ function GetMapScriptInfo()
 				DefaultValue = 2,
 				SortPriority = -83,
 			},
+
+			{
+				Name = "Connected islands",	-- overlaping islands (11)
+				Values = {
+					"allowed",
+					"disallowed",
+				},
+
+				DefaultValue = 2,
+				SortPriority = -84,
+			},
 		},
 	}
 end
 ------------------------------------------------------------------------------
 function GetMapInitData(worldSize)
-	
-	local LandSizeX = 34 + (Map.GetCustomOption(7) * 2);
-	local LandSizeY = 18 + (Map.GetCustomOption(8) * 2);
-
-	local worldsizes = {};
-
-	worldsizes = {
-		[GameInfo.Worlds.WORLDSIZE_DUEL.ID] = {LandSizeX, LandSizeY}, -- 960
-		[GameInfo.Worlds.WORLDSIZE_TINY.ID] = {LandSizeX, LandSizeY}, -- 2016
-		[GameInfo.Worlds.WORLDSIZE_SMALL.ID] = {LandSizeX, LandSizeY}, -- 2772
-		[GameInfo.Worlds.WORLDSIZE_STANDARD.ID] = {LandSizeX, LandSizeY}, -- 4160
-		[GameInfo.Worlds.WORLDSIZE_LARGE.ID] = {LandSizeX, LandSizeY}, -- 6656
-		[GameInfo.Worlds.WORLDSIZE_HUGE.ID] = {LandSizeX, LandSizeY} -- 10240
-	}
-
-	local grid_size = worldsizes[worldSize];
-	--
 	local world = GameInfo.Worlds[worldSize];
 	if (world ~= nil) then
 		return {
-			Width = grid_size[1],
-			Height = grid_size[2],
+			Width = 34 + (Map.GetCustomOption(7) * 2),
+			Height = 18 + (Map.GetCustomOption(8) * 2),
 			WrapX = true,
 		}; 
 	end
-
 end
 ------------------------------------------------------------------------------
 Archipelago = {};
@@ -304,106 +287,73 @@ function Archipelago:GeneratePlotTypes(args)
 	-- Hex Adjustment tables. These tables direct plot by plot scans in a radius 
 	-- around a center hex, starting to Northeast, moving clockwise.
 	local firstRingYIsEven = {{0, 1}, {1, 0}, {0, -1}, {-1, -1}, {-1, 0}, {-1, 1}};
-
-	local secondRingYIsEven = {
-	{1, 2}, {1, 1}, {2, 0}, {1, -1}, {1, -2}, {0, -2},
-	{-1, -2}, {-2, -1}, {-2, 0}, {-2, 1}, {-1, 2}, {0, 2}
-	};
-
-	local thirdRingYIsEven = {
-	{1, 3}, {2, 2}, {2, 1}, {3, 0}, {2, -1}, {2, -2},
-	{1, -3}, {0, -3}, {-1, -3}, {-2, -3}, {-2, -2}, {-3, -1},
-	{-3, 0}, {-3, 1}, {-2, 2}, {-2, 3}, {-1, 3}, {0, 3}
-	};
-
 	local firstRingYIsOdd = {{1, 1}, {1, 0}, {1, -1}, {0, -1}, {-1, 0}, {0, 1}};
-
-	local secondRingYIsOdd = {		
-	{1, 2}, {2, 1}, {2, 0}, {2, -1}, {1, -2}, {0, -2},
-	{-1, -2}, {-1, -1}, {-2, 0}, {-1, 1}, {-1, 2}, {0, 2}
-	};
-
-	local thirdRingYIsOdd = {		
-	{2, 3}, {2, 2}, {3, 1}, {3, 0}, {3, -1}, {2, -2},
-	{2, -3}, {1, -3}, {0, -3}, {-1, -3}, {-2, -2}, {-2, -1},
-	{-3, 0}, {-2, 1}, {-2, 2}, {-1, 3}, {0, 3}, {1, 3}
-	};
-
-	-- Direction types table, another method of handling hex adjustments, in combination with Map.PlotDirection()
-	local direction_types = {
-		DirectionTypes.DIRECTION_NORTHEAST,
-		DirectionTypes.DIRECTION_EAST,
-		DirectionTypes.DIRECTION_SOUTHEAST,
-		DirectionTypes.DIRECTION_SOUTHWEST,
-		DirectionTypes.DIRECTION_WEST,
-		DirectionTypes.DIRECTION_NORTHWEST
-		};
-
 	local iW, iH = Map.GetGridSize();
-	local iLandSize = 3;
-	local mapSize = iW * iH;
-	local islLandInRing = 0;
-	local goodX = 0;
-	local goodY = 0;
 
 	local wrapX = Map:IsWrapX();
 	local wrapY = Map:IsWrapY();
 	local nextX, nextY, plot_adjustments;
 	local odd = firstRingYIsOdd;
 	local even = firstRingYIsEven;
+	local fail_counter = 0;
 
-	print("######### Creating Islands #########");
-
-	local islCount = 0;
+	local islCount;
+	local distance;
 	local islandSetting = Map.GetCustomOption(6);
 	
 	if islandSetting == 1 then --sparse
 		islCount =  20;
+		distance = 3;
 	elseif islandSetting == 2 then -- average
-		islCount =  28;
+		islCount =  30;
+		distance = 2;
 	elseif islandSetting == 3 then -- plentiful
 		islCount =  40;
+		distance = 1;
 	elseif islandSetting == 4 then -- abundant
 		islCount =  50;
+		distance = 1;
 	end
-	
-	local dist = 4 - Map.GetCustomOption(6);
+
+	local connectedIslands = Map.GetCustomOption(11);
+	if connectedIslands == 1 then
+		distance = -1;
+	end
+
+	print("######### Creating Islands #########");
 	while islCount > 0 do
-		local islLandInRing = 0;
+		local islLandInRing = false;
 		--pick random location
 		local x = Map.Rand(iW, "");
 		local y = 6 + Map.Rand((iH-12), "");	
 		local plotIndex = y * iW + x;
-		local radius = 3 + dist + math.floor(Map.Rand(2, ""));
-		--print("Count: ", islCount);
-		--print ("Radius: ", radius);
-		--print("X=", x);
-		--print("Y=", y);		
+		local freeRadius = 2 + math.floor(Map.Rand(3, "")) + distance;
+		print("Count: ", islCount);
+		print ("Radius: ", radius);
+		print("X=", x);
+		print("Y=", y);
 		
 		--print("--------");
 		--print("Random Plot Is: ", plotIndex);
 
 		--check if random location is ocean
 		if self.plotTypes[plotIndex] == PlotTypes.PLOT_OCEAN then
-		
 			--print("Location is Ocean");
-
-			for ripple_radius = 1, radius do
-				local ripple_value = radius - ripple_radius + 1;
-				local currentX = x - ripple_radius;
+			for currentRadius = 1, freeRadius do
+				local currentX = x - currentRadius;
 				local currentY = y;
 				for direction_index = 1, 6 do
-					for plot_to_handle = 1, ripple_radius do
-				 		if currentY / 2 > math.floor(currentY / 2) then
+					for plot_to_handle = 1, currentRadius do
+						if currentY % 2 == 1 then
 							plot_adjustments = odd[direction_index];
 						else
 							plot_adjustments = even[direction_index];
 						end
 						nextX = currentX + plot_adjustments[1];
 						nextY = currentY + plot_adjustments[2];
-						if wrapX == false and (nextX < 0 or nextX >= iW) then
+						if not wrapX and (nextX < 0 or nextX >= iW) then
 							-- X is out of bounds.
-						elseif wrapY == false and (nextY < 0 or nextY >= iH) then
+						elseif not wrapY and (nextY < 0 or nextY >= iH) then
 							-- Y is out of bounds.
 						else
 							local realX = nextX;
@@ -415,7 +365,6 @@ function Archipelago:GeneratePlotTypes(args)
 								realY = realY % iH;
 							end
 							-- We've arrived at the correct x and y for the current plot.
-							local plot = Map.GetPlot(realX, realY);
 							local plotIndex = realY * iW + realX + 1;
 	
 							--print("--------");
@@ -423,8 +372,8 @@ function Archipelago:GeneratePlotTypes(args)
 	
 							-- Check this plot for land.
 
-							if self.plotTypes[plotIndex] == PlotTypes.PLOT_LAND then
-								islLandInRing = ripple_radius;
+							if self.plotTypes[plotIndex] == PlotTypes.PLOT_LAND or self.plotTypes[plotIndex] == PlotTypes.PLOT_HILLS then
+								islLandInRing = true;
 								break;
 							end
 
@@ -432,46 +381,43 @@ function Archipelago:GeneratePlotTypes(args)
 						end
 					end
 
-					if islLandInRing ~= 0 then
+					if islLandInRing then
 						break;
 					end
 				end
 	
-				if islLandInRing ~= 0 then
+				if islLandInRing then
 					break;
 				end
 
 			end
 
-			if islLandInRing == 0 then
+			if not islLandInRing then
 			
-				local actradius = radius - dist - 1;
-				local thisislandvar = Map.Rand(40, "") + 40;
-
-				plotIndex = y * iW + x+1;
+				local islandRadius = freeRadius - distance;
+				plotIndex = y * iW + x + 1;
 				--print("---------PlotIndex: ", plotIndex);
 				--print("---------");
 				--print("Island Location Found At X=", x, ", Y=",y);
-				--print("Island Size: ", actradius);
+				--print("Island Size: ", islandRadius);
 				
 				self.plotTypes[plotIndex] = PlotTypes.PLOT_LAND;
 
-				for ripple_radius = 1, actradius do
-					local ripple_value = actradius - ripple_radius + 1;
-					local currentX = x - ripple_radius;
+				for currentRadius = 1, islandRadius do
+					local currentX = x - currentRadius;
 					local currentY = y;
 					for direction_index = 1, 6 do
-						for plot_to_handle = 1, ripple_radius do
-					 		if currentY / 2 > math.floor(currentY / 2) then
+						for plot_to_handle = 1, currentRadius do
+					 		if currentY % 2 == 1 then
 								plot_adjustments = odd[direction_index];
 							else
 								plot_adjustments = even[direction_index];
 							end
 							nextX = currentX + plot_adjustments[1];
 							nextY = currentY + plot_adjustments[2];
-							if wrapX == false and (nextX < 0 or nextX >= iW) then
+							if not wrapX and (nextX < 0 or nextX >= iW) then
 								-- X is out of bounds.
-							elseif wrapY == false and (nextY < 0 or nextY >= iH) then
+							elseif not wrapY and (nextY < 0 or nextY >= iH) then
 								-- Y is out of bounds.
 							else
 								local realX = nextX;
@@ -483,31 +429,19 @@ function Archipelago:GeneratePlotTypes(args)
 									realY = realY % iH;
 								end
 								-- We've arrived at the correct x and y for the current plot.
-								local plot = Map.GetPlot(realX, realY);
 								local plotIndex = realY * iW + realX + 1;
 		
 								--print("--------");
 								--print("Plot Is: ", plotIndex);
-		
-								-- closer we get to outer edge increase chance of ocean.
-								--if ripple_radius == 1  then --100%
-								--	islThresh = Map.Rand(27, "") + thisislandvar;
-								--elseif ripple_radius == 2 then -- 57% to 74%
-								--	islThresh = Map.Rand(32, "") + (thisislandvar / 1.25);
-								--elseif ripple_radius == 3 then --40% to 57%
-								--	islThresh = Map.Rand(25, "") + (thisislandvar / 1.5);									
-								--else --30% to 50%
-								--	islThresh = Map.Rand(20, "") + (thisislandvar / 2);
-								--end
 								
-								islThresh = Map.Rand(25, "") + (thisislandvar / 1.5);
+								local islThresh = 60 - 10* Map.GetCustomOption(10);
 								
-								local islRand = Map.Rand(120, "") - 10* Map.GetCustomOption(10);
+								local islRand = Map.Rand(100, "");
 								local islHill = Map.Rand(100, "");
 
 								--print("Rand: ", islRand, "Thresh: ", islThresh);
 
-								if islRand > islThresh then
+								if islRand < islThresh then
 									self.plotTypes[plotIndex] = PlotTypes.PLOT_OCEAN
 								else
 									if islHill <= 30 then
@@ -523,10 +457,13 @@ function Archipelago:GeneratePlotTypes(args)
 					end
 	
 				end
-			
 				islCount = islCount - 1;
 			else
-				
+				fail_counter = fail_counter + 1;
+				-- after 10000 failed island creation attempts stop trying
+				if fail_counter == 10000 then
+					islCount = 0;
+				end
 				--print("---------");
 				--print("Land In Ring: ", islLandInRing);
 			end
@@ -536,10 +473,9 @@ function Archipelago:GeneratePlotTypes(args)
 	print("######### Finished Islands #########");
 	return self.plotTypes;
 end
--------------------------------------------------------------------------------
+------------------------------------------------------------------------------
 function GeneratePlotTypes()
 	print("Generating Plot Types (Lua Archipelago) ...");
-
 
 	local fractal_world = Archipelago.Create();
 	local plotTypes = fractal_world:GeneratePlotTypes();
@@ -550,8 +486,6 @@ end
 ------------------------------------------------------------------------------
 function GenerateTerrain()
 	print("Generating Terrain (Lua Archipelago) ...");
-	
-	local DesertPercent = 22;
 
 	-- Get Temperature setting input by user.
 	local temp = Map.GetCustomOption(1)
@@ -559,23 +493,21 @@ function GenerateTerrain()
 		temp = 1 + Map.Rand(3, "Random Temperature - Lua");
 	end
 
-	local grassMoist = Map.GetCustomOption(5);
-
 	local args = {
 			temperature = temp,
-			iDesertPercent = DesertPercent,
-			iGrassMoist = grassMoist,
+			iDesertPercent = 22,
+			iGrassMoist = Map.GetCustomOption(5),
 			};
 
 	local terraingen = TerrainGenerator.Create(args);
 
-	terrainTypes = terraingen:GenerateTerrain();
+	local terrainTypes = terraingen:GenerateTerrain();
 	
 	SetTerrainTypes(terrainTypes);
 	
 	FixIslands();
 end
-
+------------------------------------------------------------------------------
 function FixIslands()
 	--function to change some of the flat land tundra on islands to plains tiles
 	local iW, iH = Map.GetGridSize();
@@ -596,7 +528,6 @@ function FixIslands()
 					end
 				end
 			end
-
 		end
 	end
 end
@@ -619,34 +550,21 @@ end
 ------------------------------------------------------------------------------
 function StartPlotSystem()
 	-- Get Resources setting input by user.
-	local res = Map.GetCustomOption(9)
 	local starts = Map.GetCustomOption(3)
 	if starts == 7 then
 		starts = 1 + Map.Rand(8, "Random Resources Option - Lua");
 	end
-
-	-- Handle coastal spawns and start bias
-	local OnlyCoastal = true;
-	local BalancedCoastal = true;
-	local MixedBias = false;
 	
 	print("Creating start plot database.");
 	local start_plot_database = AssignStartingPlots.Create()
 	
 	print("Dividing the map in to Regions.");
-	-- Regional Division Method 4: Inside rectangle
-	local iW, iH = Map.GetGridSize();
+	-- Regional Division Method 2: Continental
 	local args = {
+		mustBeCoast = true,
 		method = 2,
 		start_locations = starts,
-		resources = res,
-		NoCoastInland = OnlyCoastal,
-		BalancedCoastal = BalancedCoastal,
-		MixedBias = MixedBias;
-		iWestX = 6;
-		iSouthY = 6;
-		iWidth = iW - 12;
-		iHeight = iH - 12;
+		resources = Map.GetCustomOption(9),
 		};
 	start_plot_database:GenerateRegions(args)
 
@@ -672,7 +590,6 @@ function StartPlotSystem()
 	};
 	
 	start_plot_database:PlaceNaturalWonders(wonderargs)
-
 
 	print("Placing Resources and City States.");
 	start_plot_database:PlaceResourcesAndCityStates()
