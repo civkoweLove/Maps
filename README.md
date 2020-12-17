@@ -1,7 +1,7 @@
 # civkoweLoveMaps
 Map Pack inspired by HB MAPS / LEK MAP
 
-Possible templates:
+Possible templates:\
 Continents
 - one Continent challenge is not working well, use bigger map than player or it will be unplayable
 
