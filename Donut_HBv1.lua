@@ -17,7 +17,7 @@ include("MultilayeredFractal");
 function GetMapScriptInfo()
 	local world_age, temperature, rainfall, sea_level, resources = GetCoreMapOptions()
 	return {
-		Name = "Donut feat. Szczeepan v1.0",
+		Name = "Donut feat. Szczeepan v1.1",
 		Description = "TXT_KEY_MAP_DONUT_HELP",
 		IconIndex = 18,
 		IconAtlas = "WORLDTYPE_ATLAS_3",
@@ -132,7 +132,17 @@ function GetMapScriptInfo()
 				},
 				DefaultValue = 3,
 				SortPriority = 5,
-			},			
+			},
+			{
+				Name = "Desert Size", -- (9) desertSize
+				Values = {
+					"sparse",
+					"average",
+					"plentiful",
+				},
+				DefaultValue = 2,
+				SortPriority = 8,
+			},
 		}
 	};
 end
@@ -331,8 +341,14 @@ end
 ----------------------------------------------------------------------------------
 function GenerateTerrain()
 	print("Generating Terrain (Lua Donut) ...");
-	
-	local terraingen = TerrainGenerator.Create();
+	-- desertSize
+
+	local desertSize = 2 + 10 * Map.GetCustomOption(9); -- desertSize 12/22/32
+	local args = {
+		iDesertPercent = desertSize,
+	};
+
+	local terraingen = TerrainGenerator.Create(args);
 
 	terrainTypes = terraingen:GenerateTerrain();
 	
