@@ -578,40 +578,41 @@ function ContinentsFractalWorld:GeneratePlotTypes(args)
 		-- Set Hills and Mountains
 		for x = 0, self.iNumPlotsX - 1 do
 			for y = 0, self.iNumPlotsY - 1 do
-				local plot = Map.GetPlot(x, y);
+				-- local plot = Map.GetPlot(x, y);
+				local i = y * self.iNumPlotsX + x;
 				local mountainVal = self.mountainsFrac:GetHeight(x, y);
 				local hillVal = self.hillsFrac:GetHeight(x, y);
 
-				if plot:GetPlotType() ~= PlotTypes.PLOT_OCEAN then
+				if self.plotTypes[i]  ~= PlotTypes.PLOT_OCEAN then
 					if (mountainVal >= iMountainThreshold) then
 						if (hillVal >= iPassThreshold) then -- Mountain Pass though the ridgeline
-							plot:SetPlotType(PlotTypes.PLOT_HILLS, false, false);
+							self.plotTypes[i] = PlotTypes.PLOT_HILLS;
 						else -- Mountain
 							-- set some randomness to moutains next to each other
 							local iIsMount = Map.Rand(100, "Mountain Spwan Chance");
 							--print("-"); print("Mountain Spawn Chance: ", iIsMount);
 							local iIsMountAdj = 83 - adjustment;
 							if iIsMount >= iIsMountAdj then
-								plot:SetPlotType(PlotTypes.PLOT_MOUNTAIN, false, false);
+								self.plotTypes[i] = PlotTypes.PLOT_MOUNTAIN;
 							else
 								-- set some randomness to hills or flat land next to the mountain
 								local iIsHill = Map.Rand(100, "Hill Spwan Chance");
 								--print("-"); print("Mountain Spawn Chance: ", iIsMount);
 								local iIsHillAdj = 50 - adjustment;
 								if iIsHillAdj >= iIsHill then
-									plot:SetPlotType(PlotTypes.PLOT_HILLS, false, false);
+									self.plotTypes[i] = PlotTypes.PLOT_HILLS;
 								else
-									plot:SetPlotType(PlotTypes.PLOT_LAND, false, false);
+									self.plotTypes[i] = PlotTypes.PLOT_LAND;
 								end
 							end
 						end
 					elseif (mountainVal >= iHillsNearMountains) then
-						plot:SetPlotType(PlotTypes.PLOT_HILLS, false, false);
+						self.plotTypes[i] = PlotTypes.PLOT_HILLS;
 					else
 						if ((hillVal >= iHillsBottom1 and hillVal <= iHillsTop1) or (hillVal >= iHillsBottom2 and hillVal <= iHillsTop2)) then
-							plot:SetPlotType(PlotTypes.PLOT_HILLS, false, false);
+							self.plotTypes[i] = PlotTypes.PLOT_HILLS;
 						else
-							plot:SetPlotType(PlotTypes.PLOT_LAND, false, false);
+							self.plotTypes[i] = PlotTypes.PLOT_LAND;
 						end
 					end
 				end
