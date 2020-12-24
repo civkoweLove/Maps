@@ -4379,7 +4379,10 @@ function AssignStartingPlots:ChooseLocations(args)
 		print("Num coastal still needed " .. tostring(iNumCoastNeeded));
 		--print(tostring(self.startLocationConditions[currentRegionNumber][1]));
 
-		if res_reg[currentRegionNumber] == false and iNumCoastNeeded > 0 then
+		if mustBeCoast == true then
+			bSuccessFlag, bForcedPlacementFlag = self:FindCoastalStart(currentRegionNumber)
+
+		elseif res_reg[currentRegionNumber] == false and iNumCoastNeeded > 0 then
 			-- not already reserved, can be coastal
 			bSuccessFlag, bForcedPlacementFlag = self:FindCoastalStart(currentRegionNumber)
 			iNumCoastNeeded = iNumCoastNeeded - 1;
