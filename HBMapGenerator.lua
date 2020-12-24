@@ -600,12 +600,11 @@ function AddLakes()
 	for i = 0, (iW * iH) - 1, 1 do
 		plot = Map.GetPlotByIndex(i);
 		if(plot) then
-			if(plot:GetPlotType() ~= PlotTypes.PLOT_MOUNTAIN) then
-				if (plot:IsWater() == false) then
-					if (plot:IsCoastalLand() == false) then
-						if (plot:IsRiver() == false) then
-							coolDown = coolDown - 1;
-							--if (AdjacentToNaturalWonder(plot) == false) then
+			if (plot:IsWater() == false) then
+				if (plot:IsCoastalLand() == false) then
+					if (plot:IsRiver() == false) then
+						coolDown = coolDown - 1;
+						--if (AdjacentToNaturalWonder(plot) == false) then
 							local r = Map.Rand(lakePlotRand, "MapGenerator AddLakes");
 							if r == 0 then
 								numLakesAdded = numLakesAdded + 1;
@@ -621,8 +620,7 @@ function AddLakes()
 
 								plot:SetPlotType(PlotTypes.PLOT_OCEAN);
 							end
-							--end
-						end
+						--end
 					end
 				end
 			end
