@@ -522,9 +522,17 @@ function ContinentsFractalWorld:GeneratePlotTypes(args)
 
 			biggest_area = Map.FindBiggestArea(false);
 			iNumBiggestAreaTiles = biggest_area:GetNumTiles();
+			local oneContinent = Map.GetCustomOption(12);
 			-- Now test the biggest landmass to see if it is large enough.
-			if (iNumBiggestAreaTiles <= (iNumTotalLandTiles * 0.53)) and (iNumBiggestAreaTiles >= (iNumTotalLandTiles * 0.47)) then
+			if oneContinent == 1 then
+				print("One Continent challenge true");
+				if (iNumBiggestAreaTiles >= (iNumTotalLandTiles * 0.75)) then
+					done = true;
+					iBiggestID = biggest_area:GetID();
+				end
+			elseif (iNumBiggestAreaTiles <= (iNumTotalLandTiles * 0.53)) and (iNumBiggestAreaTiles >= (iNumTotalLandTiles * 0.47)) then
 				done = true;
+				print("One Continent challenge false");
 				iBiggestID = biggest_area:GetID();
 			end
 			iAttempts = iAttempts + 1;
