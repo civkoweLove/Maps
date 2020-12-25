@@ -18,7 +18,7 @@ include("MultilayeredFractal");
 function GetMapScriptInfo()
 	local world_age, temperature, rainfall, sea_level, resources = GetCoreMapOptions()
 	return {
-		Name = "Continents feat. Szczeepan v0.7",
+		Name = "Continents feat. Szczeepan v0.8",
 		Description = "A map script made for Lekmod based of HB's Mapscript v8.1 containing different map types selectable from the map set up screen.",
 		IsAdvancedMap = false,
 		IconIndex = 0,
@@ -327,6 +327,15 @@ function GetMapScriptInfo()
 
 				DefaultValue = 2,
 				SortPriority = -85,
+			},
+			{
+				Name = "Must be coast", -- (19) force coastal start
+				Values = {
+					"Yes",
+					"No",
+				},
+				DefaultValue = 1,
+				SortPriority = -84,
 			},
 		},
 	};
@@ -1049,11 +1058,18 @@ end
 ------------------------------------------------------------------------------
 function StartPlotSystem()
 
+	print("StartPlotSystem()");
 	local spawnType = Map.GetCustomOption(12);
 	local RegionalMethod = 1;
 
 	if spawnType == 2 then
 		RegionalMethod = 2;
+	end
+	local _mustBeCoast = false;
+
+	if Map.GetCustomOption(19) == 1 then
+		_mustBeCoast = true;
+		print("mustBeCoast = true");
 	end
 
 	-- Get Resources setting input by user.
@@ -1088,12 +1104,13 @@ function StartPlotSystem()
 		resources = res,
 		NoCoastInland = OnlyCoastal,
 		BalancedCoastal = BalancedCoastal,
-		MixedBias = MixedBias;
+		MixedBias = MixedBias,
+		mustBeCoast = _mustBeCoast;
 	};
 	start_plot_database:GenerateRegions(args)
 
 	print("Choosing start locations for civilizations.");
-	start_plot_database:ChooseLocations()
+	start_plot_database:ChooseLocations(args)
 
 	print("Normalizing start locations and assigning them to Players.");
 	start_plot_database:BalanceAndAssign(args)

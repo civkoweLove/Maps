@@ -4380,6 +4380,7 @@ function AssignStartingPlots:ChooseLocations(args)
 		--print(tostring(self.startLocationConditions[currentRegionNumber][1]));
 
 		if mustBeCoast == true then
+			print("mustBeCoast Region #" .. currentRegionNumber);
 			bSuccessFlag, bForcedPlacementFlag = self:FindCoastalStart(currentRegionNumber)
 			
 		elseif res_reg[currentRegionNumber] == false and iNumCoastNeeded > 0 then
