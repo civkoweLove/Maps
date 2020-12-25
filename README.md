@@ -4,7 +4,6 @@ Map Pack inspired by HB MAPS / LEK MAP
 Possible templates:\
 Continents
 - one Continent challenge is not working well, use bigger map than player or it will be unplayable
-- there is some bug and on mainland continents u will not have mountains
 
 Donut
 - Must Be Coast with inland sea is bad option to use
