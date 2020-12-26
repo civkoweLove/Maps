@@ -18,7 +18,7 @@ include("MultilayeredFractal");
 function GetMapScriptInfo()
 	local world_age, temperature, rainfall, sea_level, resources = GetCoreMapOptions()
 	return {
-		Name = "Continents feat. Szczeepan v0.7",
+		Name = "Continents feat. Szczeepan v0.8",
 		Description = "A map script made for Lekmod based of HB's Mapscript v8.1 containing different map types selectable from the map set up screen.",
 		IsAdvancedMap = false,
 		IconIndex = 0,
@@ -328,40 +328,28 @@ function GetMapScriptInfo()
 				DefaultValue = 2,
 				SortPriority = -85,
 			},
+			{
+				Name = "Must be coast", -- (19) force coastal start
+				Values = {
+					"Yes",
+					"No",
+				},
+				DefaultValue = 1,
+				SortPriority = -84,
+			},
 		},
 	};
 end
 ------------------------------------------------------------------------------
 function GetMapInitData(worldSize)
-
-	local LandSizeX = 34 + (Map.GetCustomOption(13) * 2);
-	local LandSizeY = 18 + (Map.GetCustomOption(14) * 2);
-
-	local worldsizes = {};
-
-
-	worldsizes = {
-
-		[GameInfo.Worlds.WORLDSIZE_DUEL.ID] = {LandSizeX, LandSizeY}, -- 720
-		[GameInfo.Worlds.WORLDSIZE_TINY.ID] = {LandSizeX, LandSizeY}, -- 1664
-		[GameInfo.Worlds.WORLDSIZE_SMALL.ID] = {LandSizeX, LandSizeY}, -- 2480
-		[GameInfo.Worlds.WORLDSIZE_STANDARD.ID] = {LandSizeX, LandSizeY}, -- 3900
-		[GameInfo.Worlds.WORLDSIZE_LARGE.ID] = {LandSizeX, LandSizeY}, -- 6076
-		[GameInfo.Worlds.WORLDSIZE_HUGE.ID] = {LandSizeX, LandSizeY} -- 9424
-	}
-
-
-	local grid_size = worldsizes[worldSize];
-	--
 	local world = GameInfo.Worlds[worldSize];
 	if (world ~= nil) then
 		return {
-			Width = grid_size[1],
-			Height = grid_size[2],
+			Width = 34 + (Map.GetCustomOption(13) * 2),
+			Height = 18 + (Map.GetCustomOption(14) * 2),
 			WrapX = true,
 		};
 	end
-
 end
 ------------------------------------------------------------------------------
 
@@ -410,13 +398,9 @@ function ContinentsFractalWorld:GeneratePlotTypes(args)
 		local world_age_new = 15;
 		--
 		local extra_mountains = 25;
-		local grain_amount = 0;
 		local adjust_plates = 1.3;
-		local shift_plot_types = true;
-		local tectonic_islands = false;
 		local hills_ridge_flags = self.iFlags;
 		local peaks_ridge_flags = self.iFlags;
-		local has_center_rift = true;
 		local adjadj = 1.4;
 
 		local sea_level = Map.GetCustomOption(4)
@@ -439,7 +423,7 @@ function ContinentsFractalWorld:GeneratePlotTypes(args)
 
 		-- Set values for hills and mountains according to World Age chosen by user.
 		local adjustment = world_age_normal;
-		if world_age == 4 then -- No Moutains
+		if world_age == 4 then -- No Mountains
 			adjustment = world_age_old;
 			adjust_plates = adjust_plates * 0.5;
 		elseif world_age == 3 then -- 5 Billion Years
@@ -455,7 +439,6 @@ function ContinentsFractalWorld:GeneratePlotTypes(args)
 		local hillsTop1 = 28 + (adjustment * adjadj);
 		local hillsBottom2 = 72 - (adjustment * adjadj);
 		local hillsTop2 = 72 + (adjustment * adjadj);
-		local hillsClumps = 1 + (adjustment * adjadj);
 		local hillsNearMountains = 120 - (adjustment * 2) - extra_mountains;
 		local mountains = 100 - adjustment - extra_mountains;
 
@@ -498,7 +481,6 @@ function ContinentsFractalWorld:GeneratePlotTypes(args)
 		local iAttempts = 0;
 		local iWaterThreshold, biggest_area, iNumTotalLandTiles, iNumBiggestAreaTiles, iBiggestID;
 		while done == false do
-			local plusminus = 0.3;
 			local grain_dice = Map.Rand(7, "Continental Grain roll - LUA Continents");
 			if grain_dice < 4 then
 				grain_dice = 1;
@@ -540,9 +522,17 @@ function ContinentsFractalWorld:GeneratePlotTypes(args)
 
 			biggest_area = Map.FindBiggestArea(false);
 			iNumBiggestAreaTiles = biggest_area:GetNumTiles();
+			local oneContinent = Map.GetCustomOption(12);
 			-- Now test the biggest landmass to see if it is large enough.
-			if (iNumBiggestAreaTiles <= (iNumTotalLandTiles * 0.53)) and (iNumBiggestAreaTiles >= (iNumTotalLandTiles * 0.47)) then
+			if oneContinent == 1 then
+				print("One Continent challenge true");
+				if (iNumBiggestAreaTiles >= (iNumTotalLandTiles * 0.75)) then
+					done = true;
+					iBiggestID = biggest_area:GetID();
+				end
+			elseif (iNumBiggestAreaTiles <= (iNumTotalLandTiles * 0.53)) and (iNumBiggestAreaTiles >= (iNumTotalLandTiles * 0.47)) then
 				done = true;
+				print("One Continent challenge false");
 				iBiggestID = biggest_area:GetID();
 			end
 			iAttempts = iAttempts + 1;
@@ -570,7 +560,6 @@ function ContinentsFractalWorld:GeneratePlotTypes(args)
 		local iHillsTop1 = self.hillsFrac:GetHeight(hillsTop1);
 		local iHillsBottom2 = self.hillsFrac:GetHeight(hillsBottom2);
 		local iHillsTop2 = self.hillsFrac:GetHeight(hillsTop2);
-		local iHillsClumps = self.mountainsFrac:GetHeight(hillsClumps);
 		local iHillsNearMountains = self.mountainsFrac:GetHeight(hillsNearMountains);
 		local iMountainThreshold = self.mountainsFrac:GetHeight(mountains);
 		local iPassThreshold = self.hillsFrac:GetHeight(hillsNearMountains);
@@ -578,40 +567,41 @@ function ContinentsFractalWorld:GeneratePlotTypes(args)
 		-- Set Hills and Mountains
 		for x = 0, self.iNumPlotsX - 1 do
 			for y = 0, self.iNumPlotsY - 1 do
-				local plot = Map.GetPlot(x, y);
+				-- local plot = Map.GetPlot(x, y);
+				local i = y * self.iNumPlotsX + x;
 				local mountainVal = self.mountainsFrac:GetHeight(x, y);
 				local hillVal = self.hillsFrac:GetHeight(x, y);
 
-				if plot:GetPlotType() ~= PlotTypes.PLOT_OCEAN then
+				if self.plotTypes[i]  ~= PlotTypes.PLOT_OCEAN then
 					if (mountainVal >= iMountainThreshold) then
 						if (hillVal >= iPassThreshold) then -- Mountain Pass though the ridgeline
-							plot:SetPlotType(PlotTypes.PLOT_HILLS, false, false);
+							self.plotTypes[i] = PlotTypes.PLOT_HILLS;
 						else -- Mountain
 							-- set some randomness to moutains next to each other
 							local iIsMount = Map.Rand(100, "Mountain Spwan Chance");
 							--print("-"); print("Mountain Spawn Chance: ", iIsMount);
 							local iIsMountAdj = 83 - adjustment;
 							if iIsMount >= iIsMountAdj then
-								plot:SetPlotType(PlotTypes.PLOT_MOUNTAIN, false, false);
+								self.plotTypes[i] = PlotTypes.PLOT_MOUNTAIN;
 							else
 								-- set some randomness to hills or flat land next to the mountain
 								local iIsHill = Map.Rand(100, "Hill Spwan Chance");
 								--print("-"); print("Mountain Spawn Chance: ", iIsMount);
 								local iIsHillAdj = 50 - adjustment;
 								if iIsHillAdj >= iIsHill then
-									plot:SetPlotType(PlotTypes.PLOT_HILLS, false, false);
+									self.plotTypes[i] = PlotTypes.PLOT_HILLS;
 								else
-									plot:SetPlotType(PlotTypes.PLOT_LAND, false, false);
+									self.plotTypes[i] = PlotTypes.PLOT_LAND;
 								end
 							end
 						end
 					elseif (mountainVal >= iHillsNearMountains) then
-						plot:SetPlotType(PlotTypes.PLOT_HILLS, false, false);
+						self.plotTypes[i] = PlotTypes.PLOT_HILLS;
 					else
 						if ((hillVal >= iHillsBottom1 and hillVal <= iHillsTop1) or (hillVal >= iHillsBottom2 and hillVal <= iHillsTop2)) then
-							plot:SetPlotType(PlotTypes.PLOT_HILLS, false, false);
+							self.plotTypes[i] = PlotTypes.PLOT_HILLS;
 						else
-							plot:SetPlotType(PlotTypes.PLOT_LAND, false, false);
+							self.plotTypes[i] = PlotTypes.PLOT_LAND;
 						end
 					end
 				end
@@ -627,69 +617,21 @@ function ContinentsFractalWorld:GeneratePlotTypes(args)
 
 		-- Hex Adjustment tables. These tables direct plot by plot scans in a radius
 		-- around a center hex, starting to Northeast, moving clockwise.
-		local islandQty = {
-			[WorldSizeTypes.WORLDSIZE_DUEL]		= 5,
-			[WorldSizeTypes.WORLDSIZE_TINY]     = 16,
-			[WorldSizeTypes.WORLDSIZE_SMALL]    = 24,
-			[WorldSizeTypes.WORLDSIZE_STANDARD] = 32,
-			[WorldSizeTypes.WORLDSIZE_LARGE]    = 52,
-			[WorldSizeTypes.WORLDSIZE_HUGE]		= 77
-		}
 
 		local firstRingYIsEven = {{0, 1}, {1, 0}, {0, -1}, {-1, -1}, {-1, 0}, {-1, 1}};
 
-		local secondRingYIsEven = {
-			{1, 2}, {1, 1}, {2, 0}, {1, -1}, {1, -2}, {0, -2},
-			{-1, -2}, {-2, -1}, {-2, 0}, {-2, 1}, {-1, 2}, {0, 2}
-		};
-
-		local thirdRingYIsEven = {
-			{1, 3}, {2, 2}, {2, 1}, {3, 0}, {2, -1}, {2, -2},
-			{1, -3}, {0, -3}, {-1, -3}, {-2, -3}, {-2, -2}, {-3, -1},
-			{-3, 0}, {-3, 1}, {-2, 2}, {-2, 3}, {-1, 3}, {0, 3}
-		};
-
 		local firstRingYIsOdd = {{1, 1}, {1, 0}, {1, -1}, {0, -1}, {-1, 0}, {0, 1}};
-
-		local secondRingYIsOdd = {
-			{1, 2}, {2, 1}, {2, 0}, {2, -1}, {1, -2}, {0, -2},
-			{-1, -2}, {-1, -1}, {-2, 0}, {-1, 1}, {-1, 2}, {0, 2}
-		};
-
-		local thirdRingYIsOdd = {
-			{2, 3}, {2, 2}, {3, 1}, {3, 0}, {3, -1}, {2, -2},
-			{2, -3}, {1, -3}, {0, -3}, {-1, -3}, {-2, -2}, {-2, -1},
-			{-3, 0}, {-2, 1}, {-2, 2}, {-1, 3}, {0, 3}, {1, 3}
-		};
-
-		-- Direction types table, another method of handling hex adjustments, in combination with Map.PlotDirection()
-		local direction_types = {
-			DirectionTypes.DIRECTION_NORTHEAST,
-			DirectionTypes.DIRECTION_EAST,
-			DirectionTypes.DIRECTION_SOUTHEAST,
-			DirectionTypes.DIRECTION_SOUTHWEST,
-			DirectionTypes.DIRECTION_WEST,
-			DirectionTypes.DIRECTION_NORTHWEST
-		};
-
 
 		plotTypesTwo = self.plotTypes;
 
 		local iW, iH = Map.GetGridSize();
-		local islMax = islandQty[sizekey] or 24;
-		local mapSize = iW * iH;
 		local islCount = 0;
-		local islLandInRing = 0;
-		local goodX = 0;
-		local goodY = 0;
 
 		local wrapX = Map:IsWrapX();
 		local wrapY = false; --Map:IsWrapY();
 		local nextX, nextY, plot_adjustments;
 		local odd = firstRingYIsOdd;
 		local even = firstRingYIsEven;
-		local failedattemps = 0;
-		local bIslandsFailure = false;
 
 		local minIslandSize = 1;
 		local maxIslandSize = 5;
@@ -743,7 +685,6 @@ function ContinentsFractalWorld:GeneratePlotTypes(args)
 				-- local radius = 5;
 
 				for ripple_radius = 1, radius do
-					local ripple_value = radius - ripple_radius + 1;
 					local currentX = x - ripple_radius;
 					local currentY = y;
 					for direction_index = 1, 6 do
@@ -810,12 +751,6 @@ function ContinentsFractalWorld:GeneratePlotTypes(args)
 				if islLandInRing ~= 0 then
 
 					print("We hit land, check if it is the Mainland");
-
-					local biggest_area = Map.FindBiggestArea(false);
-					local biggest_ID = biggest_area:GetID();
-					local plotCheck = Map.GetPlot(landX, landY);
-					local plotArea = plotCheck:Area();
-					local iAreaID = plotArea:GetID();
 					local pullBack = 3;
 
 					-- pull back the radius by 2 to 3 tiles and as long as island will be a radius of 2 then plunk it in da water init bruv!
@@ -867,7 +802,7 @@ function ContinentsFractalWorld:GeneratePlotTypes(args)
 											end
 											-- We've arrived at the correct x and y for the current plot.
 											--local plot = Map.GetPlot(realX, realY);
-											local plotIndex = realY * iW + realX + 1;
+											plotIndex = realY * iW + realX + 1;
 
 											local thisislandvar = Map.Rand(60, "") + landvarDefault;
 
@@ -924,7 +859,6 @@ function ContinentsFractalWorld:GeneratePlotTypes(args)
 
 		--check to make sure map has not failed
 		local iNumLandTilesInUse = 0;
-		local iW, iH = Map.GetGridSize();
 		local iPercent = (iW * iH) * 0.25;
 
 		for y = 0, iH - 1 do
@@ -956,8 +890,6 @@ end
 
 ------------------------------------------------------------------------------
 function GeneratePlotTypes()
-
-	local MapShape = 2;
 
 	-- Customized plot generation to ensure avoiding "near Pangaea" conditions.
 	print("Generating Plot Types (Lua Continents) ...");
@@ -1048,11 +980,18 @@ end
 ------------------------------------------------------------------------------
 function StartPlotSystem()
 
+	print("StartPlotSystem()");
 	local spawnType = Map.GetCustomOption(12);
 	local RegionalMethod = 1;
 
 	if spawnType == 2 then
 		RegionalMethod = 2;
+	end
+	local _mustBeCoast = false;
+
+	if Map.GetCustomOption(19) == 1 then
+		_mustBeCoast = true;
+		print("mustBeCoast = true");
 	end
 
 	-- Get Resources setting input by user.
@@ -1087,12 +1026,13 @@ function StartPlotSystem()
 		resources = res,
 		NoCoastInland = OnlyCoastal,
 		BalancedCoastal = BalancedCoastal,
-		MixedBias = MixedBias;
+		MixedBias = MixedBias,
+		mustBeCoast = _mustBeCoast;
 	};
 	start_plot_database:GenerateRegions(args)
 
 	print("Choosing start locations for civilizations.");
-	start_plot_database:ChooseLocations()
+	start_plot_database:ChooseLocations(args)
 
 	print("Normalizing start locations and assigning them to Players.");
 	start_plot_database:BalanceAndAssign(args)
