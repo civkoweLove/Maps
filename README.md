@@ -61,7 +61,7 @@
     <li>
       <a href="#about-the-project">About The Project</a>
       <ul>
-        <li><a href="#built-with">Built With</a></li>
+        <li><a href="#maps">New playable Maps</a></li>
       </ul>
     </li>
     <li>
@@ -92,26 +92,36 @@ Here's a blank template to get started:
 `github_username`, `repo_name`, `twitter_handle`, `email`, `project_title`, `project_description`
 
 
-### Built With
+### maps
+* Continents v0.8
+  * FIX:
+    * OneContinent challenge is now possible - main continent is  bigger 3:1 than slower (v.08)
+    * must be coast option added (v0.8)
+    * mountains and hills are back again (v0.8)
+    * added islands to template (v0.7)
+    * First standalone version. Same as HB map/lekMap (v0.6)
+  * BUGS:
+    * no known bugs yet reported 
 
-* []()
-* []()
-* []()
-
-
+* Donut v1.1
+  * FIX:
+    * Desert size is added with values: 12%- sparse / 22% - average / 32% - plentiful (v1.1)
+    * Added outside region options (hills, mountains, ocean, standard, random) (v1.0)
+    * Radius Size and Holy Radius Factor added (v0.8)
+    * must be coast option added (v0.7)
+    * First Version based on regular Donut and HB maps template (v0.6)
+  * BUGS:
+    * Must Be Coast with inland sea is bad option to use
+    * default lake generator doing bugs with Mountains options. Sometimes u need restart map because start near lake and Mountain
+* Archipelago
+  * FIX:
+  * BUGS:
+    * Players may spawn very close if 2 rich islands are close
 
 <!-- GETTING STARTED -->
 ## Getting Started
 
 To get a local copy up and running follow these simple steps.
-
-### Prerequisites
-
-This is an example of how to list things you need to use the software and how to install them.
-* npm
-  ```sh
-  npm install npm@latest -g
-  ```
 
 ### Installation
 
@@ -119,10 +129,7 @@ This is an example of how to list things you need to use the software and how to
    ```sh
    git clone https://github.com/civkoweLove/Maps.git
    ```
-2. Install NPM packages
-   ```sh
-   npm install
-   ```
+2. Put maps into \Sid Meier's Civilization V\Assets\Maps catalog
 
 
 
@@ -174,6 +181,7 @@ Project Link: [https://github.com/civkoweLove/Maps/repo_name](https://github.com
 <!-- ACKNOWLEDGEMENTS -->
 ## Acknowledgements
 
+* []()
 * []()
 * []()
 * []()
