@@ -61,7 +61,7 @@
     <li>
       <a href="#about-the-project">About The Project</a>
       <ul>
-        <li><a href="#maps">New playable Maps</a></li>
+        <li><a href="#maps-details">New playable Maps</a></li>
       </ul>
     </li>
     <li>
@@ -92,7 +92,7 @@ Here's a blank template to get started:
 `github_username`, `repo_name`, `twitter_handle`, `email`, `project_title`, `project_description`
 
 
-### maps
+### maps details
 * Continents v0.8
   * FIX:
     * OneContinent challenge is now possible - main continent is  bigger 3:1 than slower (v.08)
