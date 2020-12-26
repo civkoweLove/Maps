@@ -2,8 +2,16 @@
 Map Pack inspired by HB MAPS / LEK MAP
 
 Possible templates:\
-Continents
-- one Continent challenge is not working well, use bigger map than player or it will be unplayable
+Continents 0.8
+OneContinent challenge is now possible - main continent is  bigger 3:1 than slower
+must be coast option added
+mountains and hills are back again
+
+no known bugs yet reported
+
+
+Donut 1.1
+Desert size is added. 12/22/32 percent
 
 Donut
 - Must Be Coast with inland sea is bad option to use
