@@ -95,7 +95,7 @@ Here's a blank template to get started:
 ### maps details
 * Continents v0.8
   * FIX:
-    * OneContinent challenge is now possible - main continent is  bigger 3:1 than slower (v.08)
+    * OneContinent challenge is now possible - main continent is  bigger 3:1 than lower (v.08)
     * must be coast option added (v0.8)
     * mountains and hills are back again (v0.8)
     * added islands to template (v0.7)
