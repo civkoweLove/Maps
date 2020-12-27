@@ -1,0 +1,31 @@
+## Continents v0.8 ##
+
+FIX:
+OneContinent challenge is now possible - main continent is bigger 3:1 than lower (v.08)
+must be coast option added (v0.8)
+mountains and hills are back again (v0.8)
+added islands to template (v0.7)
+First standalone version. Same as HB map/lekMap (v0.6)
+BUGS:
+no known bugs yet reported
+
+
+## Donut v1.1 ##
+
+FIX:
+Desert size is added with values: 12%- sparse / 22% - average / 32% - plentiful (v1.1)
+Added outside region options (hills, mountains, ocean, standard, random) (v1.0)
+Radius Size and Holy Radius Factor added (v0.8)
+must be coast option added (v0.7)
+First Version based on regular Donut and HB maps template (v0.6)
+
+BUGS:
+Must Be Coast with inland sea is bad option to use
+default lake generator doing bugs with Mountains options. Sometimes u need restart map because start near lake and Mountain
+
+
+## Archipelago ##
+
+FIX:
+BUGS:
+Players may spawn very close if 2 rich islands are close
