@@ -33,7 +33,7 @@ function TerrainGenerator.Create(args)
 	
 	-- Set terrain bands.
 	local iDesertPercent = args.iDesertPercent or 32;
-	local iPlainsPercent = args.iPlainsPercent or 60; -- Deserts are processed first, so Plains will take this percentage of whatever remains. - Bob
+	local iPlainsPercent = args.iPlainsPercent or 50; -- Deserts are processed first, so Plains will take this percentage of whatever remains. - Bob
 
 	if grassMoist == 1 then
 		iPlainsPercent = 50;
@@ -41,11 +41,11 @@ function TerrainGenerator.Create(args)
 		iPlainsPercent = 80;
 	end
 
-	local fSnowLatitude  = args.fSnowLatitude  or 0.95;
+	local fSnowLatitude  = args.fSnowLatitude  or 0.90;
 	
 	local tundra_level = Map.GetCustomOption(10)
 
-	local fTundraLatitude = args.fTundraLatitude or 0.42;
+	local fTundraLatitude = args.fTundraLatitude or 0.59;
 
 	if tundra_level	== 1 then
 		fTundraLatitude = 0.6;			

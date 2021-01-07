@@ -7,7 +7,7 @@
 --	Copyright (c) 2010 Firaxis Games, Inc. All rights reserved.
 ------------------------------------------------------------------------------
 
-include("HBAssignStartingPlots");
+include("HBAssignStartingPlots2.2");
 
 ------------------------------------------------------------------------------
 --	Various Map utility functions
@@ -499,10 +499,10 @@ end
 
 ----------------------------------------------------------------------------------------------------------------------
 function AddRivers()
-	local riverSourceRangeDefault = 2;
-	local seaWaterRangeDefault = 1;
-	local plotsPerRiverEdge =  10;
-	local riverRnd = 200;
+	local riverSourceRangeDefault = 1.5;
+	local seaWaterRangeDefault = 0.75;
+	local plotsPerRiverEdge =  9;
+	local riverRnd = 210;
 	local rivers_level = Map.GetCustomOption(8)
 
 	if rivers_level == 1 then
