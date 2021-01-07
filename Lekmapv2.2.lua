@@ -7,10 +7,10 @@
 --	Copyright (c) 2011 Firaxis Games, Inc. All rights reserved.
 ------------------------------------------------------------------------------
 
-include("HBMapGenerator2.2");
-include("HBFractalWorld2.2");
-include("HBFeatureGenerator2.2");
-include("HBTerrainGenerator2.2");
+include("HBMapGenerator");
+include("HBFractalWorld");
+include("HBFeatureGenerator");
+include("HBTerrainGenerator");
 include("IslandMaker");
 include("MultilayeredFractal");
 
