@@ -18,7 +18,7 @@ include("MultilayeredFractal");
 function GetMapScriptInfo()
 	local world_age, temperature, rainfall, sea_level, resources = GetCoreMapOptions()
 	return {
-		Name = "Continents feat. Szczeepan v0.8",
+		Name = "Continents feat. Szczeepan v0.9",
 		Description = "A map script made for Lekmod based of HB's Mapscript v8.1 containing different map types selectable from the map set up screen.",
 		IsAdvancedMap = false,
 		IconIndex = 0,
@@ -345,8 +345,19 @@ function GetMapScriptInfo()
 					"plentiful",
 				},
 				DefaultValue = 2,
-				SortPriority = 8,
+				SortPriority = -83,
 			},
+			{
+				Name = "Forest Size", -- (21) forestSize
+				Values = {
+					"sparse",
+					"average",
+					"plentiful",
+				},
+				DefaultValue = 2,
+				SortPriority = -82,
+			},
+
 		},
 	};
 end
@@ -978,8 +989,12 @@ function AddFeatures()
 	if rain == 4 then
 		rain = 1 + Map.Rand(3, "Random Rainfall - Lua");
 	end
+	local forestSize = 8 + 5 * Map.GetCustomOption(21);  -- forestSize 13/18/23
 
-	local args = {rainfall = rain}
+	local args = {
+		rainfall = rain,
+		iForestPercent = forestSize,
+	};
 	local featuregen = FeatureGenerator.Create(args);
 
 	-- False parameter removes mountains from coastlines.
