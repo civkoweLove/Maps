@@ -35,7 +35,7 @@ function GetMapScriptInfo()
 					"TXT_KEY_MAP_OPTION_RANDOM",
 				},
 				DefaultValue = 2,
-				SortPriority = -99,
+				SortPriority = 4,
 			},
 			{
 				Name = "TXT_KEY_MAP_OPTION_TEMPERATURE",	-- 2 add temperature defaults to random
@@ -46,7 +46,7 @@ function GetMapScriptInfo()
 					"TXT_KEY_MAP_OPTION_RANDOM",
 				},
 				DefaultValue = 2,
-				SortPriority = -96,
+				SortPriority = 5,
 			},
 			{
 				Name = "TXT_KEY_MAP_OPTION_RAINFALL",	-- 3 add rainfall defaults to random
@@ -57,7 +57,7 @@ function GetMapScriptInfo()
 					"TXT_KEY_MAP_OPTION_RANDOM",
 				},
 				DefaultValue = 2,
-				SortPriority = -97,
+				SortPriority = 6,
 			},
 			{
 				Name = "TXT_KEY_MAP_OPTION_SEA_LEVEL",	-- 4 add sea level defaults to random.
@@ -70,7 +70,7 @@ function GetMapScriptInfo()
 					"TXT_KEY_MAP_OPTION_RANDOM",
 				},
 				DefaultValue = 3,
-				SortPriority = -93,
+				SortPriority = 7,
 			},
 			{
 				Name = "Start Locations",	-- 5 add resources defaults to random
@@ -84,7 +84,7 @@ function GetMapScriptInfo()
 					"TXT_KEY_MAP_OPTION_RANDOM",
 				},
 				DefaultValue = 2,
-				SortPriority = -90,
+				SortPriority = 8,
 			},
 
 			{
@@ -107,7 +107,7 @@ function GetMapScriptInfo()
 					"Default",
 				},
 				DefaultValue = 15,
-				SortPriority = -88,
+				SortPriority = 9,
 			},
 
 			{
@@ -119,7 +119,7 @@ function GetMapScriptInfo()
 				},
 
 				DefaultValue = 2,
-				SortPriority = -98,
+				SortPriority = 10,
 			},
 
 			{
@@ -131,7 +131,7 @@ function GetMapScriptInfo()
 				},
 
 				DefaultValue = 2,
-				SortPriority = -95,
+				SortPriority = 11,
 			},
 
 			{
@@ -143,7 +143,7 @@ function GetMapScriptInfo()
 				},
 
 				DefaultValue = 1,
-				SortPriority = -94,
+				SortPriority = 12,
 			},
 
 			{
@@ -155,7 +155,7 @@ function GetMapScriptInfo()
 				},
 
 				DefaultValue = 1,
-				SortPriority = -92,
+				SortPriority = 13,
 			},
 
 			{
@@ -168,7 +168,7 @@ function GetMapScriptInfo()
 				},
 
 				DefaultValue = 2,
-				SortPriority = -89,
+				SortPriority = 14,
 			},
 
 			{
@@ -179,7 +179,7 @@ function GetMapScriptInfo()
 				},
 
 				DefaultValue = 2,
-				SortPriority = -102,
+				SortPriority = 1,
 			},
 
 			{
@@ -232,8 +232,8 @@ function GetMapScriptInfo()
 					"124",
 				},
 
-				DefaultValue = 11,
-				SortPriority = -101,
+				DefaultValue = 16,
+				SortPriority = 2,
 			},
 
 			{
@@ -271,8 +271,8 @@ function GetMapScriptInfo()
 
 				},
 
-				DefaultValue = 15,
-				SortPriority = -100,
+				DefaultValue = 12,
+				SortPriority = 3,
 			},
 
 			{
@@ -291,7 +291,7 @@ function GetMapScriptInfo()
 				},
 
 				DefaultValue = 5,
-				SortPriority = -91,
+				SortPriority = 15,
 			},
 
 			{
@@ -303,7 +303,7 @@ function GetMapScriptInfo()
 				},
 
 				DefaultValue = 3,
-				SortPriority = -87,
+				SortPriority = 16,
 			},
 
 			{
@@ -314,7 +314,7 @@ function GetMapScriptInfo()
 				},
 
 				DefaultValue = 1,
-				SortPriority = -86,
+				SortPriority = 17,
 			},
 
 			{
@@ -326,7 +326,7 @@ function GetMapScriptInfo()
 				},
 
 				DefaultValue = 2,
-				SortPriority = -85,
+				SortPriority = 18,
 			},
 			{
 				Name = "Must be coast", -- (19) force coastal start
@@ -335,7 +335,7 @@ function GetMapScriptInfo()
 					"No",
 				},
 				DefaultValue = 1,
-				SortPriority = -84,
+				SortPriority = 19,
 			},
 			{
 				Name = "Desert Size", -- (20) desertSize
@@ -345,7 +345,7 @@ function GetMapScriptInfo()
 					"plentiful",
 				},
 				DefaultValue = 2,
-				SortPriority = -83,
+				SortPriority = 20,
 			},
 			{
 				Name = "Forest Size", -- (21) forestSize
@@ -355,7 +355,7 @@ function GetMapScriptInfo()
 					"plentiful",
 				},
 				DefaultValue = 2,
-				SortPriority = -82,
+				SortPriority = 21,
 			},
 
 		},
