@@ -337,6 +337,16 @@ function GetMapScriptInfo()
 				DefaultValue = 1,
 				SortPriority = -84,
 			},
+			{
+				Name = "Desert Size", -- (20) desertSize
+				Values = {
+					"sparse",
+					"average",
+					"plentiful",
+				},
+				DefaultValue = 2,
+				SortPriority = 8,
+			},
 		},
 	};
 end
@@ -903,8 +913,8 @@ end
 
 ------------------------------------------------------------------------------
 function GenerateTerrain()
-	local DesertPercent = 22;
-
+	-- local DesertPercent = 22;
+	local desertSize = 2 + 10 * Map.GetCustomOption(20); -- desertSize 12/22/32
 
 	-- Get Temperature setting input by user.
 	local temp = Map.GetCustomOption(2)
@@ -916,7 +926,7 @@ function GenerateTerrain()
 
 	local args = {
 		temperature = temp,
-		iDesertPercent = DesertPercent,
+		iDesertPercent = desertSize,
 		iGrassMoist = grassMoist,
 	};
 
