@@ -95,6 +95,9 @@ Here's a blank template to get started:
 ### maps details
 * Continents v0.8
   * FIX:
+    * HB Core and LekMap Core are changed into 2.2 (v.09)
+    * Forest size is added with values: 13% sparse / 18% - average / 23% - plentiful (v.09)
+    * Desert size is added with values: 12%- sparse / 22% - average / 32% - plentiful (v.09)
     * OneContinent challenge is now possible - main continent is  bigger 3:1 than lower (v.08)
     * must be coast option added (v0.8)
     * mountains and hills are back again (v0.8)
@@ -105,6 +108,7 @@ Here's a blank template to get started:
 
 * Donut v1.1
   * FIX:
+    * HB Core and LekMap Core are changed into 2.2 (v1.1) 
     * Desert size is added with values: 12%- sparse / 22% - average / 32% - plentiful (v1.1)
     * Added outside region options (hills, mountains, ocean, standard, random) (v1.0)
     * Radius Size and Holy Radius Factor added (v0.8)
@@ -116,6 +120,7 @@ Here's a blank template to get started:
 * Archipelago
   * FIX:
   * BUGS:
+    * HB Core and LekMap Core are changed into 2.20 (v.09)
     * Players may spawn very close if 2 rich islands are close
 
 <!-- GETTING STARTED -->
