@@ -93,7 +93,7 @@ Here's a blank template to get started:
 
 
 ### maps details
-* Continents v0.8
+* Continents v0.9
   * FIX:
     * HB Core and LekMap Core are changed into 2.2 (v.09)
     * Forest size is added with values: 13% sparse / 18% - average / 23% - plentiful (v.09)
