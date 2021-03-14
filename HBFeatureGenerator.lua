@@ -21,8 +21,9 @@ function FeatureGenerator.Create(args)
 	-- Temperature map options affect only terrain generation.
 	-- Rainfall map options affect only feature generation.
 	--
-
+	local MapShape = Map.GetCustomOption(12);	
 	local grassMoist = Map.GetCustomOption(7);
+
 	local args = args or {};
 	local rainfall = args.rainfall or 2; -- Default is Normal rainfall.
 	local jungle_grain = args.jungle_grain or 5;
@@ -40,7 +41,7 @@ function FeatureGenerator.Create(args)
 	local fracYExp = args.fracYExp or -1;
 	
 	-- Set feature traits.
-	local iJunglePercent = args.iJunglePercent or 45;
+	local iJunglePercent = args.iJunglePercent or 42;
 
 	if grassMoist == 1 then
 		iJunglePercent = iJunglePercent - 5;
@@ -48,10 +49,17 @@ function FeatureGenerator.Create(args)
 		iJunglePercent = iJunglePercent + 5;
 	end
 
-	local iForestPercent = args.iForestPercent or 13;
+	local iForestPercent = args.iForestPercent or 18;
 	local iClumpHeight = args.iClumpHeight or 75;
 	local fMarshPercent = args.fMarshPercent or 8;
 	local iOasisPercent = args.iOasisPercent or 25;
+
+	if MapShape == 3 then
+		iForestPercent = iForestPercent + 6;
+		iJunglePercent = iJunglePercent + 3;
+		fMarshPercent = fMarshPercent + 1;
+	end
+
 	-- Adjust foliage amounts according to user's Rainfall selection. (Which must be passed in by the map script.)
 	if rainfall == 1 then -- Rainfall is sparse, climate is Arid.
 		iJunglePercent = iJunglePercent - iJungleChange;
@@ -254,9 +262,9 @@ function FeatureGenerator:AddIceAtPlot(plot, iX, iY, lat)
 		else
 			local rand = Map.Rand(200, "Add Ice Lua")/100.0;
 
-			if(rand < 8 * (lat - 0.975)) then
+			if(rand < 8 * (lat - 0.875)) then
 				plot:SetFeatureType(self.featureIce, -1);
-			elseif(rand < 4 * (lat - 0.875)) then
+			elseif(rand < 4 * (lat - 0.75)) then
 				plot:SetFeatureType(self.featureIce, -1);
 			end
 		end

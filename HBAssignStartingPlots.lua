@@ -750,8 +750,8 @@ function AssignStartingPlots:__InitLuxuryWeights()
 		
 		self.luxury_region_weights[3] = {			-- Forest
 		{self.truffles_ID,	40},
-		{self.silk_ID,		40},
-		{self.dye_ID,		40},
+		{self.silk_ID,		10},
+		{self.dye_ID,		10},
 		{self.fur_ID,		40},
 		{self.coconut_ID,	10},
 		{self.rubber_ID,	10},
@@ -975,8 +975,8 @@ function AssignStartingPlots:__InitLuxuryWeights()
 		{self.dye_ID,		25},	};
 		
 		self.luxury_region_weights[3] = {			-- Forest
-		{self.dye_ID,		30},
-		{self.silk_ID,		30},
+		{self.dye_ID,		10},
+		{self.silk_ID,		10},
 		{self.truffles_ID,	30},
 		{self.coconut_ID,	30},
 		{self.rubber_ID,	10},
@@ -2433,21 +2433,21 @@ function AssignStartingPlots:DetermineRegionTypes()
 			print("Region #", this_region, " has been defined as a Tundra Region.");
 		
 		-- Jungle check.
-		elseif (jungleCount >= areaPlots * 0.11) then
+		elseif (jungleCount >= areaPlots * 0.12) then
 			table.insert(self.regionTypes, 2);
 			print("-");
 			print("Region #", this_region, " has been defined as a Jungle Region.");
-		elseif (jungleCount >= areaPlots * 0.10) and (jungleCount + forestCount >= areaPlots * 0.20) then
+		elseif (jungleCount >= areaPlots * 0.10) and (jungleCount + forestCount >= areaPlots * 0.24) then
 			table.insert(self.regionTypes, 2);
 			print("-");
 			print("Region #", this_region, " has been defined as a Jungle Region.");
 		
 		-- Forest check.
-		elseif (forestCount >= areaPlots * 0.10) then
+		elseif (forestCount >= areaPlots * 0.19) then
 			table.insert(self.regionTypes, 3);
 			print("-");
 			print("Region #", this_region, " has been defined as a Forest Region.");
-		elseif (forestCount >= areaPlots * 0.8) and (jungleCount + forestCount >= areaPlots * 0.18) then
+		elseif (forestCount >= areaPlots * 0.8) and (jungleCount + forestCount >= areaPlots * 0.3) then
 			table.insert(self.regionTypes, 3);
 			print("-");
 			print("Region #", this_region, " has been defined as a Forest Region.");
@@ -2464,19 +2464,19 @@ function AssignStartingPlots:DetermineRegionTypes()
 			print("-");
 			print("Region #", this_region, " has been defined as a Wetlands Region.");
 		-- Hills check.
-		elseif (hillsCount >= areaPlots * 0.47) then
+		elseif (hillsCount >= areaPlots * 0.37) then
 			table.insert(self.regionTypes, 5);
 			print("-");
 			print("Region #", this_region, " has been defined as a Hills Region.");
 			
 		-- Grass check.
-		elseif (grassCount >= areaPlots * 0.22) and (grassCount * 0.7 > plainsCount) then
+		elseif (grassCount >= areaPlots * 0.20) and (grassCount * 0.7 > plainsCount) then
 			table.insert(self.regionTypes, 7);
 			print("-");
 			print("Region #", this_region, " has been defined as a Grassland Region.");
 		
 		-- Plains check.
-		elseif (plainsCount >= areaPlots * 0.30) and (plainsCount * 0.8 > grassCount) then
+		elseif (plainsCount >= areaPlots * 0.27) and (plainsCount * 0.8 > grassCount) then
 			table.insert(self.regionTypes, 6);
 			print("-");
 			print("Region #", this_region, " has been defined as a Plains Region.");
@@ -2697,7 +2697,7 @@ function AssignStartingPlots:DetermineRegionTypes()
 			table.insert(self.regionTypes, 2);
 			print("-");
 			print("Region #", this_region, " has been defined as a Jungle Region.");
-		elseif (jungleCount >= areaPlots * 0.15) and (jungleCount + forestCount >= areaPlots * 0.25) then
+		elseif (jungleCount >= areaPlots * 0.15) and (jungleCount + forestCount >= areaPlots * 0.32) then
 			table.insert(self.regionTypes, 2);
 			print("-");
 			print("Region #", this_region, " has been defined as a Jungle Region.");
@@ -3673,7 +3673,8 @@ function AssignStartingPlots:FindCoastalStart(region_number)
 	-- This function returns two boolean flags, indicating the success level of the operation.
 	local bSuccessFlag = false; -- Returns true when a start is placed, false when process fails.
 	local bForcedPlacementFlag = false; -- Returns true if this region had no eligible starts and one was forced to occur.
-	
+	local AllowInlandSea = Map.GetCustomOption(18)
+
 	-- Obtain data needed to process this region.
 	local iW, iH = Map.GetGridSize();
 	local region_data_table = self.regionData[region_number];
@@ -3763,7 +3764,7 @@ function AssignStartingPlots:FindCoastalStart(region_number)
 			if self.plotDataIsCoastal[plotIndex] == true then -- This plot is a land plot next to an ocean.
 				local plot = Map.GetPlot(x, y);
 				local plotType = plot:GetPlotType()
-				if plotType ~= PlotTypes.PLOT_MOUNTAIN then -- Not a mountain plot.
+				if plotType ~= PlotTypes.PLOT_MOUNTAIN and (AllowInlandSea == 2 or plot:IsCoastalLand(50)) then -- Not a mountain plot, nor a plot adjacent to inland sea, or inland sea allowed.
 					local area_of_plot = plot:GetArea();
 					if area_of_plot == iAreaID or iAreaID == -1 then -- This plot is a member, so it goes on at least one candidate list.
 						--
@@ -4378,11 +4379,10 @@ function AssignStartingPlots:ChooseLocations(args)
 		print("Region #" .. currentRegionNumber);
 		print("Num coastal still needed " .. tostring(iNumCoastNeeded));
 		--print(tostring(self.startLocationConditions[currentRegionNumber][1]));
-
 		if mustBeCoast == true then
 			print("mustBeCoast Region #" .. currentRegionNumber);
 			bSuccessFlag, bForcedPlacementFlag = self:FindCoastalStart(currentRegionNumber)
-
+			
 		elseif res_reg[currentRegionNumber] == false and iNumCoastNeeded > 0 then
 			-- not already reserved, can be coastal
 			bSuccessFlag, bForcedPlacementFlag = self:FindCoastalStart(currentRegionNumber)
@@ -9461,7 +9461,7 @@ function AssignStartingPlots:AssignLuxuryToRegion(region_number)
 					end
 				-- Land-based resources are automatically approved if they were in the region's option table.
 				--res_ID == self.salt_ID
-				elseif res_ID == self.salt_ID  or res_ID == self.marble_ID then
+				elseif res_ID == self.salt_ID  or res_ID == self.marble_ID or res_ID == self.spices_ID or res_ID == self.gems_ID then
 					-- No salt to regions please, sorry
 				else
 					table.insert(resource_IDs, res_ID);
@@ -9565,7 +9565,7 @@ function AssignStartingPlots:AssignLuxuryToRegion(region_number)
 
 	local sea_lux_cahnce = Map.Rand(100, "Chance for sea lux as coastal");
 
-	if sea_lux_cahnce > 80 and CoastLux == false then
+	if sea_lux_cahnce > 0 and CoastLux == false then
 		coast_lux = false;
 	end
 
