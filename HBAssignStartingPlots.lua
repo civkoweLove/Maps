@@ -750,8 +750,8 @@ function AssignStartingPlots:__InitLuxuryWeights()
 		
 		self.luxury_region_weights[3] = {			-- Forest
 		{self.truffles_ID,	40},
-		{self.silk_ID,		40},
-		{self.dye_ID,		40},
+		{self.silk_ID,		10},
+		{self.dye_ID,		10},
 		{self.fur_ID,		40},
 		{self.coconut_ID,	10},
 		{self.rubber_ID,	10},
@@ -975,8 +975,8 @@ function AssignStartingPlots:__InitLuxuryWeights()
 		{self.dye_ID,		25},	};
 		
 		self.luxury_region_weights[3] = {			-- Forest
-		{self.dye_ID,		30},
-		{self.silk_ID,		30},
+		{self.dye_ID,		10},
+		{self.silk_ID,		10},
 		{self.truffles_ID,	30},
 		{self.coconut_ID,	30},
 		{self.rubber_ID,	10},
@@ -1850,6 +1850,8 @@ function AssignStartingPlots:GenerateRegions(args)
 	self.method = args.method or self.method; -- Continental method is default.
 	self.start_locations = args.start_locations or 2; -- Each map script has to pass in parameter for Resource setting chosen by user.
 	self.resource_setting = args.resources or 3;
+	self.CoastLux = args.CoastLux or false;
+	self.AllowInlandSea = args.AllowInlandSea or 1;
 	self.NoCoastInland = args.NoCoastInland;
 	self.BalancedCoastal = args.BalancedCoastal;
 	self.MixedBias = args.MixedBias;
@@ -2433,21 +2435,21 @@ function AssignStartingPlots:DetermineRegionTypes()
 			print("Region #", this_region, " has been defined as a Tundra Region.");
 		
 		-- Jungle check.
-		elseif (jungleCount >= areaPlots * 0.11) then
+		elseif (jungleCount >= areaPlots * 0.12) then
 			table.insert(self.regionTypes, 2);
 			print("-");
 			print("Region #", this_region, " has been defined as a Jungle Region.");
-		elseif (jungleCount >= areaPlots * 0.10) and (jungleCount + forestCount >= areaPlots * 0.20) then
+		elseif (jungleCount >= areaPlots * 0.10) and (jungleCount + forestCount >= areaPlots * 0.24) then
 			table.insert(self.regionTypes, 2);
 			print("-");
 			print("Region #", this_region, " has been defined as a Jungle Region.");
 		
 		-- Forest check.
-		elseif (forestCount >= areaPlots * 0.10) then
+		elseif (forestCount >= areaPlots * 0.19) then
 			table.insert(self.regionTypes, 3);
 			print("-");
 			print("Region #", this_region, " has been defined as a Forest Region.");
-		elseif (forestCount >= areaPlots * 0.8) and (jungleCount + forestCount >= areaPlots * 0.18) then
+		elseif (forestCount >= areaPlots * 0.8) and (jungleCount + forestCount >= areaPlots * 0.3) then
 			table.insert(self.regionTypes, 3);
 			print("-");
 			print("Region #", this_region, " has been defined as a Forest Region.");
@@ -2464,19 +2466,19 @@ function AssignStartingPlots:DetermineRegionTypes()
 			print("-");
 			print("Region #", this_region, " has been defined as a Wetlands Region.");
 		-- Hills check.
-		elseif (hillsCount >= areaPlots * 0.47) then
+		elseif (hillsCount >= areaPlots * 0.37) then
 			table.insert(self.regionTypes, 5);
 			print("-");
 			print("Region #", this_region, " has been defined as a Hills Region.");
 			
 		-- Grass check.
-		elseif (grassCount >= areaPlots * 0.22) and (grassCount * 0.7 > plainsCount) then
+		elseif (grassCount >= areaPlots * 0.20) and (grassCount * 0.7 > plainsCount) then
 			table.insert(self.regionTypes, 7);
 			print("-");
 			print("Region #", this_region, " has been defined as a Grassland Region.");
 		
 		-- Plains check.
-		elseif (plainsCount >= areaPlots * 0.30) and (plainsCount * 0.8 > grassCount) then
+		elseif (plainsCount >= areaPlots * 0.27) and (plainsCount * 0.8 > grassCount) then
 			table.insert(self.regionTypes, 6);
 			print("-");
 			print("Region #", this_region, " has been defined as a Plains Region.");
@@ -2697,7 +2699,7 @@ function AssignStartingPlots:DetermineRegionTypes()
 			table.insert(self.regionTypes, 2);
 			print("-");
 			print("Region #", this_region, " has been defined as a Jungle Region.");
-		elseif (jungleCount >= areaPlots * 0.15) and (jungleCount + forestCount >= areaPlots * 0.25) then
+		elseif (jungleCount >= areaPlots * 0.15) and (jungleCount + forestCount >= areaPlots * 0.32) then
 			table.insert(self.regionTypes, 2);
 			print("-");
 			print("Region #", this_region, " has been defined as a Jungle Region.");
@@ -2796,8 +2798,18 @@ function AssignStartingPlots:PlaceImpactAndRipples(x, y)
 	local wrapX = Map:IsWrapX();
 	local wrapY = Map:IsWrapY();
 	local impact_value = 99;
-	--local ripple_values = {97, 95, 92, 89, 69, 57, 24, 15};
-	local ripple_values = {97, 95, 92, 88, 83, 77, 70, 62, 51, 41, 30, 18};
+
+	local ripple_decider = Map.GetCustomOption(6);
+	local ripple_values = {97, 95, 92, 88, 83, 77, 70, 62, 51, 41, 30, 18};	
+	if ripple_decider == 1 then
+		local ripple_values = {97, 95, 92, 89, 69, 57, 24, 15};
+	end
+	if ripple_decider == 2 then	
+		local ripple_values = {97, 95, 92, 88, 83, 77, 70, 62, 51, 41, 30, 18};
+	end
+	if ripple_decider == 3 then	
+		local ripple_values = {99, 98, 97, 89, 88, 83, 77, 70, 62, 51, 41, 30, 18, 12};
+	end
 	
 	--local ripple_values = {99, 99, 99, 99, 99, 99};
 
@@ -3673,7 +3685,8 @@ function AssignStartingPlots:FindCoastalStart(region_number)
 	-- This function returns two boolean flags, indicating the success level of the operation.
 	local bSuccessFlag = false; -- Returns true when a start is placed, false when process fails.
 	local bForcedPlacementFlag = false; -- Returns true if this region had no eligible starts and one was forced to occur.
-	
+	local AllowInlandSea = self.AllowInlandSea;
+
 	-- Obtain data needed to process this region.
 	local iW, iH = Map.GetGridSize();
 	local region_data_table = self.regionData[region_number];
@@ -3763,7 +3776,7 @@ function AssignStartingPlots:FindCoastalStart(region_number)
 			if self.plotDataIsCoastal[plotIndex] == true then -- This plot is a land plot next to an ocean.
 				local plot = Map.GetPlot(x, y);
 				local plotType = plot:GetPlotType()
-				if plotType ~= PlotTypes.PLOT_MOUNTAIN then -- Not a mountain plot.
+				if plotType ~= PlotTypes.PLOT_MOUNTAIN and (AllowInlandSea == 1 or plot:IsCoastalLand(50)) then -- Not a mountain plot, nor a plot adjacent to inland sea, or inland sea allowed.
 					local area_of_plot = plot:GetArea();
 					if area_of_plot == iAreaID or iAreaID == -1 then -- This plot is a member, so it goes on at least one candidate list.
 						--
@@ -4379,11 +4392,7 @@ function AssignStartingPlots:ChooseLocations(args)
 		print("Num coastal still needed " .. tostring(iNumCoastNeeded));
 		--print(tostring(self.startLocationConditions[currentRegionNumber][1]));
 
-		if mustBeCoast == true then
-			print("mustBeCoast Region #" .. currentRegionNumber);
-			bSuccessFlag, bForcedPlacementFlag = self:FindCoastalStart(currentRegionNumber)
-
-		elseif res_reg[currentRegionNumber] == false and iNumCoastNeeded > 0 then
+		if res_reg[currentRegionNumber] == false and iNumCoastNeeded > 0 then
 			-- not already reserved, can be coastal
 			bSuccessFlag, bForcedPlacementFlag = self:FindCoastalStart(currentRegionNumber)
 			iNumCoastNeeded = iNumCoastNeeded - 1;
@@ -7785,7 +7794,7 @@ function AssignStartingPlots:CanPlaceCityStateAt(x, y, area_ID, force_it, ignore
 	local biggest_area = Map.FindBiggestArea(False);
 	local iAreaID = biggest_area:GetID();
 
-	if self.method ~= 2 then
+	if self.method == 1 then
 		if area_ID ~= iAreaID then
 			return false
 		end
@@ -9336,52 +9345,25 @@ function AssignStartingPlots:PlaceSpecificNumberOfResources(resource_ID, quantit
 	-- Main loop
 	for place_resource = 1, iNumResources do
 		for loop, plotIndex in ipairs(plot_list) do
-			if resource_ID == self.marble_ID then	-- MOD.Barathor: Temporary Fix: Marble's additional impact and ripple values on the marble layer were originally disregarded.
-				if bCheckImpact == false or impact_table[plotIndex] == 0 then
-					if self.marbleData[plotIndex] == 0 then
-						local x = (plotIndex - 1) % iW;
-						local y = (plotIndex - x - 1) / iW;
-						local res_plot = Map.GetPlot(x, y)
-						if res_plot:GetResourceType(-1) == -1 then -- Placing this resource in this plot.
-							res_plot:SetResourceType(resource_ID, quantity);
-							self.amounts_of_resources_placed[resource_ID + 1] = self.amounts_of_resources_placed[resource_ID + 1] + quantity;
-							self.totalLuxPlacedSoFar = self.totalLuxPlacedSoFar + 1;
-							iNumLeftToPlace = iNumLeftToPlace - 1;
-							self:PlaceResourceImpact(x, y, 7, 9) 			-- MOD.Barathor: Always emit marble layer ripples, regardless of bCheckImpact.  Using the updated ripple radius value of 9 instead of 6.
-							if bCheckImpact == true then
-								local res_addition = 0;
-								if max_radius > min_radius then
-									res_addition = Map.Rand(1 + (max_radius - min_radius), "Resource Radius - Place Resource LUA");
-								end
-								local radius = min_radius + res_addition;					-- MOD.Barathor: Changed "rad" to "radius"
-								self:PlaceResourceImpact(x, y, impact_table_number, radius)	-- MOD.Barathor: Changed "rad" to "radius"
-							end
-							break
+			if bCheckImpact == false or impact_table[plotIndex] == 0 then
+				local x = (plotIndex - 1) % iW;
+				local y = (plotIndex - x - 1) / iW;
+				local res_plot = Map.GetPlot(x, y)
+				if res_plot:GetResourceType(-1) == -1 then -- Placing this resource in this plot.
+					res_plot:SetResourceType(resource_ID, quantity);
+					self.amounts_of_resources_placed[resource_ID + 1] = self.amounts_of_resources_placed[resource_ID + 1] + quantity;
+					--print("-"); print("Placed Resource#", resource_ID, "at Plot", x, y);
+					self.totalLuxPlacedSoFar = self.totalLuxPlacedSoFar + 1;
+					iNumLeftToPlace = iNumLeftToPlace - 1;
+					if bCheckImpact == true then
+						local res_addition = 0;
+						if max_radius > min_radius then
+							res_addition = Map.Rand(1 + (max_radius - min_radius), "Resource Radius - Place Resource LUA");
 						end
+						local rad = min_radius + res_addition;
+						self:PlaceResourceImpact(x, y, impact_table_number, rad)
 					end
-				end
-			else
-
-				if bCheckImpact == false or impact_table[plotIndex] == 0 then
-					local x = (plotIndex - 1) % iW;
-					local y = (plotIndex - x - 1) / iW;
-					local res_plot = Map.GetPlot(x, y)
-					if res_plot:GetResourceType(-1) == -1 then -- Placing this resource in this plot.
-						res_plot:SetResourceType(resource_ID, quantity);
-						self.amounts_of_resources_placed[resource_ID + 1] = self.amounts_of_resources_placed[resource_ID + 1] + quantity;
-						--print("-"); print("Placed Resource#", resource_ID, "at Plot", x, y);
-						self.totalLuxPlacedSoFar = self.totalLuxPlacedSoFar + 1;
-						iNumLeftToPlace = iNumLeftToPlace - 1;
-						if bCheckImpact == true then
-							local res_addition = 0;
-							if max_radius > min_radius then
-								res_addition = Map.Rand(1 + (max_radius - min_radius), "Resource Radius - Place Resource LUA");
-							end
-							local rad = min_radius + res_addition;
-							self:PlaceResourceImpact(x, y, impact_table_number, rad)
-						end
-						break
-					end
+					break
 				end
 			end
 		end
@@ -9418,11 +9400,7 @@ function AssignStartingPlots:AssignLuxuryToRegion(region_number)
 	-- Assigns a luxury type to an individual region.
 	local region_type = self.regionTypes[region_number];
 	local luxury_candidates;
-	local CoastLux = false;
-
-	if Map.GetCustomOption(17) == 1 then
-		CoastLux = true;
-	end
+	local CoastLux = self.CoastLux;
 
 	if region_type > 0 and region_type < 9 then -- Note: if number of Region Types is modified, this line and the table to which it refers need adjustment.
 		luxury_candidates = self.luxury_region_weights[region_type];
@@ -9461,7 +9439,7 @@ function AssignStartingPlots:AssignLuxuryToRegion(region_number)
 					end
 				-- Land-based resources are automatically approved if they were in the region's option table.
 				--res_ID == self.salt_ID
-				elseif res_ID == self.salt_ID  or res_ID == self.marble_ID then
+				elseif res_ID == self.salt_ID or res_ID == self.spices_ID or res_ID == self.gems_ID or res_ID == self.obsidian_ID then
 					-- No salt to regions please, sorry
 				else
 					table.insert(resource_IDs, res_ID);
@@ -9494,7 +9472,7 @@ function AssignStartingPlots:AssignLuxuryToRegion(region_number)
 								iNumAvailableTypes = iNumAvailableTypes + 1;
 							end
 						end
-					elseif res_ID == self.salt_ID or res_ID == self.marble_ID then
+					elseif res_ID == self.salt_ID then
 					-- No salt to regions please, sorry
 					else
 						table.insert(resource_IDs, res_ID);
@@ -9565,7 +9543,7 @@ function AssignStartingPlots:AssignLuxuryToRegion(region_number)
 
 	local sea_lux_cahnce = Map.Rand(100, "Chance for sea lux as coastal");
 
-	if sea_lux_cahnce > 80 and CoastLux == false then
+	if sea_lux_cahnce > 0 and CoastLux == false then
 		coast_lux = false;
 	end
 
@@ -9758,7 +9736,7 @@ function AssignStartingPlots:AssignLuxuryRoles()
 	-- Assign Marble to special casing.
 	table.insert(self.resourceIDs_assigned_to_special_case, self.marble_ID);
 
-	--self.iNumTypesUnassigned = self.iNumTypesUnassigned - 1;	-- MOD.Barathor: This is no longer needed.
+	self.iNumTypesUnassigned = self.iNumTypesUnassigned - 1;	-- MOD.Barathor: This is no longer needed.
 	
 	--[[ MOD.Barathor.Barthor:
 	
@@ -11352,12 +11330,7 @@ function AssignStartingPlots:PlaceLuxuries()
 		end
 	end
 
-	-- Handle Special Case Luxuries
-	if self.iNumTypesSpecialCase > 0 then
-		-- Add a special case function for each luxury to be handled as a special case.
-		self:PlaceMarble()
-	end
-
+	self:PlaceMarble()
 	self.realtotalLuxPlacedSoFar = self.totalLuxPlacedSoFar		-- MOD.Barathor: New -- save the real total of luxuries before it gets corrupted with non-luxury additions which use the luxury placement method
 end
 ------------------------------------------------------------------------------
@@ -12360,7 +12333,7 @@ function AssignStartingPlots:PlaceMarble()
 		marble_target = math.ceil(self.iNumCivs * 0.5);
 	elseif self.resource_setting == 3 then
 		marble_target = math.ceil(self.iNumCivs * 0.9);
-	end
+	end	
 	local iNumMarbleToPlace = math.max(2, marble_target - marble_already_placed);
 	local iW, iH = Map.GetGridSize();
 	local iNumLeftToPlace = iNumMarbleToPlace;
@@ -12372,7 +12345,7 @@ function AssignStartingPlots:PlaceMarble()
 	-- Main loop
 	for place_resource = 1, iNumMarbleToPlace do
 		for loop, plotIndex in ipairs(self.marble_list) do
-			if self.marbleData[plotIndex] == 0 and self.luxuryData[plotIndex] == 0 then
+			if self.marbleData[plotIndex] == 0 and self.distanceData[plotIndex] < 90 then			
 				local x = (plotIndex - 1) % iW;
 				local y = (plotIndex - x - 1) / iW;
 				local res_plot = Map.GetPlot(x, y)
@@ -13656,16 +13629,9 @@ function AssignStartingPlots:PlaceResourcesAndCityStates()
 	-- replace them with custom methods. I have labored to make this new 
 	-- system as accessible and powerful as any ever before offered.
 
-	local LandSize = Map.GetCustomOption(13);
-
 	print("Map Generation - Assigning Luxury Resource Distribution");
 	self:AssignLuxuryRoles()
-
-	if LandSize ~= 6 then --brawl no wonders or CS please
-		print("Map Generation - Placing City States");
-		self:PlaceCityStates()
-	end
-
+	self:PlaceCityStates()
 	-- Generate global plot lists for resource distribution.
 	self:GenerateGlobalResourcePlotLists()
 	
@@ -13674,13 +13640,7 @@ function AssignStartingPlots:PlaceResourcesAndCityStates()
 
 	-- Place Strategic and Bonus resources.
 	self:PlaceStrategicAndBonusResources()
-
-	if LandSize ~= 6 then --brawl no wonders or CS please
-
-		print("Map Generation - Normalize City State Locations");
-		self:NormalizeCityStateLocations()
-	end
-	
+	self:NormalizeCityStateLocations()	
 	-- Fix Sugar graphics
 	self:FixResourceGraphics()
 	

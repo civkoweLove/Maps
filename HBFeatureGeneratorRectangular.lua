@@ -40,7 +40,7 @@ function FeatureGenerator.Create(args)
 	local fracYExp = args.fracYExp or -1;
 	
 	-- Set feature traits.
-	local iJunglePercent = args.iJunglePercent or 42;
+	local iJunglePercent = args.iJunglePercent or 45;
 
 	if grassMoist == 1 then
 		iJunglePercent = iJunglePercent - 5;
@@ -48,9 +48,9 @@ function FeatureGenerator.Create(args)
 		iJunglePercent = iJunglePercent + 5;
 	end
 
-	local iForestPercent = args.iForestPercent or 18;
+	local iForestPercent = args.iForestPercent or 24;
 	local iClumpHeight = args.iClumpHeight or 75;
-	local fMarshPercent = args.fMarshPercent or 8;
+	local fMarshPercent = args.fMarshPercent or 9;
 	local iOasisPercent = args.iOasisPercent or 25;
 
 	-- if MapShape == 3 then
