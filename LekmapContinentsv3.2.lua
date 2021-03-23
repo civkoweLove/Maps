@@ -18,7 +18,7 @@ include("MultilayeredFractal");
 function GetMapScriptInfo()
 	local world_age, temperature, rainfall, sea_level, resources = GetCoreMapOptions()
 	return {
-		Name = "Lekmap: Continents (v3.2)",
+		Name = "LoveMaps: Continents (v3.0)",
 		Description = "A map script made for Lekmod based of HB's Mapscript v8.1. Continents",
 		IsAdvancedMap = false,
 		IconIndex = 1,
@@ -270,34 +270,13 @@ function GetMapScriptInfo()
 			{
 				Name = "Islands",	-- add setting for islands (14)
 				Values = {
-					"No Islands",
-					"1",
-					"2",
-					"3",
-					"4",
-					"5",
-					"6",
-					"7",
-					"8",
-					"9",
-					"10",
-					"11",
-					"12 - Default",
-					"13",
-					"14",
-					"15",
-					"16",
-					"17",
-					"18",
-					"19",
-					"20",
-					"21",
-					"22",
-					"23",
-					"24",
+					"Sparse",
+					"Average",
+					"Plentiful",
+					"Abundant",
 				},
 
-				DefaultValue = 13,
+				DefaultValue = 2,
 				SortPriority = -86,
 			},
 
@@ -333,6 +312,47 @@ function GetMapScriptInfo()
 
 				DefaultValue = 1,
 				SortPriority = -83,
+			},
+
+			{
+				Name = "Start type",	-- add setting for land type (18)
+				Values = {
+					"One Continent Challenge",
+					"regular",
+				},
+
+				DefaultValue = 2,
+				SortPriority = -82,
+			},
+
+			{
+				Name = "Must be coast", -- (19) force coastal start
+				Values = {
+					"Yes",
+					"No",
+				},
+				DefaultValue = 1,
+				SortPriority = -81,
+			},
+			{
+				Name = "Desert Size", -- (20) desertSize
+				Values = {
+					"sparse",
+					"average",
+					"plentiful",
+				},
+				DefaultValue = 2,
+				SortPriority = -80,
+			},
+			{
+				Name = "Forest Size", -- (21) forestSize
+				Values = {
+					"sparse",
+					"average",
+					"plentiful",
+				},
+				DefaultValue = 2,
+				SortPriority = -79,
 			},
 		},
 	};
@@ -538,9 +558,17 @@ function ContinentsFractalWorld:GeneratePlotTypes(args)
 		
 		biggest_area = Map.FindBiggestArea(false);
 		iNumBiggestAreaTiles = biggest_area:GetNumTiles();
+		local oneContinent = Map.GetCustomOption(18);
 		-- Now test the biggest landmass to see if it is large enough.
-		if (iNumBiggestAreaTiles <= (iNumTotalLandTiles * 0.53)) and (iNumBiggestAreaTiles >= (iNumTotalLandTiles * 0.47)) then
+		if oneContinent == 1 then
+			print("One Continent challenge true");
+			if (iNumBiggestAreaTiles >= (iNumTotalLandTiles * 0.75)) then
+				done = true;
+				iBiggestID = biggest_area:GetID();
+			end
+		elseif (iNumBiggestAreaTiles <= (iNumTotalLandTiles * 0.53)) and (iNumBiggestAreaTiles >= (iNumTotalLandTiles * 0.47)) then
 			done = true;
+			print("One Continent challenge false");
 			iBiggestID = biggest_area:GetID();
 		end
 		iAttempts = iAttempts + 1;
@@ -697,7 +725,15 @@ function ContinentsFractalWorld:GeneratePlotTypes(args)
 
 		islandSetting = Map.GetCustomOption(14);
 
-		islCount =  Map.GetCustomOption(14) - 1;
+	islCount =  20;
+
+		if islandSetting == 1 then --sparse
+			islCount =  12;
+		elseif islandSetting == 3 then -- plentiful
+			islCount =  30;
+		elseif islandSetting == 4 then -- abundant
+			islCount =  40;
+		end
 
 		while islCount > 0 and escapeRedo > 0 do
 
@@ -712,7 +748,7 @@ function ContinentsFractalWorld:GeneratePlotTypes(args)
 			local y = 3 + Map.Rand((iH-6), "");	
 			local plotIndex = y * iW + x + 1;
 
-			local radius = Map.Rand(4, "");
+			local radius = 3 + 3 + math.floor(Map.Rand(2, ""));
 			--print("----------------------------------------------------------------------------------------");
 			--print("Count: ", islCount);
 			--print ("Radius: ", radius);
@@ -728,10 +764,10 @@ function ContinentsFractalWorld:GeneratePlotTypes(args)
 				startingPlot = plotIndex;
 
 				--print("Location is Ocean");
-				local radiuschk = 5;
+				--local radius = 5;
 
-				for ripple_radius = 1, radiuschk do
-					local ripple_value = radiuschk - ripple_radius + 1;
+				for ripple_radius = 1, radius do
+					local ripple_value = radius - ripple_radius + 1;
 					local currentX = x - ripple_radius;
 					local currentY = y;
 					for direction_index = 1, 6 do
@@ -817,7 +853,7 @@ function ContinentsFractalWorld:GeneratePlotTypes(args)
 						if islLandInRing > minIslandSize and islLandInRing < maxIslandSize then
 
 							local islThresh = 0;
-							local landvarDefault = 10;
+							local landvarDefault = 20;
 
 							local locationRnd = Map.Rand(100, "");
 
@@ -865,9 +901,9 @@ function ContinentsFractalWorld:GeneratePlotTypes(args)
 											elseif ripple_radius == 2 then -- 57% to 74%
 												islThresh = Map.Rand(45, "") + (thisislandvar / 1.25);
 											elseif ripple_radius == 3 then --40% to 57%
-												islThresh = Map.Rand(37, "") + (thisislandvar / 1.5);
+												islThresh = Map.Rand(37, "") + (thisislandvar / 1.25);
 											else --30% to 50%
-												islThresh = Map.Rand(30, "") + (thisislandvar / 2);
+												islThresh = Map.Rand(30, "") + (thisislandvar / 1.5);
 											end
 
 											local islRand = Map.Rand(100, "");
@@ -960,7 +996,7 @@ end
 ------------------------------------------------------------------------------
 function GenerateTerrain()
 
-	local DesertPercent = 28;
+	local DesertPercent = 2 + 10 * Map.GetCustomOption(20); -- desertSize 12/22/32
 
 	-- Get Temperature setting input by user.
 	local temp = Map.GetCustomOption(2)
@@ -1024,8 +1060,13 @@ function AddFeatures()
 	if rain == 4 then
 		rain = 1 + Map.Rand(3, "Random Rainfall - Lua");
 	end
-	
-	local args = {rainfall = rain}
+
+	local forestSize = 8 + 5 * Map.GetCustomOption(21);  -- forestSize 13/18/23
+
+	local args = {
+		rainfall = rain,
+		iForestPercent = forestSize,
+	};
 	local featuregen = FeatureGenerator.Create(args);
 
 	-- False parameter removes mountains from coastlines.
@@ -1036,7 +1077,20 @@ end
 ------------------------------------------------------------------------------
 function StartPlotSystem()
 
-	local RegionalMethod = 2;
+	local spawnType = Map.GetCustomOption(18);
+	local RegionalMethod = 1;
+
+	if spawnType == 2 then
+		RegionalMethod = 2;
+	end
+
+	local _mustBeCoast = false;
+
+	if Map.GetCustomOption(19) == 1 then
+		_mustBeCoast = true;
+		print("mustBeCoast = true");
+	end
+
 
 	-- Get Resources setting input by user.
 	local AllowInlandSea = Map.GetCustomOption(17)
@@ -1084,11 +1138,12 @@ function StartPlotSystem()
 		NoCoastInland = OnlyCoastal,
 		BalancedCoastal = BalancedCoastal,
 		MixedBias = MixedBias;
+		mustBeCoast = _mustBeCoast;
 		};
 	start_plot_database:GenerateRegions(args)
 
 	print("Choosing start locations for civilizations.");
-	start_plot_database:ChooseLocations()
+	start_plot_database:ChooseLocations(args)
 	
 	print("Normalizing start locations and assigning them to Players.");
 	start_plot_database:BalanceAndAssign(args)

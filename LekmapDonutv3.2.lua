@@ -18,8 +18,8 @@ include("MultilayeredFractal");
 function GetMapScriptInfo()
 	local world_age, temperature, rainfall, sea_level, resources = GetCoreMapOptions()
 	return {
-		Name = "Lekmap: Donut (v3.2)",
-		Description = "A map script made for Lekmod based of HB's Mapscript v8.1. Donut",
+		Name = "LoveMap: Donut (v3.0)",
+		Description = "TXT_KEY_MAP_DONUT_HELP",
 		IsAdvancedMap = false,
 		IconIndex = 18,
 		SortIndex = 2,
@@ -158,93 +158,25 @@ function GetMapScriptInfo()
 				DefaultValue = 2,
 				SortPriority = -90,
 			},
-
 			{
-				Name = "Land Size X",	-- add setting for land type (11) +28
+				Name = "Desert Size", -- (11) desertSize
 				Values = {
-					"30",
-					"32",
-					"34",
-					"36",
-					"38",
-					"40",
-					"42",
-					"44",
-					"46",
-					"48",
-					"50",
-					"52",
-					"54",
-					"56",
-					"58",
-					"60",
-					"62",
-					"64",
-					"66",
-					"68",
-					"70",
-					"72",
-					"74",
-					"76",
-					"78",
-					"80",
-					"82",
-					"84",
-					"86",
-					"88",
-					"90",
-					"92",
-					"94",
-					"96",
-					"98",
-					"100",
-					"102",
-					"104",
-					"106",
-					"108",
-					"110",
+					"sparse",
+					"average",
+					"plentiful",
 				},
-
-				DefaultValue = 8,
+				DefaultValue = 2,
 				SortPriority = -89,
 			},
 
 			{
-				Name = "Land Size Y",	-- add setting for land type (12) +18
+				Name = "Forest Size", -- (12) forestSize
 				Values = {
-					"20",
-					"22",
-					"24",
-					"26",
-					"28",
-					"30",
-					"32",
-					"34",
-					"36",
-					"38",
-					"40",
-					"42",
-					"44",
-					"46",
-					"48",
-					"50",
-					"52",
-					"54",
-					"56",
-					"58",
-					"60",
-					"62",
-					"64",
-					"66",
-					"68",
-					"70",
-					"72",
-					"74",
-					"76",
-
+					"sparse",
+					"average",
+					"plentiful",
 				},
-
-				DefaultValue = 13,
+				DefaultValue = 2,
 				SortPriority = -88,
 			},
 
@@ -336,17 +268,7 @@ function GetMapScriptInfo()
 				SortPriority = -80,
 			},
 			{
-				Name = "Desert Size", -- (20) desertSize
-				Values = {
-					"sparse",
-					"average",
-					"plentiful",
-				},
-				DefaultValue = 2,
-				SortPriority = -79,
-			},
-			{
-				Name = "TXT_KEY_MAP_OPTION_CENTER_REGION", -- (21)
+				Name = "TXT_KEY_MAP_OPTION_CENTER_REGION", -- (20)
 				Values = {
 					"TXT_KEY_MAP_OPTION_HILLS",
 					"TXT_KEY_MAP_OPTION_MOUNTAINS",
@@ -358,26 +280,30 @@ function GetMapScriptInfo()
 				DefaultValue = 3,
 				SortPriority = -78,
 			},
+			{
+				Name = "Must be coast", -- (21) force coastal start
+				Values = {
+					"Yes",
+					"No",
+				},
+				DefaultValue = 1,
+				SortPriority = -77,
+			},
 		},
 	};
 end
 ------------------------------------------------------------------------------
 function GetMapInitData(worldSize)
-	
-	local LandSizeX = 28 + (Map.GetCustomOption(11) * 2);
-	local LandSizeY = 18 + (Map.GetCustomOption(12) * 2);
 
-	local worldsizes = {};
-
-	worldsizes = {
-
-		[GameInfo.Worlds.WORLDSIZE_DUEL.ID] = {LandSizeX, LandSizeY}, -- 720
-		[GameInfo.Worlds.WORLDSIZE_TINY.ID] = {LandSizeX, LandSizeY}, -- 1664
-		[GameInfo.Worlds.WORLDSIZE_SMALL.ID] = {LandSizeX, LandSizeY}, -- 2480
-		[GameInfo.Worlds.WORLDSIZE_STANDARD.ID] = {LandSizeX, LandSizeY}, -- 3900
-		[GameInfo.Worlds.WORLDSIZE_LARGE.ID] = {LandSizeX, LandSizeY}, -- 6076
-		[GameInfo.Worlds.WORLDSIZE_HUGE.ID] = {LandSizeX, LandSizeY} -- 9424
-		}
+	-- Donut uses a square map grid.
+	local worldsizes = {
+		[GameInfo.Worlds.WORLDSIZE_DUEL.ID] = {24, 24},
+		[GameInfo.Worlds.WORLDSIZE_TINY.ID] = {36, 36},
+		[GameInfo.Worlds.WORLDSIZE_SMALL.ID] = {44, 44},
+		[GameInfo.Worlds.WORLDSIZE_STANDARD.ID] = {52, 52},
+		[GameInfo.Worlds.WORLDSIZE_LARGE.ID] = {64, 64},
+		[GameInfo.Worlds.WORLDSIZE_HUGE.ID] = {80, 80}
+	}
 		
 	local grid_size = worldsizes[worldSize];
 	--
@@ -386,7 +312,7 @@ function GetMapInitData(worldSize)
 		return {
 			Width = grid_size[1],
 			Height = grid_size[2],
-			WrapX = true,
+			WrapX = false,
 		}; 
 	end
 
@@ -402,7 +328,7 @@ function MultilayeredFractal:GeneratePlotsByRegion()
 	local fracFlags = {FRAC_WRAP_X = false, FRAC_POLAR = true};
 
 	-- Get user input.
-	hole_type = Map.GetCustomOption(21) -- Global
+	hole_type = Map.GetCustomOption(20) -- Global
 	
 	-- Get user input.
 	radiusSize = Map.GetCustomOption(17) -- Global
@@ -563,7 +489,7 @@ function GenerateTerrain()
 	print("Generating Terrain (Lua Donut) ...");
 	-- desertSize
 
-	local desertSize = 2 + 10 * Map.GetCustomOption(20); -- desertSize 12/22/32
+	local desertSize = 2 + 10 * Map.GetCustomOption(11); -- desertSize 12/22/32
 	local args = {
 		iDesertPercent = desertSize,
 	};
@@ -590,7 +516,20 @@ end
 function AddFeatures()
 	print("Adding Features (Lua Donut) ...");
 
-	local featuregen = FeatureGenerator.Create();
+	local rain = Map.GetCustomOption(3)
+	if rain == 4 then
+		rain = 1 + Map.Rand(3, "Random Rainfall - Lua");
+	end
+	local forestSize = 8 + 5 * Map.GetCustomOption(12);  -- forestSize 13/18/23
+
+	local args = {
+		rainfall = rain,
+		iForestPercent = forestSize,
+	};
+
+	local featuregen = FeatureGenerator.Create(args);
+
+
 
 	-- False parameter removes mountains from coastlines.
 	featuregen:AddFeatures(false);
@@ -635,6 +574,11 @@ function StartPlotSystem()
 	CoastLux = false
 	end
 
+	local _mustBeCoast = false;
+	if Map.GetCustomOption(21) == 1 then -- 21 on this
+		_mustBeCoast = true;
+	end
+
 	print("Creating start plot database.");
 	local start_plot_database = AssignStartingPlots.Create()
 	
@@ -649,11 +593,12 @@ function StartPlotSystem()
 		NoCoastInland = OnlyCoastal,
 		BalancedCoastal = BalancedCoastal,
 		MixedBias = MixedBias;
+		mustBeCoast = _mustBeCoast;
 		};
 	start_plot_database:GenerateRegions(args)
 
 	print("Choosing start locations for civilizations.");
-	start_plot_database:ChooseLocations()
+	start_plot_database:ChooseLocations(args)
 	
 	print("Normalizing start locations and assigning them to Players.");
 	start_plot_database:BalanceAndAssign(args)
