@@ -1,10 +1,11 @@
--------------------------------------------------------------------------------
---	FILE:	 Donut.lua
---	AUTHOR:  Bob Thomas (Sirian), Szczeepan
---	PURPOSE: Global map script - Circular continent with center region.
--------------------------------------------------------------------------------
+------------------------------------------------------------------------------
+--	FILE:	 Lekmapv2.2.lua (Modified Pangaea_Plus.lua)
+--	AUTHOR:  Original Bob Thomas, Changes HellBlazer, lek10, EnormousApplePie, Cirra, Meota
+--	PURPOSE: Global map script - Simulates a Pan-Earth Supercontinent, with
+--           numerous tectonic island chains.
+------------------------------------------------------------------------------
 --	Copyright (c) 2011 Firaxis Games, Inc. All rights reserved.
--------------------------------------------------------------------------------
+------------------------------------------------------------------------------
 
 include("HBMapGenerator");
 include("HBFractalWorld");
@@ -17,27 +18,64 @@ include("MultilayeredFractal");
 function GetMapScriptInfo()
 	local world_age, temperature, rainfall, sea_level, resources = GetCoreMapOptions()
 	return {
-		Name = "Donut feat. Szczeepan v1.1",
+		Name = "LoveMap: Donut (v3.0)",
 		Description = "TXT_KEY_MAP_DONUT_HELP",
+		IsAdvancedMap = false,
 		IconIndex = 18,
-		IconAtlas = "WORLDTYPE_ATLAS_3",
+		SortIndex = 2,
 		SupportsMultiplayer = true,
-		CustomOptions = {
+	CustomOptions = {
 			{
-				Name = "TXT_KEY_MAP_OPTION_CENTER_REGION", -- (1)
+				Name = "TXT_KEY_MAP_OPTION_WORLD_AGE", -- 1
 				Values = {
-					"TXT_KEY_MAP_OPTION_HILLS",
-					"TXT_KEY_MAP_OPTION_MOUNTAINS",
-					"TXT_KEY_MAP_OPTION_OCEAN",
-					"TXT_KEY_MAP_OPTION_DESERT",
-					"TXT_KEY_MAP_OPTION_STANDARD",
+					"TXT_KEY_MAP_OPTION_THREE_BILLION_YEARS",
+					"TXT_KEY_MAP_OPTION_FOUR_BILLION_YEARS",
+					"TXT_KEY_MAP_OPTION_FIVE_BILLION_YEARS",
+					"No Mountains",
 					"TXT_KEY_MAP_OPTION_RANDOM",
 				},
-				DefaultValue = 3,
-				SortPriority = 5,
+				DefaultValue = 2,
+				SortPriority = -99,
 			},
+
 			{
-			Name = "Start Locations",	-- 2 add resources defaults to random
+				Name = "TXT_KEY_MAP_OPTION_TEMPERATURE",	-- 2 add temperature defaults to random
+				Values = {
+					"TXT_KEY_MAP_OPTION_COOL",
+					"TXT_KEY_MAP_OPTION_TEMPERATE",
+					"TXT_KEY_MAP_OPTION_HOT",
+					"TXT_KEY_MAP_OPTION_RANDOM",
+				},
+				DefaultValue = 2,
+				SortPriority = -98,
+			},
+
+			{
+				Name = "TXT_KEY_MAP_OPTION_RAINFALL",	-- 3 add rainfall defaults to random
+				Values = {
+					"TXT_KEY_MAP_OPTION_ARID",
+					"TXT_KEY_MAP_OPTION_NORMAL",
+					"TXT_KEY_MAP_OPTION_WET",
+					"TXT_KEY_MAP_OPTION_RANDOM",
+				},
+				DefaultValue = 2,
+				SortPriority = -97,
+			},
+
+			{
+				Name = "TXT_KEY_MAP_OPTION_SEA_LEVEL",	-- 4 add sea level defaults to random.
+				Values = {
+					"TXT_KEY_MAP_OPTION_LOW",
+					"TXT_KEY_MAP_OPTION_MEDIUM",
+					"TXT_KEY_MAP_OPTION_HIGH",
+					"TXT_KEY_MAP_OPTION_RANDOM",
+				},
+				DefaultValue = 2,
+				SortPriority = -96,
+			},
+
+			{
+				Name = "Start Quality",	-- 5 add resources defaults to random
 				Values = {
 					"Legendary Start - Strat Balance",
 					"Legendary - Strat Balance + Uranium",
@@ -48,27 +86,22 @@ function GetMapScriptInfo()
 					"TXT_KEY_MAP_OPTION_RANDOM",
 				},
 				DefaultValue = 2,
-				SortPriority = 1,
+				SortPriority = -95,
 			},
+
 			{
-			Name = "TXT_KEY_MAP_OPTION_RESOURCES",	-- 3 add setting for resources
+				Name = "Start Distance",	-- 6 add resources defaults to random
 				Values = {
-					"1 -- Nearly Nothing",
-					"2",
-					"3",
-					"4",
-					"5 -- Default",
-					"6",
-					"7",
-					"8",
-					"9",
-					"10 -- Almost no normal tiles left",
+					"Close",
+					"Normal",
+					"Far - Warning: May sometimes crash during map generation",
 				},
-				DefaultValue = 5,
-				SortPriority = 2,
+				DefaultValue = 2,
+				SortPriority = -94,
 			},
+
 			{
-				Name = "Natural Wonders", -- 4 number of natural wonders to spawn
+				Name = "Natural Wonders", -- 7 number of natural wonders to spawn
 				Values = {
 					"0",
 					"1",
@@ -87,19 +120,120 @@ function GetMapScriptInfo()
 					"Default",
 				},
 				DefaultValue = 15,
-				SortPriority = 3,
-			},	
+				SortPriority = -93,
+			},
+
 			{
-				Name = "Must be coast", -- 5 force coastal start
+				Name = "Grass Moisture",	-- add setting for grassland mositure (8)
 				Values = {
-					"Yes",
-					"No",
+					"Wet",
+					"Normal",
+					"Dry",
 				},
-				DefaultValue = 1,
-				SortPriority = 4,
+
+				DefaultValue = 2,
+				SortPriority = -92,
+			},
+
+			{
+				Name = "Rivers",	-- add setting for rivers (9)
+				Values = {
+					"Sparse",
+					"Average",
+					"Plentiful",
+				},
+
+				DefaultValue = 2,
+				SortPriority = -91,
+			},
+
+			{
+				Name = "Tundra",	-- add setting for tundra (10)
+				Values = {
+					"Sparse",
+					"Average",
+					"Plentiful",
+				},
+
+				DefaultValue = 2,
+				SortPriority = -90,
 			},
 			{
-				Name = "Radius Size", -- (6) radiusSize
+				Name = "Desert Size", -- (11) desertSize
+				Values = {
+					"sparse",
+					"average",
+					"plentiful",
+				},
+				DefaultValue = 2,
+				SortPriority = -89,
+			},
+
+			{
+				Name = "Forest Size", -- (12) forestSize
+				Values = {
+					"sparse",
+					"average",
+					"plentiful",
+				},
+				DefaultValue = 2,
+				SortPriority = -88,
+			},
+
+			{
+				Name = "TXT_KEY_MAP_OPTION_RESOURCES",	-- add setting for resources (13)
+				Values = {
+					"1 -- Nearly Nothing",
+					"2",
+					"3",
+					"4",
+					"5 -- Default",
+					"6",
+					"7",
+					"8",
+					"9",
+					"10 -- Almost no normal tiles left",
+				},
+
+				DefaultValue = 5,
+				SortPriority = -87,
+			},
+
+			{
+				Name = "Coastal Spawns",	-- Can inland civ spawn on the coast (14)
+				Values = {
+					"Coastal Civs Only",
+					"Random",
+					"Random+ (~2 coastals)",
+				},
+
+				DefaultValue = 1,
+				SortPriority = -85,
+			},
+
+			{
+				Name = "Coastal Luxes",	-- Can coast spawns have non-coastal luxes (15)
+				Values = {
+					"Guaranteed",
+					"Random",
+				},
+
+				DefaultValue = 1,
+				SortPriority = -84,
+			},
+
+			{
+				Name = "Inland Sea Spawns",	-- Can coastal civ spawn on inland seas (16)
+				Values = {
+					"Allowed",
+					"Not Allowed for Coastal Civs",
+				},
+
+				DefaultValue = 1,
+				SortPriority = -83,
+			},
+			{
+				Name = "Radius Size", -- (17) radiusSize
 				Values = {
 					"0 - to the edge",
 					"1",
@@ -108,10 +242,10 @@ function GetMapScriptInfo()
 					"4 - default",
 				},
 				DefaultValue = 5,
-				SortPriority = 6,
+				SortPriority = -82,
 			},
 			{
-				Name = "Holy Radius Factor", -- (7) holyRadiusFactor
+				Name = "Holy Radius Factor", -- (18) holyRadiusFactor
 				Values = {
 					"1,5",
 					"2 - default",
@@ -119,10 +253,10 @@ function GetMapScriptInfo()
 					"4",
 				},
 				DefaultValue = 2,
-				SortPriority = 7,
+				SortPriority = -81,
 			},
 			{
-				Name = "Outside Region", -- (8) Outside terrain Type
+				Name = "Outside Region", -- (19) Outside terrain Type
 				Values = {
 					"TXT_KEY_MAP_OPTION_HILLS",
 					"TXT_KEY_MAP_OPTION_MOUNTAINS",
@@ -131,25 +265,36 @@ function GetMapScriptInfo()
 					"TXT_KEY_MAP_OPTION_RANDOM",
 				},
 				DefaultValue = 3,
-				SortPriority = 5,
+				SortPriority = -80,
 			},
 			{
-				Name = "Desert Size", -- (9) desertSize
+				Name = "TXT_KEY_MAP_OPTION_CENTER_REGION", -- (20)
 				Values = {
-					"sparse",
-					"average",
-					"plentiful",
+					"TXT_KEY_MAP_OPTION_HILLS",
+					"TXT_KEY_MAP_OPTION_MOUNTAINS",
+					"TXT_KEY_MAP_OPTION_OCEAN",
+					"TXT_KEY_MAP_OPTION_DESERT",
+					"TXT_KEY_MAP_OPTION_STANDARD",
+					"TXT_KEY_MAP_OPTION_RANDOM",
 				},
-				DefaultValue = 2,
-				SortPriority = 8,
+				DefaultValue = 3,
+				SortPriority = -78,
 			},
-		}
+			{
+				Name = "Must be coast", -- (21) force coastal start
+				Values = {
+					"Yes",
+					"No",
+				},
+				DefaultValue = 1,
+				SortPriority = -77,
+			},
+		},
 	};
 end
 ------------------------------------------------------------------------------
-
-------------------------------------------------------------------------------
 function GetMapInitData(worldSize)
+
 	-- Donut uses a square map grid.
 	local worldsizes = {
 		[GameInfo.Worlds.WORLDSIZE_DUEL.ID] = {24, 24},
@@ -158,20 +303,21 @@ function GetMapInitData(worldSize)
 		[GameInfo.Worlds.WORLDSIZE_STANDARD.ID] = {52, 52},
 		[GameInfo.Worlds.WORLDSIZE_LARGE.ID] = {64, 64},
 		[GameInfo.Worlds.WORLDSIZE_HUGE.ID] = {80, 80}
-		}
+	}
+		
 	local grid_size = worldsizes[worldSize];
 	--
 	local world = GameInfo.Worlds[worldSize];
-	if(world ~= nil) then
-	return {
-		Width = grid_size[1],
-		Height = grid_size[2],
-		WrapX = false,
-	};      
-     end
+	if (world ~= nil) then
+		return {
+			Width = grid_size[1],
+			Height = grid_size[2],
+			WrapX = false,
+		}; 
+	end
+
 end
 ------------------------------------------------------------------------------
-
 -------------------------------------------------------------------------------
 function MultilayeredFractal:GeneratePlotsByRegion()
 	-- Sirian's MultilayeredFractal controlling function.
@@ -182,19 +328,19 @@ function MultilayeredFractal:GeneratePlotsByRegion()
 	local fracFlags = {FRAC_WRAP_X = false, FRAC_POLAR = true};
 
 	-- Get user input.
-	hole_type = Map.GetCustomOption(1) -- Global
+	hole_type = Map.GetCustomOption(20) -- Global
 	
 	-- Get user input.
-	radiusSize = Map.GetCustomOption(6) -- Global
+	radiusSize = Map.GetCustomOption(17) -- Global
 	radiusSize = radiusSize - 1;
 	-- Get user input.
-	holyRadiusFactor = Map.GetCustomOption(7) -- Global
+	holyRadiusFactor = Map.GetCustomOption(18) -- Global
 	if holyRadiusFactor == 1 then
 		holyRadiusFactor = 1.5;
 	end
 	
 		-- Get user input.
-	outsideTerrainType = Map.GetCustomOption(8) -- Global
+	outsideTerrainType = Map.GetCustomOption(19) -- Global
 	
 	if outsideTerrainType == 5 then
 		outsideTerrainType = 1 + Map.Rand(4, "Random terrain type for outside region - Donut Lua");
@@ -343,7 +489,7 @@ function GenerateTerrain()
 	print("Generating Terrain (Lua Donut) ...");
 	-- desertSize
 
-	local desertSize = 2 + 10 * Map.GetCustomOption(9); -- desertSize 12/22/32
+	local desertSize = 2 + 10 * Map.GetCustomOption(11); -- desertSize 12/22/32
 	local args = {
 		iDesertPercent = desertSize,
 	};
@@ -370,100 +516,108 @@ end
 function AddFeatures()
 	print("Adding Features (Lua Donut) ...");
 
-	local featuregen = FeatureGenerator.Create();
+	local rain = Map.GetCustomOption(3)
+	if rain == 4 then
+		rain = 1 + Map.Rand(3, "Random Rainfall - Lua");
+	end
+	local forestSize = 8 + 5 * Map.GetCustomOption(12);  -- forestSize 13/18/23
+
+	local args = {
+		rainfall = rain,
+		iForestPercent = forestSize,
+	};
+
+	local featuregen = FeatureGenerator.Create(args);
+
+
 
 	-- False parameter removes mountains from coastlines.
 	featuregen:AddFeatures(false);
 end
 ------------------------------------------------------------------------------
 
-------------------------------------------------------------------------------
-function FixIslands()
-	--function to change some of the flat land tundra on islands to plains tiles
-	local iW, iH = Map.GetGridSize();
-	local biggest_area = Map.FindBiggestArea(False);
-	local iAreaID = biggest_area:GetID();
-
-	for y = 0, iH - 1 do
-		for x = 0, iW - 1 do
-			local i = iW * y + x;
-			local plot = Map.GetPlotByIndex(i);
-			plotAreaID = plot:GetArea();
-			if plotAreaID ~= iAreaID then
-				local terrainType = plot:GetTerrainType();
-				local plotType = plot:GetPlotType();
-
-				if terrainType == TerrainTypes.TERRAIN_TUNDRA then
-					if plotType ~= PlotTypes.PLOT_HILLS then
-						--give a chance to turn this flat tundra to plains
-						local tundratoplains = Map.Rand(100, "Plains Spwan Chance");
-						if tundratoplains >= 30 then
-							plot:SetTerrainType(TerrainTypes.TERRAIN_PLAINS, false, true);
-						end
-					end
-				end
-			end
-		end
-	end
-end
-
-------------------------------------------------------------------------------
 
 ------------------------------------------------------------------------------
 function StartPlotSystem()
 
-	local starts = Map.GetCustomOption(2); -- 5 Start Location
-	local res = Map.GetCustomOption(3); --15 Resources
-	local _mustBeCoast = false;
+	local RegionalMethod = 1;
+
+	-- Get Resources setting input by user.
+	local AllowInlandSea = Map.GetCustomOption(16)
+	local res = Map.GetCustomOption(13)
+	local starts = Map.GetCustomOption(5)
+	--if starts == 7 then
+		--starts = 1 + Map.Rand(8, "Random Resources Option - Lua");
+	--end
+
+	-- Handle coastal spawns and start bias
+	MixedBias = false;
+	if Map.GetCustomOption(14) == 1 then
+		OnlyCoastal = true;
+		BalancedCoastal = false;
+	end	
+	if Map.GetCustomOption(14) == 2 then
+		BalancedCoastal = false;
+		OnlyCoastal = false;
+	end
 	
-	if Map.GetCustomOption(5) == 1 then
+	if Map.GetCustomOption(14) == 3 then
+		OnlyCoastal = true;
+		BalancedCoastal = true;
+	end
+	
+	if Map.GetCustomOption(15) == 1 then
+	CoastLux = true
+	end
+
+	if Map.GetCustomOption(15) == 2 then
+	CoastLux = false
+	end
+
+	local _mustBeCoast = false;
+	if Map.GetCustomOption(21) == 1 then -- 21 on this
 		_mustBeCoast = true;
 	end
-	
-	if starts == 7 then
-		starts = 1 + Map.Rand(8, "Random Resources Option - Lua");
-	end
-	
-	local args = {
-		method = 1,
-		start_locations = starts,
-		resources = res,
-		BalancedCoastal = true,
-		mustBeCoast = _mustBeCoast;
-		};
-		
+
 	print("Creating start plot database.");
 	local start_plot_database = AssignStartingPlots.Create()
 	
 	print("Dividing the map in to Regions.");
 	-- Regional Division Method 1: Biggest Landmass
-
+	local args = {
+		method = RegionalMethod,
+		start_locations = starts,
+		resources = res,
+		AllowInlandSea = AllowInlandSea,
+		CoastLux = CoastLux,
+		NoCoastInland = OnlyCoastal,
+		BalancedCoastal = BalancedCoastal,
+		MixedBias = MixedBias;
+		mustBeCoast = _mustBeCoast;
+		};
 	start_plot_database:GenerateRegions(args)
 
 	print("Choosing start locations for civilizations.");
-		
 	start_plot_database:ChooseLocations(args)
 	
 	print("Normalizing start locations and assigning them to Players.");
 	start_plot_database:BalanceAndAssign(args)
 
-	print("########## Wonders ##########");
-	local wonders = Map.GetCustomOption(4) -- 6 Natural Wonders
+	print("Placing Natural Wonders.");
+	local wonders = Map.GetCustomOption(7)
 	if wonders == 14 then
 		wonders = Map.Rand(13, "Number of Wonders To Spawn - Lua");
 	else
 		wonders = wonders - 1;
 	end
-	
+
+	print("########## Wonders ##########");
 	print("Natural Wonders To Place: ", wonders);
 
 	local wonderargs = {
 		wonderamt = wonders,
 	};
-	
-	print("Placing Natural Wonders.");
-	start_plot_database:PlaceNaturalWonders(wonderargs)
-
+	start_plot_database:PlaceNaturalWonders(wonderargs);
 	print("Placing Resources and City States.");
 	start_plot_database:PlaceResourcesAndCityStates()
 end

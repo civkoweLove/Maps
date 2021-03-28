@@ -93,11 +93,12 @@ Here's a blank template to get started:
 
 
 ### maps details
-* Continents v0.9
+* Continents v3.0
   * FIX:
+	* HB Core and LekMap Core are changed into 3.2 (v3.0)
     * HB Core and LekMap Core are changed into 2.2 (v.09)
-    * Forest size is added with values: 13% sparse / 18% - average / 23% - plentiful (v.09)
-    * Desert size is added with values: 12%- sparse / 22% - average / 32% - plentiful (v.09)
+    * Forest size is added with values: 13% - sparse / 18% - average / 23% - plentiful (v.09)
+    * Desert size is added with values: 12% - sparse / 22% - average / 32% - plentiful (v.09)
     * OneContinent challenge is now possible - main continent is  bigger 3:1 than lower (v.08)
     * must be coast option added (v0.8)
     * mountains and hills are back again (v0.8)
@@ -106,10 +107,12 @@ Here's a blank template to get started:
   * BUGS:
     * no known bugs yet reported 
 
-* Donut v1.1
+* Donut v3.0
   * FIX:
+    * HB Core and LekMap Core are changed into 3.2 (v3.0)
+    * Forest size is added with values: 13% - sparse / 18% - average / 23% - plentiful (v3.0)
     * HB Core and LekMap Core are changed into 2.2 (v1.1) 
-    * Desert size is added with values: 12%- sparse / 22% - average / 32% - plentiful (v1.1)
+    * Desert size is added with values: 12% - sparse / 22% - average / 32% - plentiful (v1.1)
     * Added outside region options (hills, mountains, ocean, standard, random) (v1.0)
     * Radius Size and Holy Radius Factor added (v0.8)
     * must be coast option added (v0.7)
@@ -117,12 +120,27 @@ Here's a blank template to get started:
   * BUGS:
     * Must Be Coast with inland sea is bad option to use
     * default lake generator doing bugs with Mountains options. Sometimes u need restart map because start near lake and Mountain
-* Archipelago
+	
+* Archipelago v3.0
   * FIX:
-  * BUGS:
+  	* HB Core and LekMap Core are changed into 3.2 (v3.0)
     * HB Core and LekMap Core are changed into 2.20 (v.09)
-    * Players may spawn very close if 2 rich islands are close
+  * BUGS:
 
+    * Players may spawn very close if 2 rich islands are close
+* LEK Maps v3.2
+  * FIX & BUGS:
+    * https://docs.google.com/document/d/1MauhrNfVnieHRbVxEZlkdFWvFImhnbOiK8w04JyuOes/edit
+    * PangeaRectangular v3.3
+      * Forest size is added with values: 13% - sparse / 18% - average / 23% - plentiful (v3.3)
+      * Desert size is added with values: 12% - sparse / 22% - average / 32% - plentiful (v3.3)
+      * must be coast option added (v3.3)
+	* Oval v3.3
+      * Size are now fixed like Donut but + 6 bigger size X and size Y because of inalnd seas etc.
+      * Desert size is added with values: 12% - sparse / 22% - average / 32% - plentiful (v3.3)
+      * must be coast option added (v3.3)
+	* Lakes v3.3
+      * Fixed North / South Border (v3.3)
 <!-- GETTING STARTED -->
 ## Getting Started
 
