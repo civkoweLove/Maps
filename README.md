@@ -139,8 +139,6 @@ Here's a blank template to get started:
       * Size are now fixed like Donut but + 6 bigger size X and size Y because of inalnd seas etc.
       * Desert size is added with values: 12% - sparse / 22% - average / 32% - plentiful (v3.3)
       * must be coast option added (v3.3)
-	* Lakes v3.3
-      * Fixed North / South Border (v3.3)
 <!-- GETTING STARTED -->
 ## Getting Started
 
