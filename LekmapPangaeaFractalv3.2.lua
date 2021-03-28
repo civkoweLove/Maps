@@ -205,7 +205,7 @@ function GetMapScriptInfo()
 					"110",
 				},
 
-				DefaultValue = 17,
+				DefaultValue = 19,
 				SortPriority = -89,
 			},
 
@@ -244,7 +244,7 @@ function GetMapScriptInfo()
 
 				},
 
-				DefaultValue = 16,
+				DefaultValue = 12,
 				SortPriority = -88,
 			},
 
