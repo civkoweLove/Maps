@@ -109,7 +109,7 @@ Here's a blank template to get started:
 
 * Donut v3.0
   * FIX:
-	* HB Core and LekMap Core are changed into 3.2 (v3.0)
+    * HB Core and LekMap Core are changed into 3.2 (v3.0)
     * Forest size is added with values: 13% - sparse / 18% - average / 23% - plentiful (v3.0)
     * HB Core and LekMap Core are changed into 2.2 (v1.1) 
     * Desert size is added with values: 12% - sparse / 22% - average / 32% - plentiful (v1.1)
@@ -130,8 +130,17 @@ Here's a blank template to get started:
     * Players may spawn very close if 2 rich islands are close
 * LEK Maps v3.2
   * FIX & BUGS:
-  	* https://docs.google.com/document/d/1MauhrNfVnieHRbVxEZlkdFWvFImhnbOiK8w04JyuOes/edit
-
+    * https://docs.google.com/document/d/1MauhrNfVnieHRbVxEZlkdFWvFImhnbOiK8w04JyuOes/edit
+    * PangeaRectangular v3.3
+      * Forest size is added with values: 13% - sparse / 18% - average / 23% - plentiful (v3.3)
+      * Desert size is added with values: 12% - sparse / 22% - average / 32% - plentiful (v3.3)
+      * must be coast option added (v3.3)
+	* Oval v3.3
+      * Size are now fixed like Donut but + 6 bigger size X and size Y because of inalnd seas etc.
+      * Desert size is added with values: 12% - sparse / 22% - average / 32% - plentiful (v3.3)
+      * must be coast option added (v3.3)
+	* Lakes v3.3
+      * Fixed North / South Border (v3.3)
 <!-- GETTING STARTED -->
 ## Getting Started
 

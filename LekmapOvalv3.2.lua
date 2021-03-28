@@ -18,7 +18,7 @@ include("MultilayeredFractal");
 function GetMapScriptInfo()
 	local world_age, temperature, rainfall, sea_level, resources = GetCoreMapOptions()
 	return {
-		Name = "Lekmap: Oval (v3.2)",
+		Name = "Lekmap: Oval (v3.3)",
 		Description = "A map script made for Lekmod based of HB's Mapscript v8.1. Oval",
 		IsAdvancedMap = false,
 		IconIndex = 15,
@@ -159,93 +159,25 @@ function GetMapScriptInfo()
 				SortPriority = -90,
 			},
 
-			{
-				Name = "Land Size X",	-- add setting for land type (11) +28
-				Values = {
-					"30",
-					"32",
-					"34",
-					"36",
-					"38",
-					"40",
-					"42",
-					"44",
-					"46",
-					"48",
-					"50",
-					"52",
-					"54",
-					"56",
-					"58",
-					"60",
-					"62",
-					"64",
-					"66",
-					"68",
-					"70",
-					"72",
-					"74",
-					"76",
-					"78",
-					"80",
-					"82",
-					"84",
-					"86",
-					"88",
-					"90",
-					"92",
-					"94",
-					"96",
-					"98",
-					"100",
-					"102",
-					"104",
-					"106",
-					"108",
-					"110",
-				},
 
-				DefaultValue = 8,
-				SortPriority = -89,
+			{
+				Name = "Must be coast", -- (11) force coastal start
+				Values = {
+					"Yes",
+					"No",
+				},
+				DefaultValue = 2,
+				SortPriority = -82,
 			},
-
 			{
-				Name = "Land Size Y",	-- add setting for land type (12) +18
+				Name = "Desert Size", -- (12) desertSize
 				Values = {
-					"20",
-					"22",
-					"24",
-					"26",
-					"28",
-					"30",
-					"32",
-					"34",
-					"36",
-					"38",
-					"40",
-					"42",
-					"44",
-					"46",
-					"48",
-					"50",
-					"52",
-					"54",
-					"56",
-					"58",
-					"60",
-					"62",
-					"64",
-					"66",
-					"68",
-					"70",
-					"72",
-					"74",
-					"76",
-
+					"sparse",
+					"average",
+					"plentiful",
 				},
-
-				DefaultValue = 13,
-				SortPriority = -88,
+				DefaultValue = 2,
+				SortPriority = -81,
 			},
 
 			{
@@ -300,35 +232,30 @@ function GetMapScriptInfo()
 				DefaultValue = 1,
 				SortPriority = -83,
 			},
-		},
+
+	},
 	};
 end
 ------------------------------------------------------------------------------
 function GetMapInitData(worldSize)
 	
-	local LandSizeX = 28 + (Map.GetCustomOption(11) * 2);
-	local LandSizeY = 18 + (Map.GetCustomOption(12) * 2);
-
-	local worldsizes = {};
-
-	worldsizes = {
-
-		[GameInfo.Worlds.WORLDSIZE_DUEL.ID] = {LandSizeX, LandSizeY}, -- 720
-		[GameInfo.Worlds.WORLDSIZE_TINY.ID] = {LandSizeX, LandSizeY}, -- 1664
-		[GameInfo.Worlds.WORLDSIZE_SMALL.ID] = {LandSizeX, LandSizeY}, -- 2480
-		[GameInfo.Worlds.WORLDSIZE_STANDARD.ID] = {LandSizeX, LandSizeY}, -- 3900
-		[GameInfo.Worlds.WORLDSIZE_LARGE.ID] = {LandSizeX, LandSizeY}, -- 6076
-		[GameInfo.Worlds.WORLDSIZE_HUGE.ID] = {LandSizeX, LandSizeY} -- 9424
-		}
+	local worldsizes = {
+		[GameInfo.Worlds.WORLDSIZE_DUEL.ID] = {24, 24},
+		[GameInfo.Worlds.WORLDSIZE_TINY.ID] = {36, 36},
+		[GameInfo.Worlds.WORLDSIZE_SMALL.ID] = {44, 44},
+		[GameInfo.Worlds.WORLDSIZE_STANDARD.ID] = {52, 52},
+		[GameInfo.Worlds.WORLDSIZE_LARGE.ID] = {64, 64},
+		[GameInfo.Worlds.WORLDSIZE_HUGE.ID] = {80, 80}
+	}
 		
 	local grid_size = worldsizes[worldSize];
 	--
 	local world = GameInfo.Worlds[worldSize];
 	if (world ~= nil) then
 		return {
-			Width = grid_size[1],
-			Height = grid_size[2],
-			WrapX = true,
+			Width = grid_size[1] + 6, -- bigger than DONUT because of inland seas etc
+			Height = grid_size[2] + 6, -- bigger than DONUT because of inland seas etc
+			WrapX = true, -- here u can travel by east and west
 		}; 
 	end
 
@@ -440,7 +367,15 @@ function GenerateTerrain()
 		temp = 1 + Map.Rand(3, "Random Temperature - Lua");
 	end
 
-	local args = {temperature = temp};
+	local DesertPercent = 2 + 10 * Map.GetCustomOption(12); -- desertSize 12/22/32
+
+	local grassMoist = Map.GetCustomOption(8);
+
+	local args = {
+		temperature = temp,
+		iDesertPercent = DesertPercent,
+		iGrassMoist = grassMoist,
+	};
 	local terraingen = TerrainGenerator.Create(args);
 
 	terrainTypes = terraingen:GenerateTerrain();
@@ -485,6 +420,14 @@ function StartPlotSystem()
 	CoastLux = false
 	end
 
+	local _mustBeCoast = false;
+
+	if Map.GetCustomOption(11) == 1 then
+		_mustBeCoast = true;
+		print("mustBeCoast = true");
+	end
+
+
 	print("Creating start plot database.");
 	local start_plot_database = AssignStartingPlots.Create()
 	
@@ -499,11 +442,12 @@ function StartPlotSystem()
 		NoCoastInland = OnlyCoastal,
 		BalancedCoastal = BalancedCoastal,
 		MixedBias = MixedBias;
+		mustBeCoast = _mustBeCoast;
 		};
 	start_plot_database:GenerateRegions(args)
 
 	print("Choosing start locations for civilizations.");
-	start_plot_database:ChooseLocations()
+	start_plot_database:ChooseLocations(args)
 	
 	print("Normalizing start locations and assigning them to Players.");
 	start_plot_database:BalanceAndAssign(args)

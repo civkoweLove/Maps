@@ -18,7 +18,7 @@ include("MultilayeredFractal");
 function GetMapScriptInfo()
 	local world_age, temperature, rainfall, sea_level, resources = GetCoreMapOptions()
 	return {
-		Name = "Lekmap: Pangaea - Rectangular (v3.2)",
+		Name = "Lekmap: Pangaea - Rectangular (v3.3)",
 		Description = "A map script made for Lekmod based of HB's Mapscript v8.1. Pangaea - Rectangular",
 		IsAdvancedMap = false,
 		IconIndex = 0,
@@ -207,7 +207,7 @@ function GetMapScriptInfo()
 					"110",
 				},
 
-				DefaultValue = 14,
+				DefaultValue = 19,
 				SortPriority = -89,
 			},
 
@@ -246,7 +246,7 @@ function GetMapScriptInfo()
 
 				},
 
-				DefaultValue = 14,
+				DefaultValue = 12,
 				SortPriority = -88,
 			},
 
@@ -338,7 +338,7 @@ function GetMapScriptInfo()
 			},
 
 			{
-				Name = "Lakes",	-- add setting for Lakes (18)
+				Name = "Bays",	-- add setting for Bays (18)
 				Values = {
 					"Sparse",
 					"Average",
@@ -347,6 +347,36 @@ function GetMapScriptInfo()
 
 				DefaultValue = 1,
 				SortPriority = -82,
+			},
+
+			{
+				Name = "Must be coast", -- (19) force coastal start
+				Values = {
+					"Yes",
+					"No",
+				},
+				DefaultValue = 2,
+				SortPriority = -81,
+			},
+			{
+				Name = "Desert Size", -- (20) desertSize
+				Values = {
+					"sparse",
+					"average",
+					"plentiful",
+				},
+				DefaultValue = 2,
+				SortPriority = -80,
+			},
+			{
+				Name = "Forest Size", -- (21) forestSize
+				Values = {
+					"sparse",
+					"average",
+					"plentiful",
+				},
+				DefaultValue = 2,
+				SortPriority = -79,
 			},
 
 		},
@@ -1221,7 +1251,7 @@ end
 ------------------------------------------------------------------------------
 function GenerateTerrain()
 
-	local DesertPercent = 22;
+	local DesertPercent = 2 + 10 * Map.GetCustomOption(20); -- desertSize 12/22/32
 
 	-- Get Temperature setting input by user.
 	local temp = Map.GetCustomOption(2)
@@ -1285,8 +1315,13 @@ function AddFeatures()
 	if rain == 4 then
 		rain = 1 + Map.Rand(3, "Random Rainfall - Lua");
 	end
-	
-	local args = {rainfall = rain}
+	local forestSize = 8 + 5 * Map.GetCustomOption(21);  -- forestSize 13/18/23
+
+	local args = {
+		rainfall = rain,
+		iForestPercent = forestSize,
+	};
+
 	local featuregen = FeatureGenerator.Create(args);
 
 	-- False parameter removes mountains from coastlines.
@@ -1331,6 +1366,13 @@ function StartPlotSystem()
 	CoastLux = false
 	end
 
+	local _mustBeCoast = false;
+
+	if Map.GetCustomOption(19) == 1 then
+		_mustBeCoast = true;
+		print("mustBeCoast = true");
+	end
+
 	print("Creating start plot database.");
 	local start_plot_database = AssignStartingPlots.Create()
 	
@@ -1345,11 +1387,12 @@ function StartPlotSystem()
 		NoCoastInland = OnlyCoastal,
 		BalancedCoastal = BalancedCoastal,
 		MixedBias = MixedBias;
+		mustBeCoast = _mustBeCoast;
 		};
 	start_plot_database:GenerateRegions(args)
 
 	print("Choosing start locations for civilizations.");
-	start_plot_database:ChooseLocations()
+	start_plot_database:ChooseLocations(args)
 	
 	print("Normalizing start locations and assigning them to Players.");
 	start_plot_database:BalanceAndAssign(args)
