@@ -21,7 +21,7 @@ function FeatureGenerator.Create(args)
 	-- Temperature map options affect only terrain generation.
 	-- Rainfall map options affect only feature generation.
 	--	
-	local grassMoist = Map.GetCustomOption(8);
+
 
 	local args = args or {};
 	local rainfall = args.rainfall or 2; -- Default is Normal rainfall.
@@ -34,13 +34,15 @@ function FeatureGenerator.Create(args)
 	local iJungleFactor = args.iJungleFactor or 7;
 	local iAridFactor = args.iAridFactor or 6;
 	local iWetFactor = args.iWetFactor or 2;
-	local fMarshChange = args.fMarshChange or 1.5;
+	local fMarshChange = args.fMarshChange or 2
 	local fOasisChange = args.fOasisChange or 1.5;
 	local fracXExp = args.fracXExp or -1;
 	local fracYExp = args.fracYExp or -1;
 	
 	-- Set feature traits.
 	local iJunglePercent = args.iJunglePercent or 45;
+
+	local grassMoist = args.iGrassMoist or 2;
 
 	if grassMoist == 1 then
 		iJunglePercent = iJunglePercent - 5;
@@ -50,7 +52,7 @@ function FeatureGenerator.Create(args)
 
 	local iForestPercent = args.iForestPercent or 24;
 	local iClumpHeight = args.iClumpHeight or 75;
-	local fMarshPercent = args.fMarshPercent or 9;
+	local fMarshPercent = args.fMarshPercent or 10;
 	local iOasisPercent = args.iOasisPercent or 25;
 
 	-- if MapShape == 3 then

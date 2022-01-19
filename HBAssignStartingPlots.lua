@@ -4967,7 +4967,7 @@ function AssignStartingPlots:AddStrategicBalanceResources(region_number)
 	local shuf_list;
 	local placed_iron, placed_horse, placed_oil, placed_alum, placed_coal, placed_uran = false, false, false, false, false, false;
 
-	uran_amt = 1;
+	uran_amt = 2;
 
 	if table.maxn(iron_list) > 0 then
 		shuf_list = GetShuffledCopyOfTable(iron_list)
@@ -4995,7 +4995,7 @@ function AssignStartingPlots:AddStrategicBalanceResources(region_number)
 		end
 	end
 	
-	if self.start_locations == 5 or self.start_locations == 6 or self.start_locations == 1 or self.start_locations == 2 then
+	if self.start_locations == 5 or self.start_locations == 6 or self.start_locations == 7 or self.start_locations == 1 or self.start_locations == 2 then
 		if table.maxn(alum_list) > 0 then
 			shuf_list = GetShuffledCopyOfTable(alum_list)
 			iNumLeftToPlace = self:PlaceSpecificNumberOfResources(self.aluminum_ID, alum_amt, 1, 1, 1, 0, 0, shuf_list);
@@ -5005,7 +5005,7 @@ function AssignStartingPlots:AddStrategicBalanceResources(region_number)
 		end
 	end
 	
-	if self.start_locations == 4 or self.start_locations == 6 or self.start_locations == 1  or self.start_locations == 2 then
+	if self.start_locations == 4 or self.start_locations == 6 or self.start_locations == 7 or self.start_locations == 1  or self.start_locations == 2 then
 		if table.maxn(coal_list) > 0 then
 			shuf_list = GetShuffledCopyOfTable(coal_list)
 			iNumLeftToPlace = self:PlaceSpecificNumberOfResources(self.coal_ID, coal_amt, 1, 1, 1, 0, 0, shuf_list);
@@ -5015,7 +5015,7 @@ function AssignStartingPlots:AddStrategicBalanceResources(region_number)
 		end
 	end
 
-	if self.start_locations == 2 then
+	if self.start_locations == 2 or self.start_locations == 7 then
 		if table.maxn(uran_list) > 0 then
 			shuf_list = GetShuffledCopyOfTable(uran_list)
 			iNumLeftToPlace = self:PlaceSpecificNumberOfResources(self.uranium_ID, uran_amt, 2, 1, 1, 0, 0, shuf_list);
@@ -5049,19 +5049,19 @@ function AssignStartingPlots:AddStrategicBalanceResources(region_number)
 			--print("Not All Oil Placed");
 		end
 	end
-	if self.start_locations == 5 or self.start_locations == 6 or self.start_locations == 1 or self.start_locations == 2 then
+	if self.start_locations == 5 or self.start_locations == 6  or self.start_locations == 7 or self.start_locations == 1 or self.start_locations == 2 then
 		if placed_alum == false and table.maxn(alum_fallback) > 0 then
 			shuf_list = GetShuffledCopyOfTable(horse_fallback)
 			iNumLeftToPlace = self:PlaceSpecificNumberOfResources(self.aluminum_ID, alum_amt, 1, 1, 1, 0, 0, shuf_list);
 		end
 	end
-	if self.start_locations == 4 or self.start_locations == 6 or self.start_locations == 1 or self.start_locations == 2 then
+	if self.start_locations == 4 or self.start_locations == 6  or self.start_locations == 7 or self.start_locations == 1 or self.start_locations == 2 then
 		if placed_coal == false and table.maxn(coal_fallback) > 0 then
 			shuf_list = GetShuffledCopyOfTable(coal_fallback)
 			iNumLeftToPlace = self:PlaceSpecificNumberOfResources(self.coal_ID, coal_amt, 1, 1, 1, 0, 0, shuf_list);
 		end
 	end
-	if self.start_locations == 2 then
+	if self.start_locations == 2  or self.start_locations == 7 then
 		if placed_uran == false and table.maxn(uran_fallback) > 0 then
 			shuf_list = GetShuffledCopyOfTable(uran_fallback)
 			iNumLeftToPlace = self:PlaceSpecificNumberOfResources(self.uranium_ID, uran_amt, 2, 1, 1, 0, 0, shuf_list);
@@ -5486,7 +5486,7 @@ function AssignStartingPlots:NormalizeStartLocation(region_number)
 	end
 	
 	-- Add mandatory Iron, Horse, Oil to every start if Strategic Balance option is enabled.
-	if self.start_locations == 3 or self.start_locations == 4 or self.start_locations == 5 or self.start_locations == 6 or self.start_locations == 1 or self.start_locations == 2 then
+	if self.start_locations == 3 or self.start_locations == 4 or self.start_locations == 5 or self.start_locations == 6 or self.start_locations == 7 or self.start_locations == 1 or self.start_locations == 2 then
 		self:AddStrategicBalanceResources(region_number)
 	end
 	

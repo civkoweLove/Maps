@@ -21,10 +21,11 @@ function FeatureGenerator.Create(args)
 	-- Temperature map options affect only terrain generation.
 	-- Rainfall map options affect only feature generation.
 	--	
-	local grassMoist = Map.GetCustomOption(8);
+
 
 	local args = args or {};
 	local rainfall = args.rainfall or 2; -- Default is Normal rainfall.
+	local grassMoist = args.iGrassMoist or 2; -- default is Normal grassMoist
 	local jungle_grain = args.jungle_grain or 5;
 	local forest_grain = args.forest_grain or 6;
 	local clump_grain = args.clump_grain or 10;
@@ -77,7 +78,7 @@ function FeatureGenerator.Create(args)
 	else -- Rainfall is Normal.
 	end
 
-	--[[ Activate printout for debugging only.
+	-- Activate printout for debugging only.
 	print("-"); print("--- Rainfall Readout ---");
 	print("- Rainfall Setting:", rainfall);
 	print("- Jungle Percentage:", iJunglePercent);
@@ -86,7 +87,7 @@ function FeatureGenerator.Create(args)
 	print("- Marsh Percentage:", fMarshPercent);
 	print("- Oasis Percentage:", iOasisPercent);
 	print("- - - - - - - - - - - - - - -");
-	]]--
+
 
 	local gridWidth, gridHeight = Map.GetGridSize();
 	local world_info = GameInfo.Worlds[Map.GetWorldSize()];

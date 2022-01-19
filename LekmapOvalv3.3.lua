@@ -16,9 +16,8 @@ include("MultilayeredFractal");
 
 ------------------------------------------------------------------------------
 function GetMapScriptInfo()
-	local world_age, temperature, rainfall, sea_level, resources = GetCoreMapOptions()
 	return {
-		Name = "Lekmap: Oval (v3.3)",
+		Name = "Lekmap: Oval (v3.6)",
 		Description = "A map script made for Lekmod based of HB's Mapscript v8.1. Oval",
 		IsAdvancedMap = false,
 		IconIndex = 15,
@@ -75,7 +74,7 @@ function GetMapScriptInfo()
 			},
 
 			{
-				Name = "Start Quality",	-- 5 add resources defaults to random
+				Name = "Start Quality",	-- (5) add resources defaults to random
 				Values = {
 					"Legendary Start - Strat Balance",
 					"Legendary - Strat Balance + Uranium",
@@ -83,9 +82,10 @@ function GetMapScriptInfo()
 					"Strategic Balance With Coal",
 					"Strategic Balance With Aluminum",
 					"Strategic Balance With Coal & Aluminum",
+					"Strategic Balance With Coal & Aluminum & Uran",
 					"TXT_KEY_MAP_OPTION_RANDOM",
 				},
-				DefaultValue = 2,
+				DefaultValue = 7,
 				SortPriority = -95,
 			},
 
@@ -120,7 +120,7 @@ function GetMapScriptInfo()
 					"Default",
 				},
 				DefaultValue = 15,
-				SortPriority = -93,
+				SortPriority = -90,
 			},
 
 			{
@@ -132,7 +132,7 @@ function GetMapScriptInfo()
 				},
 
 				DefaultValue = 2,
-				SortPriority = -92,
+				SortPriority = -89,
 			},
 
 			{
@@ -144,7 +144,7 @@ function GetMapScriptInfo()
 				},
 
 				DefaultValue = 2,
-				SortPriority = -91,
+				SortPriority = -88,
 			},
 
 			{
@@ -156,7 +156,7 @@ function GetMapScriptInfo()
 				},
 
 				DefaultValue = 2,
-				SortPriority = -90,
+				SortPriority = -87,
 			},
 
 
@@ -196,7 +196,7 @@ function GetMapScriptInfo()
 				},
 
 				DefaultValue = 5,
-				SortPriority = -87,
+				SortPriority = -86,
 			},
 
 			{
@@ -233,30 +233,91 @@ function GetMapScriptInfo()
 				SortPriority = -83,
 			},
 
+			{
+				Name = "Forest Size", -- (17) forestSize
+				Values = {
+					"sparse",
+					"average",
+					"plentiful",
+				},
+				DefaultValue = 2,
+				SortPriority = -80,
+			},
+			{
+				Name = "Jungle Size", -- (18) jungleSize
+				Values = {
+					"sparse",
+					"average",
+					"plentiful",
+				},
+				DefaultValue = 2,
+				SortPriority = -79,
+			},
+			{
+				Name = "Marsh Size", -- (19) marshSize
+				Values = {
+					"sparse",
+					"average",
+					"plentiful",
+				},
+				DefaultValue = 2,
+				SortPriority = -78,
+			},
+			{
+				Name = "Map Dimensions", -- (20) mapSize
+				Values = {
+					"Cage",
+					"Standard",
+					"Big",
+					"Random",
+				},
+				DefaultValue = 2,
+				SortPriority = -100,
+			},
 	},
 	};
 end
 ------------------------------------------------------------------------------
 function GetMapInitData(worldSize)
-	
+
+	local mapSize = Map.GetCustomOption(20)
+	if mapSize == 4 then
+		mapSize = 1 + Map.Rand(3, "Random Map - Lua");
+	end
+	local curWidth = 20;
+	local curHeight = 20;
+	local factor = 10;
+
+	if mapSize == 1 then
+		curWidth = math.floor(curWidth * 0.8);
+		curHeight = math.floor(curHeight * 0.8);
+		factor = math.floor(factor * 0.8);
+	end
+
+	if mapSize == 3 then
+		curWidth = math.floor(curWidth * 1.15);
+		curHeight = math.floor(curHeight * 1.15);
+		factor = math.floor(factor * 1.15);
+	end
+
 	local worldsizes = {
-		[GameInfo.Worlds.WORLDSIZE_DUEL.ID] = {24, 24},
-		[GameInfo.Worlds.WORLDSIZE_TINY.ID] = {36, 36},
-		[GameInfo.Worlds.WORLDSIZE_SMALL.ID] = {44, 44},
-		[GameInfo.Worlds.WORLDSIZE_STANDARD.ID] = {52, 52},
-		[GameInfo.Worlds.WORLDSIZE_LARGE.ID] = {64, 64},
-		[GameInfo.Worlds.WORLDSIZE_HUGE.ID] = {80, 80}
+		[GameInfo.Worlds.WORLDSIZE_DUEL.ID] = {curWidth + factor, curHeight + factor},
+		[GameInfo.Worlds.WORLDSIZE_TINY.ID] = {curWidth + 2 * factor, curHeight + 2 *  factor},
+		[GameInfo.Worlds.WORLDSIZE_SMALL.ID] = {curWidth + 3 * factor, curHeight + 3 * factor},
+		[GameInfo.Worlds.WORLDSIZE_STANDARD.ID] = {curWidth + 4 * factor, curHeight + 4 * factor},
+		[GameInfo.Worlds.WORLDSIZE_LARGE.ID] = {curWidth + 5 * factor, curHeight + 5 * factor},
+		[GameInfo.Worlds.WORLDSIZE_HUGE.ID] = {curWidth + 6 * factor, curHeight + 6 * factor}
 	}
-		
+
 	local grid_size = worldsizes[worldSize];
 	--
 	local world = GameInfo.Worlds[worldSize];
 	if (world ~= nil) then
 		return {
-			Width = grid_size[1] + 6, -- bigger than DONUT because of inland seas etc
-			Height = grid_size[2] + 6, -- bigger than DONUT because of inland seas etc
+			Width = grid_size[1],
+			Height = grid_size[2],
 			WrapX = true, -- here u can travel by east and west
-		}; 
+		};
 	end
 
 end
@@ -339,7 +400,7 @@ function MultilayeredFractal:GeneratePlotsByRegion()
 		world_age = world_age,
 	};
 	self:ApplyTectonics(args)
-		
+
 	-- Plot Type generation completed. Return global plot array.
 	return self.wholeworldPlotTypes
 end
@@ -367,20 +428,42 @@ function GenerateTerrain()
 		temp = 1 + Map.Rand(3, "Random Temperature - Lua");
 	end
 
-	local DesertPercent = 2 + 10 * Map.GetCustomOption(12); -- desertSize 12/22/32
-
-	local grassMoist = Map.GetCustomOption(8);
 
 	local args = {
 		temperature = temp,
-		iDesertPercent = DesertPercent,
-		iGrassMoist = grassMoist,
+		iDesertPercent = 2 + 10 * Map.GetCustomOption(12),-- desertSize 12/22/32
+		rainfall = Map.GetCustomOption(3),
+		iGrassMoist = Map.GetCustomOption(8),
+		tundra = Map.GetCustomOption(10),
+
 	};
 	local terraingen = TerrainGenerator.Create(args);
 
 	terrainTypes = terraingen:GenerateTerrain();
 	
 	SetTerrainTypes(terrainTypes);
+end
+
+------------------------------------------------------------------------------
+function AddFeatures()
+
+	-- Get Rainfall setting input by user.
+	local rain = Map.GetCustomOption(3)
+	if rain == 4 then
+		rain = 1 + Map.Rand(3, "Random Rainfall - Lua");
+	end
+
+	local args = {
+		rainfall = rain,
+		iGrassMoist = Map.GetCustomOption(8),
+		iForestPercent = 13 + 5 * Map.GetCustomOption(17),  -- forestSize 18/23/28
+		iJunglePercent = 15 + 15 * Map.GetCustomOption(18),  -- jungleSize 30/45/60
+		fMarshPercent =  3 + 7 * Map.GetCustomOption(19), -- marshSize 10/17/24
+	};
+	local featuregen = FeatureGenerator.Create(args);
+
+	-- False parameter removes mountains from coastlines.
+	featuregen:AddFeatures(false);
 end
 
 ------------------------------------------------------------------------------
