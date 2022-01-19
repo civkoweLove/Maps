@@ -209,7 +209,7 @@ function GetMapScriptInfo()
 				},
 
 				DefaultValue = 1,
-				SortPriority = -85,
+				SortPriority = -86,
 			},
 
 			{
@@ -220,7 +220,7 @@ function GetMapScriptInfo()
 				},
 
 				DefaultValue = 1,
-				SortPriority = -84,
+				SortPriority = -85,
 			},
 
 			{
@@ -231,7 +231,7 @@ function GetMapScriptInfo()
 				},
 
 				DefaultValue = 1,
-				SortPriority = -83,
+				SortPriority = -84,
 			},
 			{
 				Name = "Radius Size", -- (17) radiusSize
@@ -243,7 +243,7 @@ function GetMapScriptInfo()
 					"4 - default",
 				},
 				DefaultValue = 5,
-				SortPriority = -82,
+				SortPriority = -83,
 			},
 			{
 				Name = "Holy Radius Factor", -- (18) holyRadiusFactor
@@ -254,7 +254,7 @@ function GetMapScriptInfo()
 					"4",
 				},
 				DefaultValue = 2,
-				SortPriority = -81,
+				SortPriority = -82,
 			},
 			{
 				Name = "Outside Region", -- (19) Outside terrain Type
@@ -266,7 +266,7 @@ function GetMapScriptInfo()
 					"TXT_KEY_MAP_OPTION_RANDOM",
 				},
 				DefaultValue = 3,
-				SortPriority = -80,
+				SortPriority = -81,
 			},
 			{
 				Name = "TXT_KEY_MAP_OPTION_CENTER_REGION", -- (20)
@@ -279,7 +279,7 @@ function GetMapScriptInfo()
 					"TXT_KEY_MAP_OPTION_RANDOM",
 				},
 				DefaultValue = 3,
-				SortPriority = -78,
+				SortPriority = -80,
 			},
 			{
 				Name = "Must be coast", -- (21) force coastal start
@@ -288,7 +288,7 @@ function GetMapScriptInfo()
 					"No",
 				},
 				DefaultValue = 1,
-				SortPriority = -77,
+				SortPriority = -79,
 			},
 
 			{
@@ -299,7 +299,7 @@ function GetMapScriptInfo()
 					"plentiful",
 				},
 				DefaultValue = 2,
-				SortPriority = -79,
+				SortPriority = -78,
 			},
 
 			{
@@ -310,7 +310,7 @@ function GetMapScriptInfo()
 					"plentiful",
 				},
 				DefaultValue = 2,
-				SortPriority = -78,
+				SortPriority = -77,
 			},
 
 			{

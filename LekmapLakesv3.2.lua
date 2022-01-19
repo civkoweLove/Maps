@@ -287,7 +287,7 @@ function GetMapInitData(worldSize)
 		return {
 			Width = grid_size[1],
 			Height = grid_size[2],
-			WrapX = false,
+			WrapX = true,
 		};
 	end
 

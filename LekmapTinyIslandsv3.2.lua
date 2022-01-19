@@ -242,29 +242,35 @@ function GetMapInitData(worldSize)
 	if mapSize == 4 then
 		mapSize = 1 + Map.Rand(3, "Random Map - Lua");
 	end
-	local curWidth = 20;
+	local curWidth = 25;
 	local curHeight = 20;
-	local factor = 10;
+	local factorW = 15;
+	local factorH = 10;
 
 	if mapSize == 1 then
 		curWidth = math.floor(curWidth * 0.8);
 		curHeight = math.floor(curHeight * 0.8);
-		factor = math.floor(factor * 0.8);
+		factorW = math.floor(factorW * 0.8);
+		factorH = math.floor(factorH * 0.8);
 	end
 
 	if mapSize == 3 then
 		curWidth = math.floor(curWidth * 1.15);
 		curHeight = math.floor(curHeight * 1.15);
-		factor = math.floor(factor * 1.15);
+		factorW = math.floor(factorW * 1.15);
+		factorH = math.floor(factorH * 1.15);
 	end
 
-	local worldsizes = {
-		[GameInfo.Worlds.WORLDSIZE_DUEL.ID] = {curWidth + factor, curHeight + factor},
-		[GameInfo.Worlds.WORLDSIZE_TINY.ID] = {curWidth + 2 * factor, curHeight + 2 *  factor},
-		[GameInfo.Worlds.WORLDSIZE_SMALL.ID] = {curWidth + 3 * factor, curHeight + 3 * factor},
-		[GameInfo.Worlds.WORLDSIZE_STANDARD.ID] = {curWidth + 4 * factor, curHeight + 4 * factor},
-		[GameInfo.Worlds.WORLDSIZE_LARGE.ID] = {curWidth + 5 * factor, curHeight + 5 * factor},
-		[GameInfo.Worlds.WORLDSIZE_HUGE.ID] = {curWidth + 6 * factor, curHeight + 6 * factor}
+	local worldsizes = {};
+
+	worldsizes = {
+
+		[GameInfo.Worlds.WORLDSIZE_DUEL.ID] = {curWidth + factorW, curHeight + factorH},
+		[GameInfo.Worlds.WORLDSIZE_TINY.ID] = {curWidth + 2 * factorW, curHeight + 2 *  factorH},
+		[GameInfo.Worlds.WORLDSIZE_SMALL.ID] = {curWidth + 3 * factorW, curHeight + 3 * factorH},
+		[GameInfo.Worlds.WORLDSIZE_STANDARD.ID] = {curWidth + 4 * factorW, curHeight + 4 * factorH},
+		[GameInfo.Worlds.WORLDSIZE_LARGE.ID] = {curWidth + 5 * factorW, curHeight + 5 * factorH},
+		[GameInfo.Worlds.WORLDSIZE_HUGE.ID] = {curWidth + 6 * factorW, curHeight + 6 * factorH}
 	}
 
 	local grid_size = worldsizes[worldSize];
@@ -274,7 +280,7 @@ function GetMapInitData(worldSize)
 		return {
 			Width = grid_size[1],
 			Height = grid_size[2],
-			WrapX = true, -- here u can travel by east and west
+			WrapX = true,
 		};
 	end
 
