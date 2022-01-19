@@ -18,7 +18,7 @@ include("MultilayeredFractal");
 function GetMapScriptInfo()
 	local world_age, temperature, rainfall, sea_level, resources = GetCoreMapOptions()
 	return {
-		Name = "Lekmap: Pangaea - Rectangular (v3.3)",
+		Name = "Lekmap: Pangaea - Rectangular (v3.6)",
 		Description = "A map script made for Lekmod based of HB's Mapscript v8.1. Pangaea - Rectangular",
 		IsAdvancedMap = false,
 		IconIndex = 0,

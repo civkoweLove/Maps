@@ -8,7 +8,7 @@ include("MultilayeredFractal");
 ------------------------------------------------------------------------------
 function GetMapScriptInfo()
 	return {
-		Name = "LoveMap: Archipelago (v3.0)",
+		Name = "LoveMap: Archipelago (v3.6)",
 		Description = "TXT_KEY_MAP_ARCHIPELAGO_HELP",
 		IconIndex = 2, --Archipelago Icon
 		SupportsMultiplayer = true,

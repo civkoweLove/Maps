@@ -18,7 +18,7 @@ include("MultilayeredFractal");
 function GetMapScriptInfo()
 	local world_age, temperature, rainfall, sea_level, resources = GetCoreMapOptions()
 	return {
-		Name = "LoveMap: Donut (v3.0)",
+		Name = "LoveMap: Donut (v3.6)",
 		Description = "TXT_KEY_MAP_DONUT_HELP",
 		IsAdvancedMap = false,
 		IconIndex = 18,
