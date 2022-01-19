@@ -75,7 +75,7 @@ function GetMapScriptInfo()
 			},
 
 			{
-				Name = "Start Quality",	-- 5 add resources defaults to random
+				Name = "Start Quality",	-- (5) add resources defaults to random
 				Values = {
 					"Legendary Start - Strat Balance",
 					"Legendary - Strat Balance + Uranium",
@@ -83,9 +83,10 @@ function GetMapScriptInfo()
 					"Strategic Balance With Coal",
 					"Strategic Balance With Aluminum",
 					"Strategic Balance With Coal & Aluminum",
+					"Strategic Balance With Coal & Aluminum & Uran",
 					"TXT_KEY_MAP_OPTION_RANDOM",
 				},
-				DefaultValue = 2,
+				DefaultValue = 7,
 				SortPriority = -95,
 			},
 
@@ -289,22 +290,76 @@ function GetMapScriptInfo()
 				DefaultValue = 1,
 				SortPriority = -77,
 			},
+
+			{
+				Name = "Jungle Size", -- (22) jungleSize
+				Values = {
+					"sparse",
+					"average",
+					"plentiful",
+				},
+				DefaultValue = 2,
+				SortPriority = -79,
+			},
+
+			{
+				Name = "Marsh Size", -- (23) marshSize
+				Values = {
+					"sparse",
+					"average",
+					"plentiful",
+				},
+				DefaultValue = 2,
+				SortPriority = -78,
+			},
+
+			{
+				Name = "Map Dimensions", -- (24) mapSize
+				Values = {
+					"Cage",
+					"Standard",
+					"Big",
+					"Random",
+				},
+				DefaultValue = 2,
+				SortPriority = -100,
+			},
 		},
 	};
 end
 ------------------------------------------------------------------------------
 function GetMapInitData(worldSize)
 
-	-- Donut uses a square map grid.
+	local mapSize = Map.GetCustomOption(24)
+	if mapSize == 4 then
+		mapSize = 1 + Map.Rand(3, "Random Map - Lua");
+	end
+
+	local curWidth = 14;
+	local curHeight = 14;
+	local factor = 10;
+
+	if mapSize == 1 then
+		curWidth = math.floor(curWidth * 0.8);
+		curHeight = math.floor(curHeight * 0.8);
+		factor = math.floor(factor * 0.8);
+	end
+
+	if mapSize == 3 then
+		curWidth = math.floor(curWidth * 1.15);
+		curHeight = math.floor(curHeight * 1.15);
+		factor = math.floor(factor * 1.15);
+	end
+
 	local worldsizes = {
-		[GameInfo.Worlds.WORLDSIZE_DUEL.ID] = {24, 24},
-		[GameInfo.Worlds.WORLDSIZE_TINY.ID] = {36, 36},
-		[GameInfo.Worlds.WORLDSIZE_SMALL.ID] = {44, 44},
-		[GameInfo.Worlds.WORLDSIZE_STANDARD.ID] = {52, 52},
-		[GameInfo.Worlds.WORLDSIZE_LARGE.ID] = {64, 64},
-		[GameInfo.Worlds.WORLDSIZE_HUGE.ID] = {80, 80}
+		[GameInfo.Worlds.WORLDSIZE_DUEL.ID] = {curWidth + factor, curHeight + factor},
+		[GameInfo.Worlds.WORLDSIZE_TINY.ID] = {curWidth + 2 * factor, curHeight + 2 *  factor},
+		[GameInfo.Worlds.WORLDSIZE_SMALL.ID] = {curWidth + 3 * factor, curHeight + 3 * factor},
+		[GameInfo.Worlds.WORLDSIZE_STANDARD.ID] = {curWidth + 4 * factor, curHeight + 4 * factor},
+		[GameInfo.Worlds.WORLDSIZE_LARGE.ID] = {curWidth + 5 * factor, curHeight + 5 * factor},
+		[GameInfo.Worlds.WORLDSIZE_HUGE.ID] = {curWidth + 6 * factor, curHeight + 6 * factor}
 	}
-		
+
 	local grid_size = worldsizes[worldSize];
 	--
 	local world = GameInfo.Worlds[worldSize];
@@ -313,8 +368,9 @@ function GetMapInitData(worldSize)
 			Width = grid_size[1],
 			Height = grid_size[2],
 			WrapX = false,
-		}; 
+		};
 	end
+
 
 end
 ------------------------------------------------------------------------------
@@ -489,9 +545,13 @@ function GenerateTerrain()
 	print("Generating Terrain (Lua Donut) ...");
 	-- desertSize
 
-	local desertSize = 2 + 10 * Map.GetCustomOption(11); -- desertSize 12/22/32
 	local args = {
-		iDesertPercent = desertSize,
+		temperature = temp,
+		iDesertPercent = 2 + 10 * Map.GetCustomOption(11),-- desertSize 12/22/32
+		rainfall = Map.GetCustomOption(3),
+		iGrassMoist = Map.GetCustomOption(8),
+		tundra = Map.GetCustomOption(10),
+
 	};
 
 	local terraingen = TerrainGenerator.Create(args);
@@ -520,11 +580,13 @@ function AddFeatures()
 	if rain == 4 then
 		rain = 1 + Map.Rand(3, "Random Rainfall - Lua");
 	end
-	local forestSize = 8 + 5 * Map.GetCustomOption(12);  -- forestSize 13/18/23
 
 	local args = {
 		rainfall = rain,
-		iForestPercent = forestSize,
+		iGrassMoist = Map.GetCustomOption(8),
+		iForestPercent = 13 + 5 * Map.GetCustomOption(12),  -- forestSize 18/23/28
+		iJunglePercent = 15 + 15 * Map.GetCustomOption(22),  -- jungleSize 30/45/60
+		fMarshPercent =  3 + 7 * Map.GetCustomOption(23), -- marshSize 10/17/24
 	};
 
 	local featuregen = FeatureGenerator.Create(args);

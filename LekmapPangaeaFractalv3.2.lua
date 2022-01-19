@@ -149,7 +149,7 @@ function GetMapScriptInfo()
 			},
 
 			{
-				Name = "Tundra",	-- add setting for tundra (10)
+				Name = "Tundra",	-- add setting for tundraSize (10)
 				Values = {
 					"Sparse",
 					"Average",
@@ -167,7 +167,7 @@ function GetMapScriptInfo()
 					"plentiful",
 				},
 				DefaultValue = 2,
-				SortPriority = -80,
+				SortPriority = -89,
 			},
 			{
 				Name = "Jungle Size", -- (12) jungleSize
@@ -177,7 +177,7 @@ function GetMapScriptInfo()
 					"plentiful",
 				},
 				DefaultValue = 2,
-				SortPriority = -79,
+				SortPriority = -87,
 			},
 			{
 				Name = "TXT_KEY_MAP_OPTION_RESOURCES",	-- add setting for resources (13)
@@ -195,7 +195,7 @@ function GetMapScriptInfo()
 				},
 
 				DefaultValue = 5,
-				SortPriority = -87,
+				SortPriority = -86,
 			},
 
 			{
@@ -229,7 +229,7 @@ function GetMapScriptInfo()
 				},
 
 				DefaultValue = 13,
-				SortPriority = -86,
+				SortPriority = -85,
 			},
 
 			{
@@ -241,7 +241,7 @@ function GetMapScriptInfo()
 				},
 
 				DefaultValue = 1,
-				SortPriority = -85,
+				SortPriority = -84,
 			},
 
 			{
@@ -252,7 +252,7 @@ function GetMapScriptInfo()
 				},
 
 				DefaultValue = 1,
-				SortPriority = -84,
+				SortPriority = -83,
 			},
 
 			{
@@ -263,7 +263,7 @@ function GetMapScriptInfo()
 				},
 
 				DefaultValue = 1,
-				SortPriority = -83,
+				SortPriority = -82,
 			},
 			{
 				Name = "Desert Size", -- (18) desertSize
@@ -273,7 +273,7 @@ function GetMapScriptInfo()
 					"plentiful",
 				},
 				DefaultValue = 2,
-				SortPriority = -85,
+				SortPriority = -81,
 			},
 			{
 				Name = "Marsh Size", -- (19) marshSize
@@ -283,7 +283,7 @@ function GetMapScriptInfo()
 					"plentiful",
 				},
 				DefaultValue = 2,
-				SortPriority = -78,
+				SortPriority = -80,
 			},
 			{
 				Name = "Map Dimensions", -- (20) mapSize
@@ -1407,7 +1407,7 @@ function GenerateTerrain()
 		iDesertPercent = 2 + 10 * Map.GetCustomOption(18),-- desertSize 12/22/32
 		rainfall = Map.GetCustomOption(3),
 		iGrassMoist = Map.GetCustomOption(8),
-		tundra = Map.GetCustomOption(10),
+		tundra = Map.GetCustomOption(10), -- tundraSize
 			};
 
 	local terraingen = TerrainGenerator.Create(args);
