@@ -267,17 +267,17 @@ function GetMapInitData(worldSize)
 	local factorH = 10;
 
 	if mapSize == 1 then
-		curWidth = math.floor(curWidth * 0.8);
-		curHeight = math.floor(curHeight * 0.8);
-		factorW = math.floor(factorW * 0.8);
-		factorH = math.floor(factorH * 0.8);
+		curWidth = math.floor(curWidth * 0.65);
+		curHeight = math.floor(curHeight * 0.65);
+		factorW = math.floor(factorW * 0.65);
+		factorH = math.floor(factorH * 0.65);
 	end
 
-	if mapSize == 3 then
-		curWidth = math.floor(curWidth * 1.15);
-		curHeight = math.floor(curHeight * 1.15);
-		factorW = math.floor(factorW * 1.15);
-		factorH = math.floor(factorH * 1.15);
+	if mapSize == 2 then
+		curWidth = math.floor(curWidth * 0.85);
+		curHeight = math.floor(curHeight * 0.85);
+		factorW = math.floor(factorW * 0.85);
+		factorH = math.floor(factorH * 0.85);
 	end
 
 	local worldsizes = {};
