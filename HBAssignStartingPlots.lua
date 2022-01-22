@@ -9410,7 +9410,7 @@ function AssignStartingPlots:AssignLuxuryToRegion(region_number)
 					end
 				-- Land-based resources are automatically approved if they were in the region's option table.
 				--res_ID == self.salt_ID
-				elseif res_ID == self.salt_ID or res_ID == self.spices_ID or res_ID == self.gems_ID or res_ID == self.obsidian_ID then
+				elseif res_ID == self.salt_ID or res_ID == self.spices_ID or res_ID == self.gems_ID or res_ID == self.obsidian_ID or resID == self.rubber_ID then
 					-- No salt to regions please, sorry
 				else
 					table.insert(resource_IDs, res_ID);
