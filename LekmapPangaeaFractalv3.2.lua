@@ -554,7 +554,7 @@ function PangaeaFractalWorld:GeneratePlotTypes(args)
 				end
 				iAttempts = iAttempts + 1;
 
-				--[[--Printout for debug use only
+
 				print("-"); print("--- Pangaea landmass generation, Attempt#", iAttempts, "---");
 				print("- This attempt successful: ", done);
 				print("- Total Land Plots in world:", iNumTotalLandTiles);
@@ -563,7 +563,7 @@ function PangaeaFractalWorld:GeneratePlotTypes(args)
 				print("- Continent Grain for this attempt: ", grain_dice);
 				print("- Rift Grain for this attempt: ", rift_dice);
 				print("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -");
-				print(".");--]]
+				print(".");
 		
 			end
 
@@ -1422,11 +1422,13 @@ function GenerateTerrain()
 	end
 
 	local grassMoist = Map.GetCustomOption(8);
+	local tundralocal = Map.GetCustomOption(10);
 
 	local args = {
 			temperature = temp,
 			iDesertPercent = DesertPercent,
 			iGrassMoist = grassMoist,
+			tundra = tundralocal;
 			};
 
 	local terraingen = TerrainGenerator.Create(args);

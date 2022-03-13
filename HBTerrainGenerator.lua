@@ -34,16 +34,19 @@ function TerrainGenerator.Create(args)
 	-- Set terrain bands.
 	local iDesertPercent = args.iDesertPercent or 32;
 	local iPlainsPercent = args.iPlainsPercent or 50; -- Deserts are processed first, so Plains will take this percentage of whatever remains. - Bob
+	local fGrassLatitude = args.fGrassLatitude or 0.08; -- Above this is actually the latitude where it stops being all grass. - Bob
 
 	if grassMoist == 1 then
-		iPlainsPercent = 50;
+		iPlainsPercent = 30;
+		fGrassLatitude = 0.01;
 	elseif grassMoist == 3 then
 		iPlainsPercent = 80;
+		fGrassLatitude = 0.05;
 	end
 
 	local fSnowLatitude  = args.fSnowLatitude  or 0.90;
 	
-	local tundra_level = Map.GetCustomOption(10)
+	local tundra_level = args.tundra or 2;
 
 	local fTundraLatitude = args.fTundraLatitude or 0.59;
 
@@ -53,11 +56,6 @@ function TerrainGenerator.Create(args)
 		fTundraLatitude = 0.35;
 	end
 
-	local fGrassLatitude = args.fGrassLatitude or 0.1; -- Above this is actually the latitude where it stops being all grass. - Bob
-	
-	if grassMoist == 3 then
-		fGrassLatitude = 0.05;
-	end
 
 	local fDesertBottomLatitude = args.fDesertBottomLatitude or 0.2;
 	local fDesertTopLatitude = args.fDesertTopLatitude or 0.5;
@@ -75,6 +73,7 @@ function TerrainGenerator.Create(args)
 		fGrassLatitude = fGrassLatitude - (temperature_shift * 0.5);
 	else -- Normal Temperature.
 	end
+
 	
 	--[[ Activate printout for debugging only
 	print("-"); print("- Desert Percentage:", iDesertPercent);
@@ -103,7 +102,7 @@ function TerrainGenerator.Create(args)
 		fractalFlags	= Map.GetFractalFlags(), 
 		iWidth			= gridWidth,
 		iHeight			= gridHeight,
-		
+
 		iDesertPercent	= iDesertPercent,
 		iPlainsPercent	= iPlainsPercent,
 
@@ -117,7 +116,7 @@ function TerrainGenerator.Create(args)
 		fGrassLatitude			= fGrassLatitude,
 		fDesertBottomLatitude	= fDesertBottomLatitude,
 		fDesertTopLatitude		= fDesertTopLatitude,
-		
+
 		fracXExp		= fracXExp,
 		fracYExp		= fracYExp,
 		

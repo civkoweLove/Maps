@@ -1072,7 +1072,6 @@ function AddFeatures()
 	-- False parameter removes mountains from coastlines.
 	featuregen:AddFeatures(false);
 end
-------------------------------------------------------------------------------
 
 ------------------------------------------------------------------------------
 function StartPlotSystem()

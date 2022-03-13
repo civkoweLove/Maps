@@ -4720,16 +4720,16 @@ function AssignStartingPlots:AddStrategicBalanceResources(region_number)
 	local iron_fallback, horse_fallback, oil_fallback, alum_fallback, coal_fallback, uran_fallback = {}, {}, {}, {}, {}, {};
 	local radius = 3;
 	local OilToPlace = 2;
-	
-	--print("- Adding Strategic Balance Resources for start location in Region#", region_number);
-	
+
+	print("- Adding Strategic Balance Resources for start location in Region#", region_number);
+
 	for ripple_radius = 1, radius do
 		local ripple_value = radius - ripple_radius + 1;
 		local currentX = x - ripple_radius;
 		local currentY = y;
 		for direction_index = 1, 6 do
 			for plot_to_handle = 1, ripple_radius do
-			 	if currentY / 2 > math.floor(currentY / 2) then
+				if currentY / 2 > math.floor(currentY / 2) then
 					plot_adjustments = odd[direction_index];
 				else
 					plot_adjustments = even[direction_index];
@@ -4792,17 +4792,17 @@ function AssignStartingPlots:AddStrategicBalanceResources(region_number)
 									table.insert(oil_fallback, plotIndex)
 								end
 							end
-						elseif featureType == FeatureTypes.FEATURE_MARSH then		
+						elseif featureType == FeatureTypes.FEATURE_MARSH then
 							if ripple_radius < 3 then
 								table.insert(oil_list, plotIndex)
 							else
 								table.insert(oil_fallback, plotIndex)
 							end
 							table.insert(iron_fallback, plotIndex)
-						elseif featureType == FeatureTypes.FEATURE_FLOOD_PLAINS then		
+						elseif featureType == FeatureTypes.FEATURE_FLOOD_PLAINS then
 							table.insert(horse_fallback, plotIndex)
 							table.insert(oil_fallback, plotIndex)
-						elseif featureType == FeatureTypes.FEATURE_JUNGLE or featureType == FeatureTypes.FEATURE_FOREST then		
+						elseif featureType == FeatureTypes.FEATURE_JUNGLE or featureType == FeatureTypes.FEATURE_FOREST then
 							table.insert(iron_fallback, plotIndex)
 							table.insert(oil_fallback, plotIndex)
 						end
@@ -4821,7 +4821,7 @@ function AssignStartingPlots:AddStrategicBalanceResources(region_number)
 		local currentY = y;
 		for direction_index = 1, 6 do
 			for plot_to_handle = 1, ripple_radius do
-			 	if currentY / 2 > math.floor(currentY / 2) then
+				if currentY / 2 > math.floor(currentY / 2) then
 					plot_adjustments = odd[direction_index];
 				else
 					plot_adjustments = even[direction_index];
@@ -4889,7 +4889,7 @@ function AssignStartingPlots:AddStrategicBalanceResources(region_number)
 									table.insert(coal_fallback, plotIndex)
 								end
 							end
-						elseif featureType == FeatureTypes.FEATURE_MARSH then		
+						elseif featureType == FeatureTypes.FEATURE_MARSH then
 							if ripple_radius < 4 then
 								table.insert(coal_list, plotIndex)
 								table.insert(alum_list, plotIndex)
@@ -4898,10 +4898,10 @@ function AssignStartingPlots:AddStrategicBalanceResources(region_number)
 								table.insert(alum_fallback, plotIndex)
 								table.insert(coal_fallback, plotIndex)
 							end
-						elseif featureType == FeatureTypes.FEATURE_FLOOD_PLAINS then		
+						elseif featureType == FeatureTypes.FEATURE_FLOOD_PLAINS then
 							table.insert(alum_fallback, plotIndex)
 							table.insert(coal_fallback, plotIndex)
-						elseif featureType == FeatureTypes.FEATURE_JUNGLE or featureType == FeatureTypes.FEATURE_FOREST then		
+						elseif featureType == FeatureTypes.FEATURE_JUNGLE or featureType == FeatureTypes.FEATURE_FOREST then
 							table.insert(alum_fallback, plotIndex)
 							table.insert(coal_fallback, plotIndex)
 							table.insert(oil_fallback, plotIndex)
@@ -4913,14 +4913,14 @@ function AssignStartingPlots:AddStrategicBalanceResources(region_number)
 		end
 	end
 
-	local radius = 6;
-	for ripple_radius = 4, radius do
+	local radius = 3;
+	for ripple_radius = 1, radius do
 		local ripple_value = radius - ripple_radius + 1;
 		local currentX = x - ripple_radius;
 		local currentY = y;
 		for direction_index = 1, 6 do
 			for plot_to_handle = 1, ripple_radius do
-			 	if currentY / 2 > math.floor(currentY / 2) then
+				if currentY / 2 > math.floor(currentY / 2) then
 					plot_adjustments = odd[direction_index];
 				else
 					plot_adjustments = even[direction_index];
@@ -4967,106 +4967,72 @@ function AssignStartingPlots:AddStrategicBalanceResources(region_number)
 	local shuf_list;
 	local placed_iron, placed_horse, placed_oil, placed_alum, placed_coal, placed_uran = false, false, false, false, false, false;
 
-	uran_amt = 1;
-
 	if table.maxn(iron_list) > 0 then
-		shuf_list = GetShuffledCopyOfTable(iron_list)
-		iNumLeftToPlace = self:PlaceSpecificNumberOfResources(self.iron_ID, iron_amt, 1, 1, -1, 0, 0, shuf_list);
-		if iNumLeftToPlace == 0 then
-			placed_iron = true;
+		while placed_iron == false do
+			shuf_list = GetShuffledCopyOfTable(iron_list)
+			iNumLeftToPlace = self:PlaceSpecificNumberOfResources(self.iron_ID, iron_amt, 1, 1, -1, 0, 0, shuf_list);
+			if iNumLeftToPlace == 0 then
+				placed_iron = true;
+			end
 		end
 	end
+
 	if table.maxn(horse_list) > 0 then
-		shuf_list = GetShuffledCopyOfTable(horse_list)
-		iNumLeftToPlace = self:PlaceSpecificNumberOfResources(self.horse_ID, horse_amt, 1, 1, -1, 0, 0, shuf_list);
-		if iNumLeftToPlace == 0 then
-			placed_horse = true;
+		while placed_horse == false do
+			shuf_list = GetShuffledCopyOfTable(horse_list)
+			iNumLeftToPlace = self:PlaceSpecificNumberOfResources(self.horse_ID, horse_amt, 1, 1, -1, 0, 0, shuf_list);
+			if iNumLeftToPlace == 0 then
+				placed_horse = true;
+			end
 		end
 	end
+
 	if table.maxn(oil_list) > 0 then
-		shuf_list = GetShuffledCopyOfTable(oil_list)
-		iNumLeftToPlace = self:PlaceSpecificNumberOfResources(self.oil_ID, oil_amt, 2, 1, -1, 0, 0, shuf_list);
-		if iNumLeftToPlace == 0 then
-			print("All Oil Placed First Attempt");
-			placed_oil = true;
-			OilToPlace = 0;
-		else
-			OilToPlace = 1;
-		end
-	end
-	
-	if self.start_locations == 5 or self.start_locations == 6 or self.start_locations == 1 or self.start_locations == 2 then
-		if table.maxn(alum_list) > 0 then
-			shuf_list = GetShuffledCopyOfTable(alum_list)
-			iNumLeftToPlace = self:PlaceSpecificNumberOfResources(self.aluminum_ID, alum_amt, 1, 1, 1, 0, 0, shuf_list);
-			if iNumLeftToPlace == 0 then
-				placed_alum = true;
-			end
-		end
-	end
-	
-	if self.start_locations == 4 or self.start_locations == 6 or self.start_locations == 1  or self.start_locations == 2 then
-		if table.maxn(coal_list) > 0 then
-			shuf_list = GetShuffledCopyOfTable(coal_list)
-			iNumLeftToPlace = self:PlaceSpecificNumberOfResources(self.coal_ID, coal_amt, 1, 1, 1, 0, 0, shuf_list);
-			if iNumLeftToPlace == 0 then
-				placed_coal = true;
-			end
-		end
-	end
-
-	if self.start_locations == 2 then
-		if table.maxn(uran_list) > 0 then
-			shuf_list = GetShuffledCopyOfTable(uran_list)
-			iNumLeftToPlace = self:PlaceSpecificNumberOfResources(self.uranium_ID, uran_amt, 2, 1, 1, 0, 0, shuf_list);
-			if iNumLeftToPlace == 0 then
-				placed_uran = true;
-			end
-		end
-	end
-
-
-
-	if placed_iron == false and table.maxn(iron_fallback) > 0 then
-		shuf_list = GetShuffledCopyOfTable(iron_fallback)
-		iNumLeftToPlace = self:PlaceSpecificNumberOfResources(self.iron_ID, iron_amt, 1, 1, -1, 0, 0, shuf_list);
-	end
-	if placed_horse == false and table.maxn(horse_fallback) > 0 then
-		shuf_list = GetShuffledCopyOfTable(horse_fallback)
-		iNumLeftToPlace = self:PlaceSpecificNumberOfResources(self.horse_ID, horse_amt, 1, 1, -1, 0, 0, shuf_list);
-	end
-	if placed_oil == false and table.maxn(oil_fallback) > 0 then
-		shuf_list = GetShuffledCopyOfTable(oil_fallback)
-		if OilToPlace == 1 then
+		while placed_oil == false do
+			shuf_list = GetShuffledCopyOfTable(oil_list)
 			iNumLeftToPlace = self:PlaceSpecificNumberOfResources(self.oil_ID, oil_amt, 1, 1, -1, 0, 0, shuf_list);
-		else
-			iNumLeftToPlace = self:PlaceSpecificNumberOfResources(self.oil_ID, oil_amt, 2, 1, -1, 0, 0, shuf_list);
-		end
-		print("Fallback Used");
-		if iNumLeftToPlace == 0 then
-			print("All Oil Placed 2nd Attempt");
-		else
-			--print("Not All Oil Placed");
+			if iNumLeftToPlace == 0 then
+				placed_oil = true;
+			end
 		end
 	end
-	if self.start_locations == 5 or self.start_locations == 6 or self.start_locations == 1 or self.start_locations == 2 then
-		if placed_alum == false and table.maxn(alum_fallback) > 0 then
-			shuf_list = GetShuffledCopyOfTable(horse_fallback)
-			iNumLeftToPlace = self:PlaceSpecificNumberOfResources(self.aluminum_ID, alum_amt, 1, 1, 1, 0, 0, shuf_list);
+
+	if self.start_locations == 5 or self.start_locations == 6 or self.start_locations == 7 or self.start_locations == 1 or self.start_locations == 2 then
+		if table.maxn(alum_list) > 0 then
+			while placed_alum == false do
+				shuf_list = GetShuffledCopyOfTable(alum_list)
+				iNumLeftToPlace = self:PlaceSpecificNumberOfResources(self.aluminum_ID, alum_amt, 1, 1, 1, 0, 0, shuf_list);
+				if iNumLeftToPlace == 0 then
+					placed_alum = true;
+				end
+			end
 		end
 	end
-	if self.start_locations == 4 or self.start_locations == 6 or self.start_locations == 1 or self.start_locations == 2 then
-		if placed_coal == false and table.maxn(coal_fallback) > 0 then
-			shuf_list = GetShuffledCopyOfTable(coal_fallback)
-			iNumLeftToPlace = self:PlaceSpecificNumberOfResources(self.coal_ID, coal_amt, 1, 1, 1, 0, 0, shuf_list);
+
+	if self.start_locations == 4 or self.start_locations == 6 or self.start_locations == 7 or self.start_locations == 1  or self.start_locations == 2 then
+		if table.maxn(coal_list) > 0 then
+			while placed_coal == false do
+				shuf_list = GetShuffledCopyOfTable(coal_list)
+				iNumLeftToPlace = self:PlaceSpecificNumberOfResources(self.coal_ID, coal_amt, 1, 1, 1, 0, 0, shuf_list);
+				if iNumLeftToPlace == 0 then
+					placed_coal = true;
+				end
+			end
 		end
 	end
-	if self.start_locations == 2 then
-		if placed_uran == false and table.maxn(uran_fallback) > 0 then
-			shuf_list = GetShuffledCopyOfTable(uran_fallback)
-			iNumLeftToPlace = self:PlaceSpecificNumberOfResources(self.uranium_ID, uran_amt, 2, 1, 1, 0, 0, shuf_list);
+
+	if self.start_locations == 2  or self.start_locations == 7 then
+		if table.maxn(uran_list) > 0 then
+			while placed_uran == false do
+				shuf_list = GetShuffledCopyOfTable(uran_list)
+				iNumLeftToPlace = self:PlaceSpecificNumberOfResources(self.uranium_ID, uran_amt, 1, 1, -1, 0, 0, shuf_list);
+				if iNumLeftToPlace == 0 then
+					placed_uran = true;
+				end
+			end
 		end
 	end
+
 end
 ------------------------------------------------------------------------------
 function AssignStartingPlots:AttemptToPlaceStoneAtGrassPlot(x, y)
@@ -5486,10 +5452,11 @@ function AssignStartingPlots:NormalizeStartLocation(region_number)
 	end
 	
 	-- Add mandatory Iron, Horse, Oil to every start if Strategic Balance option is enabled.
-	if self.start_locations == 3 or self.start_locations == 4 or self.start_locations == 5 or self.start_locations == 6 or self.start_locations == 1 or self.start_locations == 2 then
-		self:AddStrategicBalanceResources(region_number)
-	end
-	
+	print("########## Strategic Balance Resources ##########")
+	--if self.start_locations == 3 or self.start_locations == 4 or self.start_locations == 5 or self.start_locations == 6 or self.start_locations == 7 or self.start_locations == 1 or self.start_locations == 2 then
+	self:AddStrategicBalanceResources(region_number)
+	--end
+	print("########## finished Strategic Balance Resources ##########")
 	-- If early hammers will be too short, attempt to add a small Horse or Iron to second ring.
 	if innerHammerScore <= 4 and earlyHammerScore < 10 then -- Add a small Horse or Iron to second ring.
 		if isEvenY then
