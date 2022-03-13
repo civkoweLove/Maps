@@ -18,7 +18,7 @@ include("MultilayeredFractal");
 function GetMapScriptInfo()
 	local world_age, temperature, rainfall, sea_level, resources = GetCoreMapOptions()
 	return {
-		Name = "Lekmap: Tiny Islands (v3.2)",
+		Name = "Lekmap: Tiny Islands (v3.6)",
 		Description = "A map script made for Lekmod based of HB's Mapscript v8.1. Tiny Islands",
 		IsAdvancedMap = false,
 		IconIndex = 17,
@@ -75,7 +75,7 @@ function GetMapScriptInfo()
 			},
 
 			{
-				Name = "Start Quality",	-- 5 add resources defaults to random
+				Name = "Start Quality",	-- (5) add resources defaults to random
 				Values = {
 					"Legendary Start - Strat Balance",
 					"Legendary - Strat Balance + Uranium",
@@ -83,9 +83,10 @@ function GetMapScriptInfo()
 					"Strategic Balance With Coal",
 					"Strategic Balance With Aluminum",
 					"Strategic Balance With Coal & Aluminum",
+					"Strategic Balance With Coal & Aluminum & Uran",
 					"TXT_KEY_MAP_OPTION_RANDOM",
 				},
-				DefaultValue = 2,
+				DefaultValue = 7,
 				SortPriority = -95,
 			},
 
@@ -158,93 +159,24 @@ function GetMapScriptInfo()
 				DefaultValue = 2,
 				SortPriority = -90,
 			},
-
 			{
-				Name = "Land Size X",	-- add setting for land type (11) +28
+				Name = "Forest Size", -- (11) forestSize
 				Values = {
-					"30",
-					"32",
-					"34",
-					"36",
-					"38",
-					"40",
-					"42",
-					"44",
-					"46",
-					"48",
-					"50",
-					"52",
-					"54",
-					"56",
-					"58",
-					"60",
-					"62",
-					"64",
-					"66",
-					"68",
-					"70",
-					"72",
-					"74",
-					"76",
-					"78",
-					"80",
-					"82",
-					"84",
-					"86",
-					"88",
-					"90",
-					"92",
-					"94",
-					"96",
-					"98",
-					"100",
-					"102",
-					"104",
-					"106",
-					"108",
-					"110",
+					"sparse",
+					"average",
+					"plentiful",
 				},
-
-				DefaultValue = 17,
+				DefaultValue = 2,
 				SortPriority = -89,
 			},
-
 			{
-				Name = "Land Size Y",	-- add setting for land type (12) +18
+				Name = "Jungle Size", -- (12) jungleSize
 				Values = {
-					"20",
-					"22",
-					"24",
-					"26",
-					"28",
-					"30",
-					"32",
-					"34",
-					"36",
-					"38",
-					"40",
-					"42",
-					"44",
-					"46",
-					"48",
-					"50",
-					"52",
-					"54",
-					"56",
-					"58",
-					"60",
-					"62",
-					"64",
-					"66",
-					"68",
-					"70",
-					"72",
-					"74",
-					"76",
-
+					"sparse",
+					"average",
+					"plentiful",
 				},
-
-				DefaultValue = 16,
+				DefaultValue = 2,
 				SortPriority = -88,
 			},
 
@@ -266,27 +198,81 @@ function GetMapScriptInfo()
 				DefaultValue = 5,
 				SortPriority = -87,
 			},
+
+			{
+				Name = "Desert Size", -- (14) desertSize
+				Values = {
+					"sparse",
+					"average",
+					"plentiful",
+				},
+				DefaultValue = 2,
+				SortPriority = -86,
+			},
+
+			{
+				Name = "Marsh Size", -- (15) marshSize
+				Values = {
+					"sparse",
+					"average",
+					"plentiful",
+				},
+				DefaultValue = 2,
+				SortPriority = -85,
+			},
+			{
+				Name = "Map Dimensions", -- (16) mapSize
+				Values = {
+					"Cage",
+					"Standard",
+					"Big",
+					"Random",
+				},
+				DefaultValue = 2,
+				SortPriority = -100,
+			},
+
 		},
 	};
 end
 ------------------------------------------------------------------------------
 function GetMapInitData(worldSize)
-	
-	local LandSizeX = 28 + (Map.GetCustomOption(11) * 2);
-	local LandSizeY = 18 + (Map.GetCustomOption(12) * 2);
+
+	local mapSize = Map.GetCustomOption(16)
+	if mapSize == 4 then
+		mapSize = 1 + Map.Rand(3, "Random Map - Lua");
+	end
+	local curWidth = 25;
+	local curHeight = 20;
+	local factorW = 15;
+	local factorH = 10;
+
+	if mapSize == 1 then
+		curWidth = math.floor(curWidth * 0.8);
+		curHeight = math.floor(curHeight * 0.8);
+		factorW = math.floor(factorW * 0.8);
+		factorH = math.floor(factorH * 0.8);
+	end
+
+	if mapSize == 3 then
+		curWidth = math.floor(curWidth * 1.15);
+		curHeight = math.floor(curHeight * 1.15);
+		factorW = math.floor(factorW * 1.15);
+		factorH = math.floor(factorH * 1.15);
+	end
 
 	local worldsizes = {};
 
 	worldsizes = {
 
-		[GameInfo.Worlds.WORLDSIZE_DUEL.ID] = {LandSizeX, LandSizeY}, -- 720
-		[GameInfo.Worlds.WORLDSIZE_TINY.ID] = {LandSizeX, LandSizeY}, -- 1664
-		[GameInfo.Worlds.WORLDSIZE_SMALL.ID] = {LandSizeX, LandSizeY}, -- 2480
-		[GameInfo.Worlds.WORLDSIZE_STANDARD.ID] = {LandSizeX, LandSizeY}, -- 3900
-		[GameInfo.Worlds.WORLDSIZE_LARGE.ID] = {LandSizeX, LandSizeY}, -- 6076
-		[GameInfo.Worlds.WORLDSIZE_HUGE.ID] = {LandSizeX, LandSizeY} -- 9424
-		}
-		
+		[GameInfo.Worlds.WORLDSIZE_DUEL.ID] = {curWidth + factorW, curHeight + factorH},
+		[GameInfo.Worlds.WORLDSIZE_TINY.ID] = {curWidth + 2 * factorW, curHeight + 2 *  factorH},
+		[GameInfo.Worlds.WORLDSIZE_SMALL.ID] = {curWidth + 3 * factorW, curHeight + 3 * factorH},
+		[GameInfo.Worlds.WORLDSIZE_STANDARD.ID] = {curWidth + 4 * factorW, curHeight + 4 * factorH},
+		[GameInfo.Worlds.WORLDSIZE_LARGE.ID] = {curWidth + 5 * factorW, curHeight + 5 * factorH},
+		[GameInfo.Worlds.WORLDSIZE_HUGE.ID] = {curWidth + 6 * factorW, curHeight + 6 * factorH}
+	}
+
 	local grid_size = worldsizes[worldSize];
 	--
 	local world = GameInfo.Worlds[worldSize];
@@ -295,7 +281,7 @@ function GetMapInitData(worldSize)
 			Width = grid_size[1],
 			Height = grid_size[2],
 			WrapX = true,
-		}; 
+		};
 	end
 
 end
@@ -338,8 +324,6 @@ end
 ------------------------------------------------------------------------------
 function GenerateTerrain()
 
-	local DesertPercent = 28;
-
 	-- Get Temperature setting input by user.
 	local temp = Map.GetCustomOption(2)
 	if temp == 4 then
@@ -349,10 +333,13 @@ function GenerateTerrain()
 	local grassMoist = Map.GetCustomOption(8);
 
 	local args = {
-			temperature = temp,
-			iDesertPercent = DesertPercent,
-			iGrassMoist = grassMoist,
-			};
+		temperature = temp,
+		iDesertPercent = 2 + 10 * Map.GetCustomOption(15),-- desertSize 12/22/32
+		rainfall = Map.GetCustomOption(3),
+		iGrassMoist = Map.GetCustomOption(8),
+		tundra = Map.GetCustomOption(10),
+
+	};
 
 	local terraingen = TerrainGenerator.Create(args);
 
@@ -371,8 +358,15 @@ function AddFeatures()
 	if rain == 4 then
 		rain = 1 + Map.Rand(3, "Random Rainfall - Lua");
 	end
-	
-	local args = {rainfall = rain}
+
+	local args = {
+		rainfall = rain,
+		iGrassMoist = Map.GetCustomOption(8),
+		iForestPercent = 13 + 5 * Map.GetCustomOption(11),  -- forestSize 18/23/28
+		iJunglePercent = 15 + 15 * Map.GetCustomOption(12),  -- jungleSize 30/45/60
+		fMarshPercent =  3 + 7 * Map.GetCustomOption(16), -- marshSize 10/17/24
+	};
+
 	local featuregen = FeatureGenerator.Create(args);
 
 	-- False parameter removes mountains from coastlines.

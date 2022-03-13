@@ -9410,7 +9410,7 @@ function AssignStartingPlots:AssignLuxuryToRegion(region_number)
 					end
 				-- Land-based resources are automatically approved if they were in the region's option table.
 				--res_ID == self.salt_ID
-				elseif res_ID == self.salt_ID or res_ID == self.spices_ID or res_ID == self.gems_ID or res_ID == self.obsidian_ID then
+				elseif res_ID == self.salt_ID or res_ID == self.spices_ID or res_ID == self.gems_ID or res_ID == self.obsidian_ID or resID == self.rubber_ID then
 					-- No salt to regions please, sorry
 				else
 					table.insert(resource_IDs, res_ID);
@@ -13294,28 +13294,28 @@ end
 function AssignStartingPlots:GetMajorStrategicResourceQuantityValues()
 	-- This function determines quantity per tile for each strategic resource's major deposit size.
 	-- Note: scripts that cannot place Oil in the sea need to increase amounts on land to compensate.
-	local uran_amt, horse_amt, oil_amt, iron_amt, coal_amt, alum_amt = 2, 4, 7, 6, 7, 8;
+	local uran_amt, horse_amt, oil_amt, iron_amt, coal_amt, alum_amt = 2, 2, 7, 6, 7, 8;
 	-- Check the resource setting.
 	if self.resource_setting == 1 or self.resource_setting == 2 then -- Sparse
 		uran_amt, horse_amt, oil_amt, iron_amt, coal_amt, alum_amt = 2, 2, 5, 4, 5, 6;
 	elseif self.resource_setting == 3 then -- mediocre
-		uran_amt, horse_amt, oil_amt, iron_amt, coal_amt, alum_amt = 2, 3, 6, 5, 6, 7;
+		uran_amt, horse_amt, oil_amt, iron_amt, coal_amt, alum_amt = 2, 2, 6, 5, 6, 7;
 	elseif self.resource_setting == 7 then -- plenty
-		uran_amt, horse_amt, oil_amt, iron_amt, coal_amt, alum_amt = 2, 5, 8, 7, 8, 9;
+		uran_amt, horse_amt, oil_amt, iron_amt, coal_amt, alum_amt = 2, 2, 8, 7, 8, 9;
 	elseif self.resource_setting == 8 or self.resource_setting == 9 or self.resource_setting == 10 then -- Abundant
-		uran_amt, horse_amt, oil_amt, iron_amt, coal_amt, alum_amt = 2, 6, 9, 8, 9, 10;
+		uran_amt, horse_amt, oil_amt, iron_amt, coal_amt, alum_amt = 2, 2, 9, 8, 9, 10;
 	end
 	return uran_amt, horse_amt, oil_amt, iron_amt, coal_amt, alum_amt
 end
 ------------------------------------------------------------------------------
 function AssignStartingPlots:GetSmallStrategicResourceQuantityValues()
 	-- This function determines quantity per tile for each strategic resource's small deposit size.
-	local uran_amt, horse_amt, oil_amt, iron_amt, coal_amt, alum_amt = 2, 2, 4, 2, 3, 3;
+	local uran_amt, horse_amt, oil_amt, iron_amt, coal_amt, alum_amt = 2, 1, 4, 2, 3, 3;
 	-- Check the resource setting.
 	if self.resource_setting == 1 or self.resource_setting == 2 or self.resource_setting == 3 then -- Sparse / Mediocre
 		uran_amt, horse_amt, oil_amt, iron_amt, coal_amt, alum_amt = 1, 1, 2, 1, 2, 2;
 	elseif self.resource_setting == 7 or self.resource_setting == 8 or self.resource_setting == 9 or self.resource_setting == 10 then -- Plenty / Abundant
-		uran_amt, horse_amt, oil_amt, iron_amt, coal_amt, alum_amt = 2, 3, 3, 3, 3, 3;
+		uran_amt, horse_amt, oil_amt, iron_amt, coal_amt, alum_amt = 2, 1, 3, 3, 3, 3;
 	end
 	return uran_amt, horse_amt, oil_amt, iron_amt, coal_amt, alum_amt
 end
