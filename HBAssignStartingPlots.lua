@@ -4967,69 +4967,108 @@ function AssignStartingPlots:AddStrategicBalanceResources(region_number)
 	local shuf_list;
 	local placed_iron, placed_horse, placed_oil, placed_alum, placed_coal, placed_uran = false, false, false, false, false, false;
 
+	print("Primary placing Resources");
 	if table.maxn(iron_list) > 0 then
-		while placed_iron == false do
-			shuf_list = GetShuffledCopyOfTable(iron_list)
-			iNumLeftToPlace = self:PlaceSpecificNumberOfResources(self.iron_ID, iron_amt, 1, 1, -1, 0, 0, shuf_list);
-			if iNumLeftToPlace == 0 then
-				placed_iron = true;
-			end
+		shuf_list = GetShuffledCopyOfTable(iron_list)
+		iNumLeftToPlace = self:PlaceSpecificNumberOfResources(self.iron_ID, iron_amt, 1, 1, -1, 0, 0, shuf_list);
+		if iNumLeftToPlace == 0 then
+			placed_iron = true;
+			print("Iron Placed");
 		end
 	end
 
 	if table.maxn(horse_list) > 0 then
-		while placed_horse == false do
-			shuf_list = GetShuffledCopyOfTable(horse_list)
-			iNumLeftToPlace = self:PlaceSpecificNumberOfResources(self.horse_ID, horse_amt, 1, 1, -1, 0, 0, shuf_list);
-			if iNumLeftToPlace == 0 then
-				placed_horse = true;
-			end
+		shuf_list = GetShuffledCopyOfTable(horse_list)
+		iNumLeftToPlace = self:PlaceSpecificNumberOfResources(self.horse_ID, horse_amt, 1, 1, -1, 0, 0, shuf_list);
+		if iNumLeftToPlace == 0 then
+			placed_horse = true;
+			print("Horse Placed");
 		end
 	end
 
 	if table.maxn(oil_list) > 0 then
-		while placed_oil == false do
-			shuf_list = GetShuffledCopyOfTable(oil_list)
-			iNumLeftToPlace = self:PlaceSpecificNumberOfResources(self.oil_ID, oil_amt, 1, 1, -1, 0, 0, shuf_list);
-			if iNumLeftToPlace == 0 then
-				placed_oil = true;
-			end
+		shuf_list = GetShuffledCopyOfTable(oil_list)
+		iNumLeftToPlace = self:PlaceSpecificNumberOfResources(self.oil_ID, oil_amt, 1, 1, -1, 0, 0, shuf_list);
+		if iNumLeftToPlace == 0 then
+			placed_oil = true;
+			print("Oil Placed");
 		end
 	end
 
 	if self.start_locations == 5 or self.start_locations == 6 or self.start_locations == 7 or self.start_locations == 1 or self.start_locations == 2 then
 		if table.maxn(alum_list) > 0 then
-			while placed_alum == false do
-				shuf_list = GetShuffledCopyOfTable(alum_list)
-				iNumLeftToPlace = self:PlaceSpecificNumberOfResources(self.aluminum_ID, alum_amt, 1, 1, 1, 0, 0, shuf_list);
-				if iNumLeftToPlace == 0 then
-					placed_alum = true;
-				end
+			shuf_list = GetShuffledCopyOfTable(alum_list)
+			iNumLeftToPlace = self:PlaceSpecificNumberOfResources(self.aluminum_ID, alum_amt, 1, 1, 1, 0, 0, shuf_list);
+			if iNumLeftToPlace == 0 then
+				placed_alum = true;
+				print("Aluminium Placed");
 			end
 		end
 	end
 
 	if self.start_locations == 4 or self.start_locations == 6 or self.start_locations == 7 or self.start_locations == 1  or self.start_locations == 2 then
 		if table.maxn(coal_list) > 0 then
-			while placed_coal == false do
-				shuf_list = GetShuffledCopyOfTable(coal_list)
-				iNumLeftToPlace = self:PlaceSpecificNumberOfResources(self.coal_ID, coal_amt, 1, 1, 1, 0, 0, shuf_list);
-				if iNumLeftToPlace == 0 then
-					placed_coal = true;
-				end
+			shuf_list = GetShuffledCopyOfTable(coal_list)
+			iNumLeftToPlace = self:PlaceSpecificNumberOfResources(self.coal_ID, coal_amt, 1, 1, 1, 0, 0, shuf_list);
+			if iNumLeftToPlace == 0 then
+				placed_coal = true;
+				print("Coal Placed");
 			end
 		end
 	end
 
 	if self.start_locations == 2  or self.start_locations == 7 then
 		if table.maxn(uran_list) > 0 then
-			while placed_uran == false do
-				shuf_list = GetShuffledCopyOfTable(uran_list)
-				iNumLeftToPlace = self:PlaceSpecificNumberOfResources(self.uranium_ID, uran_amt, 1, 1, -1, 0, 0, shuf_list);
-				if iNumLeftToPlace == 0 then
-					placed_uran = true;
-				end
+			shuf_list = GetShuffledCopyOfTable(uran_list)
+			iNumLeftToPlace = self:PlaceSpecificNumberOfResources(self.uranium_ID, uran_amt, 1, 1, 1, 0, 0, shuf_list);
+			if iNumLeftToPlace == 0 then
+				placed_uran = true;
+				print("Uran Placed");
 			end
+		end
+	end
+
+	-- repeat
+	print("Secondary placing Resources");
+
+	if placed_iron == false and table.maxn(iron_fallback) > 0 then
+		shuf_list = GetShuffledCopyOfTable(iron_fallback)
+		iNumLeftToPlace = self:PlaceSpecificNumberOfResources(self.iron_ID, iron_amt, 1, 1, -1, 0, 0, shuf_list);
+		print("Iron Placed");
+	end
+	if placed_horse == false and table.maxn(horse_fallback) > 0 then
+		shuf_list = GetShuffledCopyOfTable(horse_fallback)
+		iNumLeftToPlace = self:PlaceSpecificNumberOfResources(self.horse_ID, horse_amt, 1, 1, -1, 0, 0, shuf_list);
+		print("Horse placed");
+	end
+
+	if placed_oil == false and table.maxn(oil_fallback) > 0 then
+		shuf_list = GetShuffledCopyOfTable(oil_fallback)
+		iNumLeftToPlace = self:PlaceSpecificNumberOfResources(self.oil_ID, oil_amt, 1, 1, -1, 0, 0, shuf_list);
+		print("Oil Placed");
+	end
+
+	if self.start_locations == 5 or self.start_locations == 6 or self.start_locations == 7 or self.start_locations == 1 or self.start_locations == 2 then
+		if placed_alum == false and table.maxn(alum_fallback) > 0 then
+			shuf_list = GetShuffledCopyOfTable(horse_fallback)
+			iNumLeftToPlace = self:PlaceSpecificNumberOfResources(self.aluminum_ID, alum_amt, 1, 1, 1, 0, 0, shuf_list);
+			print("Aluminium Placed");
+		end
+	end
+
+	if self.start_locations == 4 or self.start_locations == 6 or self.start_locations == 7 or self.start_locations == 1  or self.start_locations == 2 then
+		if placed_coal == false and table.maxn(coal_fallback) > 0 then
+			shuf_list = GetShuffledCopyOfTable(coal_fallback)
+			iNumLeftToPlace = self:PlaceSpecificNumberOfResources(self.coal_ID, coal_amt, 1, 1, 1, 0, 0, shuf_list);
+			print("Coal Placed");
+		end
+	end
+
+	if self.start_locations == 2  or self.start_locations == 7 then
+		if placed_uran == false and table.maxn(uran_fallback) > 0 then
+			shuf_list = GetShuffledCopyOfTable(uran_fallback)
+			iNumLeftToPlace = self:PlaceSpecificNumberOfResources(self.uranium_ID, uran_amt, 1, 1, 1, 0, 0, shuf_list);
+			print("Uran Placed");
 		end
 	end
 
