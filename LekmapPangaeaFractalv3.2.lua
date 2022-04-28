@@ -139,9 +139,9 @@ function GetMapScriptInfo()
 			{
 				Name = "Rivers",	-- add setting for rivers (9)
 				Values = {
-					"Sparse",
-					"Average",
-					"Plentiful",
+					"sparse",
+					"average",
+					"plentiful",
 				},
 
 				DefaultValue = 2,
@@ -149,11 +149,11 @@ function GetMapScriptInfo()
 			},
 
 			{
-				Name = "Tundra",	-- add setting for tundraSize (10)
+				Name = "Tundra Size",	-- add setting for tundraSize (10)
 				Values = {
-					"Sparse",
-					"Average",
-					"Plentiful",
+					"sparse",
+					"average",
+					"plentiful",
 				},
 
 				DefaultValue = 2,

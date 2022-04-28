@@ -139,9 +139,9 @@ function GetMapScriptInfo()
 			{
 				Name = "Rivers",	-- add setting for rivers (9)
 				Values = {
-					"Sparse",
-					"Average",
-					"Plentiful",
+					"sparse",
+					"average",
+					"plentiful",
 				},
 
 				DefaultValue = 2,
@@ -149,11 +149,11 @@ function GetMapScriptInfo()
 			},
 
 			{
-				Name = "Tundra",	-- add setting for tundra (10)
+				Name = "Tundra Size",	-- add setting for tundra (10)
 				Values = {
-					"Sparse",
-					"Average",
-					"Plentiful",
+					"sparse",
+					"average",
+					"plentiful",
 				},
 
 				DefaultValue = 2,
@@ -203,10 +203,10 @@ function GetMapScriptInfo()
 			{
 				Name = "Islands",	-- add setting for islands (14)
 				Values = {
-					"Sparse",
-					"Average",
-					"Plentiful",
-					"Abundant",
+					"sparse",
+					"average",
+					"plentiful",
+					"abundant",
 				},
 
 				DefaultValue = 2,

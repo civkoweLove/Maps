@@ -187,11 +187,11 @@ function GetMapScriptInfo()
 			},
 
 			{
-				Name = "Tundra",	-- add setting for tundra (14)
+				Name = "Tundra Size",	-- add setting for tundra (14)
 				Values = {
-					"Sparse",
-					"Average",
-					"Plentiful",
+					"sparse",
+					"average",
+					"plentiful",
 				},
 
 				DefaultValue = 2,
