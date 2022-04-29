@@ -4719,7 +4719,6 @@ function AssignStartingPlots:AddStrategicBalanceResources(region_number)
 	local iron_list, horse_list, oil_list, alum_list, coal_list, uran_list = {}, {}, {}, {}, {}, {};
 	local iron_fallback, horse_fallback, oil_fallback, alum_fallback, coal_fallback, uran_fallback = {}, {}, {}, {}, {}, {};
 	local radius = 3;
-	local OilToPlace = 2;
 
 	print("- Adding Strategic Balance Resources for start location in Region#", region_number);
 
@@ -4968,29 +4967,33 @@ function AssignStartingPlots:AddStrategicBalanceResources(region_number)
 	local placed_iron, placed_horse, placed_oil, placed_alum, placed_coal, placed_uran = false, false, false, false, false, false;
 
 	print("Primary placing Resources");
+	local placed_resources = 0;
 	if table.maxn(iron_list) > 0 then
 		shuf_list = GetShuffledCopyOfTable(iron_list)
-		iNumLeftToPlace = self:PlaceSpecificNumberOfResources(self.iron_ID, iron_amt, 1, 1, -1, 0, 0, shuf_list);
+		local iNumLeftToPlace = self:PlaceSpecificNumberOfResources(self.iron_ID, iron_amt, 1, 1, -1, 0, 0, shuf_list);
 		if iNumLeftToPlace == 0 then
 			placed_iron = true;
+			placed_resources = placed_resources + 1
 			print("Iron Placed");
 		end
 	end
 
 	if table.maxn(horse_list) > 0 then
 		shuf_list = GetShuffledCopyOfTable(horse_list)
-		iNumLeftToPlace = self:PlaceSpecificNumberOfResources(self.horse_ID, horse_amt, 1, 1, -1, 0, 0, shuf_list);
+		local iNumLeftToPlace = self:PlaceSpecificNumberOfResources(self.horse_ID, horse_amt, 1, 1, -1, 0, 0, shuf_list);
 		if iNumLeftToPlace == 0 then
 			placed_horse = true;
+			placed_resources = placed_resources + 1
 			print("Horse Placed");
 		end
 	end
 
 	if table.maxn(oil_list) > 0 then
 		shuf_list = GetShuffledCopyOfTable(oil_list)
-		iNumLeftToPlace = self:PlaceSpecificNumberOfResources(self.oil_ID, oil_amt, 1, 1, -1, 0, 0, shuf_list);
+		local iNumLeftToPlace = self:PlaceSpecificNumberOfResources(self.oil_ID, oil_amt, 1, 1, -1, 0, 0, shuf_list);
 		if iNumLeftToPlace == 0 then
 			placed_oil = true;
+			placed_resources = placed_resources + 1
 			print("Oil Placed");
 		end
 	end
@@ -4998,9 +5001,10 @@ function AssignStartingPlots:AddStrategicBalanceResources(region_number)
 	if self.start_locations == 5 or self.start_locations == 6 or self.start_locations == 7 or self.start_locations == 1 or self.start_locations == 2 then
 		if table.maxn(alum_list) > 0 then
 			shuf_list = GetShuffledCopyOfTable(alum_list)
-			iNumLeftToPlace = self:PlaceSpecificNumberOfResources(self.aluminum_ID, alum_amt, 1, 1, 1, 0, 0, shuf_list);
+			local iNumLeftToPlace = self:PlaceSpecificNumberOfResources(self.aluminum_ID, alum_amt, 1, 1, 1, 0, 0, shuf_list);
 			if iNumLeftToPlace == 0 then
 				placed_alum = true;
+				placed_resources = placed_resources + 1
 				print("Aluminium Placed");
 			end
 		end
@@ -5009,9 +5013,10 @@ function AssignStartingPlots:AddStrategicBalanceResources(region_number)
 	if self.start_locations == 4 or self.start_locations == 6 or self.start_locations == 7 or self.start_locations == 1  or self.start_locations == 2 then
 		if table.maxn(coal_list) > 0 then
 			shuf_list = GetShuffledCopyOfTable(coal_list)
-			iNumLeftToPlace = self:PlaceSpecificNumberOfResources(self.coal_ID, coal_amt, 1, 1, 1, 0, 0, shuf_list);
+			local iNumLeftToPlace = self:PlaceSpecificNumberOfResources(self.coal_ID, coal_amt, 1, 1, 1, 0, 0, shuf_list);
 			if iNumLeftToPlace == 0 then
 				placed_coal = true;
+				placed_resources = placed_resources + 1
 				print("Coal Placed");
 			end
 		end
@@ -5020,9 +5025,10 @@ function AssignStartingPlots:AddStrategicBalanceResources(region_number)
 	if self.start_locations == 2  or self.start_locations == 7 then
 		if table.maxn(uran_list) > 0 then
 			shuf_list = GetShuffledCopyOfTable(uran_list)
-			iNumLeftToPlace = self:PlaceSpecificNumberOfResources(self.uranium_ID, uran_amt, 1, 1, 1, 0, 0, shuf_list);
+			local iNumLeftToPlace = self:PlaceSpecificNumberOfResources(self.uranium_ID, uran_amt, 1, 1, 1, 0, 0, shuf_list);
 			if iNumLeftToPlace == 0 then
 				placed_uran = true;
+				placed_resources = placed_resources + 1
 				print("Uran Placed");
 			end
 		end
@@ -5033,25 +5039,29 @@ function AssignStartingPlots:AddStrategicBalanceResources(region_number)
 
 	if placed_iron == false and table.maxn(iron_fallback) > 0 then
 		shuf_list = GetShuffledCopyOfTable(iron_fallback)
-		iNumLeftToPlace = self:PlaceSpecificNumberOfResources(self.iron_ID, iron_amt, 1, 1, -1, 0, 0, shuf_list);
+		self:PlaceSpecificNumberOfResources(self.iron_ID, iron_amt, 1, 1, -1, 0, 0, shuf_list);
+		placed_resources = placed_resources + 1
 		print("Iron Placed");
 	end
 	if placed_horse == false and table.maxn(horse_fallback) > 0 then
 		shuf_list = GetShuffledCopyOfTable(horse_fallback)
-		iNumLeftToPlace = self:PlaceSpecificNumberOfResources(self.horse_ID, horse_amt, 1, 1, -1, 0, 0, shuf_list);
+		self:PlaceSpecificNumberOfResources(self.horse_ID, horse_amt, 1, 1, -1, 0, 0, shuf_list);
+		placed_resources = placed_resources + 1
 		print("Horse placed");
 	end
 
 	if placed_oil == false and table.maxn(oil_fallback) > 0 then
 		shuf_list = GetShuffledCopyOfTable(oil_fallback)
-		iNumLeftToPlace = self:PlaceSpecificNumberOfResources(self.oil_ID, oil_amt, 1, 1, -1, 0, 0, shuf_list);
+		self:PlaceSpecificNumberOfResources(self.oil_ID, oil_amt, 1, 1, -1, 0, 0, shuf_list);
+		placed_resources = placed_resources + 1
 		print("Oil Placed");
 	end
 
 	if self.start_locations == 5 or self.start_locations == 6 or self.start_locations == 7 or self.start_locations == 1 or self.start_locations == 2 then
 		if placed_alum == false and table.maxn(alum_fallback) > 0 then
 			shuf_list = GetShuffledCopyOfTable(horse_fallback)
-			iNumLeftToPlace = self:PlaceSpecificNumberOfResources(self.aluminum_ID, alum_amt, 1, 1, 1, 0, 0, shuf_list);
+			self:PlaceSpecificNumberOfResources(self.aluminum_ID, alum_amt, 1, 1, 1, 0, 0, shuf_list);
+			placed_resources = placed_resources + 1
 			print("Aluminium Placed");
 		end
 	end
@@ -5059,7 +5069,8 @@ function AssignStartingPlots:AddStrategicBalanceResources(region_number)
 	if self.start_locations == 4 or self.start_locations == 6 or self.start_locations == 7 or self.start_locations == 1  or self.start_locations == 2 then
 		if placed_coal == false and table.maxn(coal_fallback) > 0 then
 			shuf_list = GetShuffledCopyOfTable(coal_fallback)
-			iNumLeftToPlace = self:PlaceSpecificNumberOfResources(self.coal_ID, coal_amt, 1, 1, 1, 0, 0, shuf_list);
+			self:PlaceSpecificNumberOfResources(self.coal_ID, coal_amt, 1, 1, 1, 0, 0, shuf_list);
+			placed_resources = placed_resources + 1
 			print("Coal Placed");
 		end
 	end
@@ -5067,8 +5078,17 @@ function AssignStartingPlots:AddStrategicBalanceResources(region_number)
 	if self.start_locations == 2  or self.start_locations == 7 then
 		if placed_uran == false and table.maxn(uran_fallback) > 0 then
 			shuf_list = GetShuffledCopyOfTable(uran_fallback)
-			iNumLeftToPlace = self:PlaceSpecificNumberOfResources(self.uranium_ID, uran_amt, 1, 1, 1, 0, 0, shuf_list);
+			self:PlaceSpecificNumberOfResources(self.uranium_ID, uran_amt, 1, 1, 1, 0, 0, shuf_list);
+			placed_resources = placed_resources + 1
 			print("Uran Placed");
+		end
+	end
+	-- checking placed resources
+	if self.start_locations == 2  or self.start_locations == 7 then
+		if placed_resources == 6 then
+			print("placed all 6 resources")
+		else
+			print("placed " .. placed_resources .. " ERROR placing resources")
 		end
 	end
 
@@ -5810,7 +5830,7 @@ function AssignStartingPlots:NormalizeStartLocation(region_number)
 				for attempt = 1, 6 do
 					local plot_adjustments = randomized_first_ring_adjustments[attempt];
 					local searchX, searchY = self:ApplyHexAdjustment(x, y, plot_adjustments)
-					-- Attempt to place Cows at the currently chosen plot.
+					-- Attempt to place stone at the currently chosen plot.
 					local placedBonus = self:AttemptToPlaceStoneAtGrassPlot(searchX, searchY);
 					if placedBonus == true then
 						--print("Placed Stone in first ring at ", searchX, searchY);
@@ -9350,8 +9370,11 @@ function AssignStartingPlots:PlaceSpecificNumberOfResources(resource_ID, quantit
 	end
 	local iW, iH = Map.GetGridSize();
 	local iNumLeftToPlace = amount;
+	print("iNumLeftToPlace: " .. iNumLeftToPlace);
 	local iNumPlots = table.maxn(plot_list);
+	print("iNumPlots: " .. iNumPlots);
 	local iNumResources = math.min(amount, math.ceil(ratio * iNumPlots));
+	print("iNumResources: " .. iNumResources);
 	-- Main loop
 	for place_resource = 1, iNumResources do
 		for loop, plotIndex in ipairs(plot_list) do
@@ -9378,6 +9401,7 @@ function AssignStartingPlots:PlaceSpecificNumberOfResources(resource_ID, quantit
 			end
 		end
 	end
+	print("iNumLeftToPlace: " .. iNumLeftToPlace);
 	return iNumLeftToPlace
 end
 ------------------------------------------------------------------------------
