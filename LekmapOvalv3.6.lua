@@ -16,14 +16,7 @@ include("MultilayeredFractal");
 
 ------------------------------------------------------------------------------
 function GetMapScriptInfo()
-	return {
-		Name = "Mapa z Tech Speedem; Lekmap: Oval (v3.6)",
-		Description = "A map script made for Lekmod based of HB's Mapscript v8.1. Oval",
-		IsAdvancedMap = false,
-		IconIndex = 15,
-		SortIndex = 2,
-		SupportsMultiplayer = true,
-		CustomOptions = {
+	local opt = {
 			{
 				Name = "TXT_KEY_MAP_OPTION_WORLD_AGE", -- 1
 				Values = {
@@ -275,20 +268,32 @@ function GetMapScriptInfo()
 				SortPriority = -100,
 			},
 
-			{
-				Name = "Tech Speed", -- (21)
-				Values = {
-					"Marathon",
-					"Epic",
-					"Standard",
-					"Quick",
-					"Online",
-				},
-				DefaultValue = 3,
-				SortPriority = -101,
-			},
+		}
 
+	--opt[Locale.ConvertTextKey("TXT_KEY_MAP_OPTION_TECH_SPEED_ID")] = {
+	opt["tech_speed"] = {
+		Name = "Tech Speed",
+		Values = {
+			"Marathon",
+			"Epic",
+			"Standard",
+			"Quick",
+			"Online",
+			"Optimal",
+			"Fair"
 		},
+		DefaultValue = 3,
+		SortPriority = -101,
+	}
+
+	return {
+		Name = "Mapa z Tech Speedem; Lekmap: Oval (v3.6)",
+		Description = "A map script made for Lekmod based of HB's Mapscript v8.1. Oval",
+		IsAdvancedMap = false,
+		IconIndex = 15,
+		SortIndex = 2,
+		SupportsMultiplayer = true,
+		CustomOptions = opt
 	};
 end
 ------------------------------------------------------------------------------
@@ -381,7 +386,7 @@ function MultilayeredFractal:GeneratePlotsByRegion()
 			end
 		end
 	end
-	
+
 	-- Now add bays, fjords, inland seas, etc, but not inside the cohesion area.
 	local baysFrac = Fractal.Create(iW, iH, 3, fracFlags, -1, -1);
 	local iBaysThreshold = baysFrac:GetHeight(82);
@@ -424,7 +429,7 @@ function GeneratePlotTypes()
 
 	local layered_world = MultilayeredFractal.Create();
 	local plot_list = layered_world:GeneratePlotsByRegion();
-	
+
 	SetPlotTypes(plot_list);
 
 	local args = {bExpandCoasts = false};
@@ -435,7 +440,7 @@ end
 ------------------------------------------------------------------------------
 function GenerateTerrain()
 	print("Adding Terrain (Lua Oval) ...");
-	
+
 	-- Get Temperature setting input by user.
 	local temp = Map.GetCustomOption(2)
 	if temp == 4 then
@@ -454,7 +459,7 @@ function GenerateTerrain()
 	local terraingen = TerrainGenerator.Create(args);
 
 	terrainTypes = terraingen:GenerateTerrain();
-	
+
 	SetTerrainTypes(terrainTypes);
 end
 
@@ -498,17 +503,17 @@ function StartPlotSystem()
 	if Map.GetCustomOption(14) == 1 then
 		OnlyCoastal = true;
 		BalancedCoastal = false;
-	end	
+	end
 	if Map.GetCustomOption(14) == 2 then
 		BalancedCoastal = false;
 		OnlyCoastal = false;
 	end
-	
+
 	if Map.GetCustomOption(14) == 3 then
 		OnlyCoastal = true;
 		BalancedCoastal = true;
 	end
-	
+
 	if Map.GetCustomOption(15) == 1 then
 	CoastLux = true
 	end
@@ -527,7 +532,7 @@ function StartPlotSystem()
 
 	print("Creating start plot database.");
 	local start_plot_database = AssignStartingPlots.Create()
-	
+
 	print("Dividing the map in to Regions.");
 	-- Regional Division Method 1: Biggest Landmass
 	local args = {
@@ -545,7 +550,7 @@ function StartPlotSystem()
 
 	print("Choosing start locations for civilizations.");
 	start_plot_database:ChooseLocations(args)
-	
+
 	print("Normalizing start locations and assigning them to Players. DUPA");
 	start_plot_database:BalanceAndAssign(args)
 
