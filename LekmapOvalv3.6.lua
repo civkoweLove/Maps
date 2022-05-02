@@ -271,18 +271,18 @@ function GetMapScriptInfo()
 		}
 
 	--opt[Locale.ConvertTextKey("TXT_KEY_MAP_OPTION_TECH_SPEED_ID")] = {
-	opt["tech_speed"] = {
-		Name = "Tech Speed",
+	opt["Tech Speed"] = {
+		Name = Locale.ConvertTextKey("TXT_KEY_MAP_OPTION_TECH_SPEED_ID"),
 		Values = {
-			"Marathon",
-			"Epic",
-			"Standard",
-			"Quick",
 			"Online",
+			"Quick",
+			"Fair",
+			"Standard",
 			"Optimal",
-			"Fair"
+			"Epic",
+			"Marathon",
 		},
-		DefaultValue = 3,
+		DefaultValue = 4,
 		SortPriority = -101,
 	}
 
