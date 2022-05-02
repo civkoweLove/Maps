@@ -7,209 +7,225 @@ include("MultilayeredFractal");
 
 ------------------------------------------------------------------------------
 function GetMapScriptInfo()
+	local opt = {
+		{
+			Name = "TXT_KEY_MAP_OPTION_TEMPERATURE",	-- 1 add temperature defaults to random
+			Values = {
+				"TXT_KEY_MAP_OPTION_COOL",
+				"TXT_KEY_MAP_OPTION_TEMPERATE",
+				"TXT_KEY_MAP_OPTION_HOT",
+				"TXT_KEY_MAP_OPTION_RANDOM",
+			},
+			DefaultValue = 2,
+			SortPriority = -97,
+		},
+
+		{
+			Name = "TXT_KEY_MAP_OPTION_RAINFALL",	-- 2 add rainfall defaults to random
+			Values = {
+				"TXT_KEY_MAP_OPTION_ARID",
+				"TXT_KEY_MAP_OPTION_NORMAL",
+				"TXT_KEY_MAP_OPTION_WET",
+				"TXT_KEY_MAP_OPTION_RANDOM",
+			},
+			DefaultValue = 2,
+			SortPriority = -96,
+		},
+
+		{
+			Name = "Start Locations",	-- (3) add resources defaults to random
+			Values = {
+				"Legendary Start - Strat Balance",
+				"Legendary - Strat Balance + Uranium",
+				"TXT_KEY_MAP_OPTION_STRATEGIC_BALANCE",
+				"Strategic Balance With Coal",
+				"Strategic Balance With Aluminum",
+				"Strategic Balance With Coal & Aluminum",
+				"Strategic Balance With Coal & Aluminum & Uran",
+				"TXT_KEY_MAP_OPTION_RANDOM",
+			},
+			DefaultValue = 7,
+			SortPriority = -95,
+		},
+
+		{
+			Name = "Natural Wonders", -- 4 number of natural wonders to spawn
+			Values = {
+				"0",
+				"1",
+				"2",
+				"3",
+				"4",
+				"5",
+				"6",
+				"7",
+				"8",
+				"9",
+				"10",
+				"11",
+				"12",
+				"Random",
+				"Default",
+			},
+			DefaultValue = 15,
+			SortPriority = -94,
+		},
+
+		{
+			Name = "Grass Moisture",	-- add setting for grassland mositure (5)
+			Values = {
+				"Wet",
+				"Normal",
+				"Dry",
+			},
+
+			DefaultValue = 2,
+			SortPriority = -93,
+		},
+
+		{
+			Name = "Islands count",	-- add setting for islands (6)
+			Values = {
+				"Sparse",
+				"Average",
+				"Plentiful",
+				"Abundant",
+			},
+
+			DefaultValue = 2,
+			SortPriority = -92,
+		},
+
+		{
+			Name = "Forest Size", -- (7) forestSize
+			Values = {
+				"sparse",
+				"average",
+				"plentiful",
+			},
+			DefaultValue = 2,
+			SortPriority = -91,
+		},
+		{
+			Name = "Jungle Size", -- (8) jungleSize
+			Values = {
+				"sparse",
+				"average",
+				"plentiful",
+			},
+			DefaultValue = 2,
+			SortPriority = -90,
+		},
+
+		{
+			Name = "TXT_KEY_MAP_OPTION_RESOURCES",	-- add setting for resources (9)
+			Values = {
+				"1 -- Nearly Nothing",
+				"2",
+				"3",
+				"4",
+				"5 -- Default",
+				"6",
+				"7",
+				"8",
+				"9",
+				"10 -- Almost no normal tiles left",
+			},
+
+			DefaultValue = 5,
+			SortPriority = -89,
+		},
+
+		{
+			Name = "Islands size",	-- chance of land in area of island (10)
+			Values = {
+				"small",
+				"normal",
+				"big",
+				"large",
+			},
+
+			DefaultValue = 2,
+			SortPriority = -88,
+		},
+
+		{
+			Name = "Connected islands",	-- overlaping islands (11)
+			Values = {
+				"allowed",
+				"disallowed",
+			},
+
+			DefaultValue = 2,
+			SortPriority = -87,
+		},
+		{
+			Name = "Desert Size", -- (12) desertSize
+			Values = {
+				"sparse",
+				"average",
+				"plentiful",
+			},
+			DefaultValue = 2,
+			SortPriority = -86,
+		},
+
+		{
+			Name = "Marsh Size", -- (13) marshSize
+			Values = {
+				"sparse",
+				"average",
+				"plentiful",
+			},
+			DefaultValue = 2,
+			SortPriority = -85,
+		},
+
+		{
+			Name = "Tundra Size",	-- add setting for tundra (14)
+			Values = {
+				"sparse",
+				"average",
+				"plentiful",
+			},
+
+			DefaultValue = 2,
+			SortPriority = -84,
+		},
+
+		{
+			Name = "Map Dimensions", -- (15) mapSize
+			Values = {
+				"Cage",
+				"Standard",
+				"Big",
+				"Random",
+			},
+			DefaultValue = 2,
+			SortPriority = -100,
+		},
+	}
+	opt["Tech Speed"] = {
+		Name = Locale.ConvertTextKey("TXT_KEY_MAP_OPTION_TECH_SPEED_ID"),
+		Values = {
+			"Online",
+			"Quick",
+			"Fair",
+			"Standard",
+			"Optimal",
+			"Epic",
+			"Marathon",
+		},
+		DefaultValue = 4,
+		SortPriority = -101,
+	}
+
 	return {
 		Name = "LoveMap: Archipelago (v3.6)",
 		Description = "TXT_KEY_MAP_ARCHIPELAGO_HELP",
 		IconIndex = 2, --Archipelago Icon
 		SupportsMultiplayer = true,
-		CustomOptions = {
-			{
-				Name = "TXT_KEY_MAP_OPTION_TEMPERATURE",	-- 1 add temperature defaults to random
-				Values = {
-					"TXT_KEY_MAP_OPTION_COOL",
-					"TXT_KEY_MAP_OPTION_TEMPERATE",
-					"TXT_KEY_MAP_OPTION_HOT",
-					"TXT_KEY_MAP_OPTION_RANDOM",
-				},
-				DefaultValue = 2,
-				SortPriority = -97,
-			},
-
-			{
-				Name = "TXT_KEY_MAP_OPTION_RAINFALL",	-- 2 add rainfall defaults to random
-				Values = {
-					"TXT_KEY_MAP_OPTION_ARID",
-					"TXT_KEY_MAP_OPTION_NORMAL",
-					"TXT_KEY_MAP_OPTION_WET",
-					"TXT_KEY_MAP_OPTION_RANDOM",
-				},
-				DefaultValue = 2,
-				SortPriority = -96,
-			},
-
-			{
-				Name = "Start Locations",	-- (3) add resources defaults to random
-				Values = {
-					"Legendary Start - Strat Balance",
-					"Legendary - Strat Balance + Uranium",
-					"TXT_KEY_MAP_OPTION_STRATEGIC_BALANCE",
-					"Strategic Balance With Coal",
-					"Strategic Balance With Aluminum",
-					"Strategic Balance With Coal & Aluminum",
-					"Strategic Balance With Coal & Aluminum & Uran",
-					"TXT_KEY_MAP_OPTION_RANDOM",
-				},
-				DefaultValue = 7,
-				SortPriority = -95,
-			},
-
-			{
-				Name = "Natural Wonders", -- 4 number of natural wonders to spawn
-				Values = {
-					"0",
-					"1",
-					"2",
-					"3",
-					"4",
-					"5",
-					"6",
-					"7",
-					"8",
-					"9",
-					"10",
-					"11",
-					"12",
-					"Random",
-					"Default",
-				},
-				DefaultValue = 15,
-				SortPriority = -94,
-			},
-
-			{
-				Name = "Grass Moisture",	-- add setting for grassland mositure (5)
-				Values = {
-					"Wet",
-					"Normal",
-					"Dry",
-				},
-
-				DefaultValue = 2,
-				SortPriority = -93,
-			},
-
-			{
-				Name = "Islands count",	-- add setting for islands (6)
-				Values = {
-					"Sparse",
-					"Average",
-					"Plentiful",
-					"Abundant",
-				},
-
-				DefaultValue = 2,
-				SortPriority = -92,
-			},
-
-			{
-				Name = "Forest Size", -- (7) forestSize
-				Values = {
-					"sparse",
-					"average",
-					"plentiful",
-				},
-				DefaultValue = 2,
-				SortPriority = -91,
-			},
-			{
-				Name = "Jungle Size", -- (8) jungleSize
-				Values = {
-					"sparse",
-					"average",
-					"plentiful",
-				},
-				DefaultValue = 2,
-				SortPriority = -90,
-			},
-
-			{
-				Name = "TXT_KEY_MAP_OPTION_RESOURCES",	-- add setting for resources (9)
-				Values = {
-					"1 -- Nearly Nothing",
-					"2",
-					"3",
-					"4",
-					"5 -- Default",
-					"6",
-					"7",
-					"8",
-					"9",
-					"10 -- Almost no normal tiles left",
-				},
-
-				DefaultValue = 5,
-				SortPriority = -89,
-			},
-
-			{
-				Name = "Islands size",	-- chance of land in area of island (10)
-				Values = {
-					"small",
-					"normal",
-					"big",
-					"large",
-				},
-
-				DefaultValue = 2,
-				SortPriority = -88,
-			},
-
-			{
-				Name = "Connected islands",	-- overlaping islands (11)
-				Values = {
-					"allowed",
-					"disallowed",
-				},
-
-				DefaultValue = 2,
-				SortPriority = -87,
-			},
-			{
-				Name = "Desert Size", -- (12) desertSize
-				Values = {
-					"sparse",
-					"average",
-					"plentiful",
-				},
-				DefaultValue = 2,
-				SortPriority = -86,
-			},
-
-			{
-				Name = "Marsh Size", -- (13) marshSize
-				Values = {
-					"sparse",
-					"average",
-					"plentiful",
-				},
-				DefaultValue = 2,
-				SortPriority = -85,
-			},
-
-			{
-				Name = "Tundra Size",	-- add setting for tundra (14)
-				Values = {
-					"sparse",
-					"average",
-					"plentiful",
-				},
-
-				DefaultValue = 2,
-				SortPriority = -84,
-			},
-
-			{
-				Name = "Map Dimensions", -- (15) mapSize
-				Values = {
-					"Cage",
-					"Standard",
-					"Big",
-					"Random",
-				},
-				DefaultValue = 2,
-				SortPriority = -100,
-			},
-		},
+		CustomOptions = opt
 	}
 end
 ------------------------------------------------------------------------------

@@ -17,6 +17,249 @@ include("MultilayeredFractal");
 ------------------------------------------------------------------------------
 function GetMapScriptInfo()
 	local world_age, temperature, rainfall, sea_level, resources = GetCoreMapOptions()
+	local opt = {
+		{
+			Name = "TXT_KEY_MAP_OPTION_WORLD_AGE", -- 1
+			Values = {
+				"TXT_KEY_MAP_OPTION_THREE_BILLION_YEARS",
+				"TXT_KEY_MAP_OPTION_FOUR_BILLION_YEARS",
+				"TXT_KEY_MAP_OPTION_FIVE_BILLION_YEARS",
+				"No Mountains",
+				"TXT_KEY_MAP_OPTION_RANDOM",
+			},
+			DefaultValue = 2,
+			SortPriority = -99,
+		},
+
+		{
+			Name = "TXT_KEY_MAP_OPTION_TEMPERATURE",	-- 2 add temperature defaults to random
+			Values = {
+				"TXT_KEY_MAP_OPTION_COOL",
+				"TXT_KEY_MAP_OPTION_TEMPERATE",
+				"TXT_KEY_MAP_OPTION_HOT",
+				"TXT_KEY_MAP_OPTION_RANDOM",
+			},
+			DefaultValue = 2,
+			SortPriority = -98,
+		},
+
+		{
+			Name = "TXT_KEY_MAP_OPTION_RAINFALL",	-- (3) add rainfall defaults to random
+			Values = {
+				"TXT_KEY_MAP_OPTION_ARID",
+				"TXT_KEY_MAP_OPTION_NORMAL",
+				"TXT_KEY_MAP_OPTION_WET",
+				"TXT_KEY_MAP_OPTION_RANDOM",
+			},
+			DefaultValue = 2,
+			SortPriority = -97,
+		},
+
+		{
+			Name = "TXT_KEY_MAP_OPTION_SEA_LEVEL",	-- 4 add sea level defaults to random.
+			Values = {
+				"TXT_KEY_MAP_OPTION_LOW",
+				"TXT_KEY_MAP_OPTION_MEDIUM",
+				"TXT_KEY_MAP_OPTION_HIGH",
+				"TXT_KEY_MAP_OPTION_RANDOM",
+			},
+			DefaultValue = 2,
+			SortPriority = -96,
+		},
+
+		{
+			Name = "Start Quality",	-- (5) add resources defaults to random
+			Values = {
+				"Legendary Start - Strat Balance",
+				"Legendary - Strat Balance + Uranium",
+				"TXT_KEY_MAP_OPTION_STRATEGIC_BALANCE",
+				"Strategic Balance With Coal",
+				"Strategic Balance With Aluminum",
+				"Strategic Balance With Coal & Aluminum",
+				"Strategic Balance With Coal & Aluminum & Uran",
+				"TXT_KEY_MAP_OPTION_RANDOM",
+			},
+			DefaultValue = 7,
+			SortPriority = -95,
+		},
+
+		{
+			Name = "Start Distance",	-- 6 add resources defaults to random
+			Values = {
+				"Close",
+				"Normal",
+				"Far - Warning: May sometimes crash during map generation",
+			},
+			DefaultValue = 2,
+			SortPriority = -94,
+		},
+
+		{
+			Name = "Natural Wonders", -- 7 number of natural wonders to spawn
+			Values = {
+				"0",
+				"1",
+				"2",
+				"3",
+				"4",
+				"5",
+				"6",
+				"7",
+				"8",
+				"9",
+				"10",
+				"11",
+				"12",
+				"Random",
+				"Default",
+			},
+			DefaultValue = 15,
+			SortPriority = -93,
+		},
+
+		{
+			Name = "Grass Moisture",	-- add setting for grassland mositure (8)
+			Values = {
+				"Wet",
+				"Normal",
+				"Dry",
+			},
+
+			DefaultValue = 2,
+			SortPriority = -92,
+		},
+
+		{
+			Name = "Rivers",	-- add setting for rivers (9)
+			Values = {
+				"sparse",
+				"average",
+				"plentiful",
+			},
+
+			DefaultValue = 2,
+			SortPriority = -91,
+		},
+
+		{
+			Name = "Tundra Size",	-- add setting for tundra (10)
+			Values = {
+				"sparse",
+				"average",
+				"plentiful",
+			},
+
+			DefaultValue = 2,
+			SortPriority = -90,
+		},
+		{
+			Name = "TXT_KEY_MAP_OPTION_RESOURCES",	-- add setting for resources (11)
+			Values = {
+				"1 -- Nearly Nothing",
+				"2",
+				"3",
+				"4",
+				"5 -- Default",
+				"6",
+				"7",
+				"8",
+				"9",
+				"10 -- Almost no normal tiles left",
+			},
+
+			DefaultValue = 5,
+			SortPriority = -89,
+		},
+
+		{
+			Name = "Coastal Spawns",	-- Can inland civ spawn on the coast (12)
+			Values = {
+				"Coastal Civs Only",
+				"Random",
+				"Random+ (~2 coastals)",
+			},
+
+			DefaultValue = 1,
+			SortPriority = -88,
+		},
+
+		{
+			Name = "Coastal Luxes",	-- Can coast spawns have non-coastal luxes (13)
+			Values = {
+				"Guaranteed",
+				"Random",
+			},
+
+			DefaultValue = 1,
+			SortPriority = -87,
+		},
+		{
+			Name = "Forest Size", -- (14) forestSize
+			Values = {
+				"sparse",
+				"average",
+				"plentiful",
+			},
+			DefaultValue = 2,
+			SortPriority = -86,
+		},
+		{
+			Name = "Jungle Size", -- (15) jungleSize
+			Values = {
+				"sparse",
+				"average",
+				"plentiful",
+			},
+			DefaultValue = 2,
+			SortPriority = -85,
+		},
+		{
+			Name = "Marsh Size", -- (16) marshSize
+			Values = {
+				"sparse",
+				"average",
+				"plentiful",
+			},
+			DefaultValue = 2,
+			SortPriority = -84,
+		},
+		{
+			Name = "Desert Size", -- (17) desertSize
+			Values = {
+				"sparse",
+				"average",
+				"plentiful",
+			},
+			DefaultValue = 2,
+			SortPriority = -83,
+		},
+		{
+			Name = "Map Dimensions", -- (18) mapSize
+			Values = {
+				"Cage",
+				"Standard",
+				"Big",
+				"Random",
+			},
+			DefaultValue = 2,
+			SortPriority = -100,
+		},
+	}
+	opt["Tech Speed"] = {
+		Name = Locale.ConvertTextKey("TXT_KEY_MAP_OPTION_TECH_SPEED_ID"),
+		Values = {
+			"Online",
+			"Quick",
+			"Fair",
+			"Standard",
+			"Optimal",
+			"Epic",
+			"Marathon",
+		},
+		DefaultValue = 4,
+		SortPriority = -101,
+	}
+
 	return {
 		Name = "Lekmap: Inland Sea (v3.6)",
 		Description = "A map script made for Lekmod based of HB's Mapscript v8.1. Inland Sea",
@@ -24,234 +267,7 @@ function GetMapScriptInfo()
 		IconIndex = 12,
 		SortIndex = 2,
 		SupportsMultiplayer = true,
-	CustomOptions = {
-			{
-				Name = "TXT_KEY_MAP_OPTION_WORLD_AGE", -- 1
-				Values = {
-					"TXT_KEY_MAP_OPTION_THREE_BILLION_YEARS",
-					"TXT_KEY_MAP_OPTION_FOUR_BILLION_YEARS",
-					"TXT_KEY_MAP_OPTION_FIVE_BILLION_YEARS",
-					"No Mountains",
-					"TXT_KEY_MAP_OPTION_RANDOM",
-				},
-				DefaultValue = 2,
-				SortPriority = -99,
-			},
-
-			{
-				Name = "TXT_KEY_MAP_OPTION_TEMPERATURE",	-- 2 add temperature defaults to random
-				Values = {
-					"TXT_KEY_MAP_OPTION_COOL",
-					"TXT_KEY_MAP_OPTION_TEMPERATE",
-					"TXT_KEY_MAP_OPTION_HOT",
-					"TXT_KEY_MAP_OPTION_RANDOM",
-				},
-				DefaultValue = 2,
-				SortPriority = -98,
-			},
-
-			{
-				Name = "TXT_KEY_MAP_OPTION_RAINFALL",	-- (3) add rainfall defaults to random
-				Values = {
-					"TXT_KEY_MAP_OPTION_ARID",
-					"TXT_KEY_MAP_OPTION_NORMAL",
-					"TXT_KEY_MAP_OPTION_WET",
-					"TXT_KEY_MAP_OPTION_RANDOM",
-				},
-				DefaultValue = 2,
-				SortPriority = -97,
-			},
-
-			{
-				Name = "TXT_KEY_MAP_OPTION_SEA_LEVEL",	-- 4 add sea level defaults to random.
-				Values = {
-					"TXT_KEY_MAP_OPTION_LOW",
-					"TXT_KEY_MAP_OPTION_MEDIUM",
-					"TXT_KEY_MAP_OPTION_HIGH",
-					"TXT_KEY_MAP_OPTION_RANDOM",
-				},
-				DefaultValue = 2,
-				SortPriority = -96,
-			},
-
-			{
-				Name = "Start Quality",	-- (5) add resources defaults to random
-				Values = {
-					"Legendary Start - Strat Balance",
-					"Legendary - Strat Balance + Uranium",
-					"TXT_KEY_MAP_OPTION_STRATEGIC_BALANCE",
-					"Strategic Balance With Coal",
-					"Strategic Balance With Aluminum",
-					"Strategic Balance With Coal & Aluminum",
-					"Strategic Balance With Coal & Aluminum & Uran",
-					"TXT_KEY_MAP_OPTION_RANDOM",
-				},
-				DefaultValue = 7,
-				SortPriority = -95,
-			},
-
-			{
-				Name = "Start Distance",	-- 6 add resources defaults to random
-				Values = {
-					"Close",
-					"Normal",
-					"Far - Warning: May sometimes crash during map generation",
-				},
-				DefaultValue = 2,
-				SortPriority = -94,
-			},
-
-			{
-				Name = "Natural Wonders", -- 7 number of natural wonders to spawn
-				Values = {
-					"0",
-					"1",
-					"2",
-					"3",
-					"4",
-					"5",
-					"6",
-					"7",
-					"8",
-					"9",
-					"10",
-					"11",
-					"12",
-					"Random",
-					"Default",
-				},
-				DefaultValue = 15,
-				SortPriority = -93,
-			},
-
-			{
-				Name = "Grass Moisture",	-- add setting for grassland mositure (8)
-				Values = {
-					"Wet",
-					"Normal",
-					"Dry",
-				},
-
-				DefaultValue = 2,
-				SortPriority = -92,
-			},
-
-			{
-				Name = "Rivers",	-- add setting for rivers (9)
-				Values = {
-					"sparse",
-					"average",
-					"plentiful",
-				},
-
-				DefaultValue = 2,
-				SortPriority = -91,
-			},
-
-			{
-				Name = "Tundra Size",	-- add setting for tundra (10)
-				Values = {
-					"sparse",
-					"average",
-					"plentiful",
-				},
-
-				DefaultValue = 2,
-				SortPriority = -90,
-			},
-			{
-				Name = "TXT_KEY_MAP_OPTION_RESOURCES",	-- add setting for resources (11)
-				Values = {
-					"1 -- Nearly Nothing",
-					"2",
-					"3",
-					"4",
-					"5 -- Default",
-					"6",
-					"7",
-					"8",
-					"9",
-					"10 -- Almost no normal tiles left",
-				},
-
-				DefaultValue = 5,
-				SortPriority = -89,
-			},
-
-			{
-				Name = "Coastal Spawns",	-- Can inland civ spawn on the coast (12)
-				Values = {
-					"Coastal Civs Only",
-					"Random",
-					"Random+ (~2 coastals)",
-				},
-
-				DefaultValue = 1,
-				SortPriority = -88,
-			},
-
-			{
-				Name = "Coastal Luxes",	-- Can coast spawns have non-coastal luxes (13)
-				Values = {
-					"Guaranteed",
-					"Random",
-				},
-
-				DefaultValue = 1,
-				SortPriority = -87,
-			},
-			{
-				Name = "Forest Size", -- (14) forestSize
-				Values = {
-					"sparse",
-					"average",
-					"plentiful",
-				},
-				DefaultValue = 2,
-				SortPriority = -86,
-			},
-			{
-				Name = "Jungle Size", -- (15) jungleSize
-				Values = {
-					"sparse",
-					"average",
-					"plentiful",
-				},
-				DefaultValue = 2,
-				SortPriority = -85,
-			},
-			{
-				Name = "Marsh Size", -- (16) marshSize
-				Values = {
-					"sparse",
-					"average",
-					"plentiful",
-				},
-				DefaultValue = 2,
-				SortPriority = -84,
-			},
-			{
-				Name = "Desert Size", -- (17) desertSize
-				Values = {
-					"sparse",
-					"average",
-					"plentiful",
-				},
-				DefaultValue = 2,
-				SortPriority = -83,
-			},
-			{
-				Name = "Map Dimensions", -- (18) mapSize
-				Values = {
-					"Cage",
-					"Standard",
-					"Big",
-					"Random",
-				},
-				DefaultValue = 2,
-				SortPriority = -100,
-			},
-		},
+		CustomOptions = opt
 	};
 end
 ------------------------------------------------------------------------------
