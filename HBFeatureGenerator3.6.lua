@@ -7,7 +7,7 @@
 --	Copyright (c) 2009, 2010 Firaxis Games, Inc. All rights reserved.
 ------------------------------------------------------------------------------
 
-include("HBMapmakerUtilities");
+include("HBMapmakerUtilities3.6");
 
 ------------------------------------------------------------------------------
 FeatureGenerator = {};
@@ -25,6 +25,7 @@ function FeatureGenerator.Create(args)
 
 	local args = args or {};
 	local rainfall = args.rainfall or 2; -- Default is Normal rainfall.
+	local grassMoist = args.iGrassMoist or 2; -- default is Normal grassMoist
 	local jungle_grain = args.jungle_grain or 5;
 	local forest_grain = args.forest_grain or 6;
 	local clump_grain = args.clump_grain or 10;
@@ -34,15 +35,13 @@ function FeatureGenerator.Create(args)
 	local iJungleFactor = args.iJungleFactor or 7;
 	local iAridFactor = args.iAridFactor or 6;
 	local iWetFactor = args.iWetFactor or 2;
-	local fMarshChange = args.fMarshChange or 2
+	local fMarshChange = args.fMarshChange or 1.5;
 	local fOasisChange = args.fOasisChange or 1.5;
 	local fracXExp = args.fracXExp or -1;
 	local fracYExp = args.fracYExp or -1;
 	
 	-- Set feature traits.
-	local iJunglePercent = args.iJunglePercent or 45;
-
-	local grassMoist = args.iGrassMoist or 2;
+	local iJunglePercent = args.iJunglePercent or 42;
 
 	if grassMoist == 1 then
 		iJunglePercent = iJunglePercent - 5;
@@ -50,9 +49,9 @@ function FeatureGenerator.Create(args)
 		iJunglePercent = iJunglePercent + 5;
 	end
 
-	local iForestPercent = args.iForestPercent or 24;
+	local iForestPercent = args.iForestPercent or 18;
 	local iClumpHeight = args.iClumpHeight or 75;
-	local fMarshPercent = args.fMarshPercent or 10;
+	local fMarshPercent = args.fMarshPercent or 8;
 	local iOasisPercent = args.iOasisPercent or 25;
 
 	-- if MapShape == 3 then
@@ -79,7 +78,7 @@ function FeatureGenerator.Create(args)
 	else -- Rainfall is Normal.
 	end
 
-	--[[ Activate printout for debugging only.
+	-- Activate printout for debugging only.
 	print("-"); print("--- Rainfall Readout ---");
 	print("- Rainfall Setting:", rainfall);
 	print("- Jungle Percentage:", iJunglePercent);
@@ -88,7 +87,7 @@ function FeatureGenerator.Create(args)
 	print("- Marsh Percentage:", fMarshPercent);
 	print("- Oasis Percentage:", iOasisPercent);
 	print("- - - - - - - - - - - - - - -");
-	]]--
+
 
 	local gridWidth, gridHeight = Map.GetGridSize();
 	local world_info = GameInfo.Worlds[Map.GetWorldSize()];
