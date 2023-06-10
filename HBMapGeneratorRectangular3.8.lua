@@ -7,7 +7,7 @@
 --	Copyright (c) 2010 Firaxis Games, Inc. All rights reserved.
 ------------------------------------------------------------------------------
 
-include("HBAssignStartingPlots3.6");
+include("HBAssignStartingPlots3.8");
 
 ------------------------------------------------------------------------------
 --	Various Map utility functions

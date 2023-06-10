@@ -12,7 +12,7 @@
 --	Copyright (c) 2010 Firaxis Games, Inc. All rights reserved.
 ------------------------------------------------------------------------------
 
-include("HBMapmakerUtilities3.6");
+include("HBMapmakerUtilities3.8");
 include("NaturalWondersCustomMethods");
 
 ------------------------------------------------------------------------------

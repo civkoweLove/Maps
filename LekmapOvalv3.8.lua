@@ -7,10 +7,10 @@
 --	Copyright (c) 2011 Firaxis Games, Inc. All rights reserved.
 ------------------------------------------------------------------------------
 
-include("HBMapGenerator3.6");
-include("HBFractalWorld3.6");
-include("HBFeatureGenerator3.6");
-include("HBTerrainGenerator3.6");
+include("HBMapGenerator3.8");
+include("HBFractalWorld3.8");
+include("HBFeatureGenerator3.8");
+include("HBTerrainGenerator3.8");
 include("IslandMaker");
 include("MultilayeredFractal");
 
@@ -283,7 +283,7 @@ function GetMapScriptInfo()
 		SortPriority = -101,
 	}
 	return {
-		Name = "Lekmap: Oval (v3.6)",
+		Name = "Lekmap: Oval (v3.8)",
 		Description = "A map script made for Lekmod based of HB's Mapscript v8.1. Oval",
 		IsAdvancedMap = false,
 		IconIndex = 15,
@@ -332,6 +332,7 @@ function GetMapInitData(worldSize)
 			Width = grid_size[1],
 			Height = grid_size[2],
 			WrapX = true, -- here u can travel by east and west
+			WrapY = true, -- here u can travel by north and south with no ice needed on top and bottom
 		};
 	end
 
@@ -344,7 +345,7 @@ function MultilayeredFractal:GeneratePlotsByRegion()
 	--
 	-- This implementation is specific to Oval.
 	local iW, iH = Map.GetGridSize();
-	local fracFlags = {FRAC_POLAR = true};
+	local fracFlags = {FRAC_WRAP_X = true, FRAC_POLAR = false, FRAC_WRAP_Y = true};
 
 	local sea_level = Map.GetCustomOption(4)
 	if sea_level == 4 then
@@ -458,7 +459,10 @@ function GenerateTerrain()
 	
 	SetTerrainTypes(terrainTypes);
 end
-
+------------------------------------------------------------------------------
+function FeatureGenerator:AddIceAtPlot(plot, iX, iY, lat)
+	-- No ice.
+end
 ------------------------------------------------------------------------------
 function AddFeatures()
 

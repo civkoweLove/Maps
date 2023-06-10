@@ -7,10 +7,10 @@
 --	Copyright (c) 2011 Firaxis Games, Inc. All rights reserved.
 ------------------------------------------------------------------------------
 
-include("HBMapGenerator3.6");
-include("HBFractalWorld3.6");
-include("HBFeatureGenerator3.6");
-include("HBTerrainGenerator3.6");
+include("HBMapGenerator3.8");
+include("HBFractalWorld3.8");
+include("HBFeatureGenerator3.8");
+include("HBTerrainGenerator3.8");
 include("IslandMaker");
 include("MultilayeredFractal");
 
@@ -308,7 +308,7 @@ function GetMapScriptInfo()
 	}
 
 	return {
-		Name = "LoveMaps: Continents (v3.6)",
+		Name = "LoveMaps: Continents (v3.8)",
 		Description = "A map script made for Lekmod based of HB's Mapscript v8.1. Continents",
 		IsAdvancedMap = false,
 		IconIndex = 1,

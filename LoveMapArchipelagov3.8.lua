@@ -1,7 +1,7 @@
-include("HBMapGenerator3.6");
-include("HBFractalWorld3.6");
-include("HBFeatureGenerator3.6");
-include("HBTerrainGenerator3.6");
+include("HBMapGenerator3.8");
+include("HBFractalWorld3.8");
+include("HBFeatureGenerator3.8");
+include("HBTerrainGenerator3.8");
 include("IslandMaker");
 include("MultilayeredFractal");
 
@@ -221,7 +221,7 @@ function GetMapScriptInfo()
 	}
 
 	return {
-		Name = "LoveMap: Archipelago (v3.6)",
+		Name = "LoveMap: Archipelago (v3.8)",
 		Description = "TXT_KEY_MAP_ARCHIPELAGO_HELP",
 		IconIndex = 2, --Archipelago Icon
 		SupportsMultiplayer = true,

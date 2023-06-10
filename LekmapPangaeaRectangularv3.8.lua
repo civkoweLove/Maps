@@ -7,10 +7,10 @@
 --	Copyright (c) 2011 Firaxis Games, Inc. All rights reserved.
 ------------------------------------------------------------------------------
 
-include("HBMapGeneratorRectangular3.6");
-include("HBFractalWorld3.6");
-include("HBFeatureGeneratorRectangular3.6");
-include("HBTerrainGenerator3.6");
+include("HBMapGeneratorRectangular3.8");
+include("HBFractalWorld3.8");
+include("HBFeatureGeneratorRectangular3.8");
+include("HBTerrainGenerator3.8");
 include("IslandMaker");
 include("MultilayeredFractal");
 
@@ -333,7 +333,7 @@ function GetMapScriptInfo()
 	}
 
 	return {
-		Name = "Lekmap: Pangaea - Rectangular (v3.6)",
+		Name = "Lekmap: Pangaea - Rectangular (v3.8)",
 		Description = "A map script made for Lekmod based of HB's Mapscript v8.1. Pangaea - Rectangular",
 		IsAdvancedMap = false,
 		IconIndex = 0,

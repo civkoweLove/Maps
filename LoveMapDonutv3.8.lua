@@ -7,10 +7,10 @@
 --	Copyright (c) 2011 Firaxis Games, Inc. All rights reserved.
 ------------------------------------------------------------------------------
 
-include("HBMapGenerator3.6");
-include("HBFractalWorld3.6");
-include("HBFeatureGenerator3.6");
-include("HBTerrainGenerator3.6");
+include("HBMapGenerator3.8");
+include("HBFractalWorld3.8");
+include("HBFeatureGenerator3.8");
+include("HBTerrainGenerator3.8");
 include("IslandMaker");
 include("MultilayeredFractal");
 
@@ -334,7 +334,7 @@ function GetMapScriptInfo()
 	}
 
 	return {
-		Name = "LoveMap: Donut (v3.6)",
+		Name = "LoveMap: Donut (v3.8)",
 		Description = "TXT_KEY_MAP_DONUT_HELP",
 		IsAdvancedMap = false,
 		IconIndex = 18,
@@ -383,13 +383,13 @@ function GetMapInitData(worldSize)
 		return {
 			Width = grid_size[1],
 			Height = grid_size[2],
-			WrapX = false,
+			WrapX = true,
+			WrapY = true,
 		};
 	end
 
 
 end
-------------------------------------------------------------------------------
 -------------------------------------------------------------------------------
 function MultilayeredFractal:GeneratePlotsByRegion()
 	-- Sirian's MultilayeredFractal controlling function.
@@ -397,7 +397,7 @@ function MultilayeredFractal:GeneratePlotsByRegion()
 	--
 	-- This implementation is specific to Donut.
 	local iW, iH = Map.GetGridSize();
-	local fracFlags = {FRAC_WRAP_X = false, FRAC_POLAR = true};
+	local fracFlags = {FRAC_WRAP_X = true, FRAC_POLAR = false, FRAC_WRAP_Y = true};
 
 	-- Get user input.
 	hole_type = Map.GetCustomOption(20) -- Global
