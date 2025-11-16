@@ -5990,7 +5990,128 @@ function AssignStartingPlots:NormalizeTeamLocations()
 	-- locations, to ensure that Civs on the same team start near one another.
 	--Game:NormalizeStartingPlotLocations() 
 end
+function AddPlayerArmyXY(player, plotX, plotY)
+	print(">>>> AddHumanArmyXY");
+	local HuArmy_useroption = 3;
+	local iW, iH = Map.GetGridSize();
+	if HuArmy_useroption > 1 then
+		local unitsQty = HuArmy_useroption -1;
+		local Human = 1;
+		if not ( player:IsHuman() ) then
+			Human = 0;
+		end
+		if Human == 1 then
+			print(">>>> Human == 1 ");
+			for i=0,  unitsQty   do
+				if unitsQty == 1 then
+					player:AddFreeUnit(82);
+					unitsQty = unitsQty -1;
+				end
+				if unitsQty == 2 then
+					player:AddFreeUnit(1);
+					unitsQty = unitsQty -1;
+				end
+				if unitsQty == 3 then
+
+					player:AddFreeUnit(83);
+					unitsQty = unitsQty -1;
+				end
+				if unitsQty == 4 then
+					player:AddFreeUnit(0);
+					player:AddFreeUnit(0);
+					player:AddFreeUnit(83);
+					unitsQty = unitsQty -1;
+				end
+			end
+		end
+	end
+end
 ------------------------------------------------------------------------------
+function AddCSArmyXY(player, plotX, plotY)
+	print(">>>> AddCityStateArmyXY");
+	local CSArmy_useroption = 2;
+	local Promo_useroption = 1;
+	local iW, iH = Map.GetGridSize();
+	if CSArmy_useroption > 1 then
+		local unitsQty = CSArmy_useroption - 1;
+		for ix = -1, 2 do -- add only on land plots
+			for iy = -1, 2 do
+				local newX = plotX + ix;
+				local newY = plotY + iy;
+				if (newX > 1 and newX < iW - 2 and newY > 1 and newY < iH -2 ) then	--map edge
+					local newPlot = Map.GetPlot(newX, newY);
+					local plotType = newPlot:GetPlotType();
+					local featureType = newPlot:GetFeatureType();
+					if ( newPlot:IsWater() == false and plotType ~= 0 and featureType <=6 ) then
+						if unitsQty > 0 then
+							if not (ix == 0 and iy ==0) then
+								if unitsQty == 1 then
+									local unit = player:InitUnit( 81, newX, newY, UNITAI_DEFENCE, NO_DIRECTION); --add unit Archer
+									if Promo_useroption == 4 or Promo_useroption == 2 then
+										unit:SetHasPromotion(9, true); --Acurency III
+										unit:SetHasPromotion(12, true); --Barrage III
+										unit:SetHasPromotion(69, true); --morale
+										unit:SetHasPromotion(30, true); --march
+										unit:SetHasPromotion(74, true); --nationalism
+										unit:SetHasPromotion(129, true); --move after atack
+										unit:SetHasPromotion(33, true); --logistic
+									end
+									unitsQty = unitsQty -1;
+								end
+								if unitsQty == 2 then
+									local unit = player:InitUnit( 79, newX, newY, UNITAI_DEFENCE, NO_DIRECTION); --add unit PIKEMAN 66, 79 HOPLITE
+									if Promo_useroption == 4 or Promo_useroption == 2 then
+										unit:SetHasPromotion(6, true); --drill III
+										unit:SetHasPromotion(3, true); --shock III
+										unit:SetHasPromotion(69, true); --morale
+										unit:SetHasPromotion(30, true); --march
+										unit:SetHasPromotion(74, true); --nationalism
+									end
+									unitsQty = unitsQty -1;
+								end
+								if unitsQty == 3 then
+									local unit = player:InitUnit( 61, newX, newY, UNITAI_ATTACK, NO_DIRECTION); --add unit (PIKEMAN 66, 79 HOPLITE)
+									if Promo_useroption == 4 or Promo_useroption == 2 then
+										unit:SetHasPromotion(4, true); --drill I
+										unit:SetHasPromotion(1, true); --shock I
+										unit:SetHasPromotion(30, true); --march
+										unit:SetHasPromotion(31, true); --bliz
+										unit:SetHasPromotion(78, true); -- +1 move
+									end
+									unitsQty = unitsQty -1;
+								end
+								if unitsQty == 4 then
+									local unit = player:InitUnit( 79, newX, newY, UNITAI_DEFENCE, NO_DIRECTION); --add (61 SIAMI WARELEPHANT)
+									if Promo_useroption == 4 or Promo_useroption == 2 then
+										unit:SetHasPromotion(6, true); --drill III
+										unit:SetHasPromotion(3, true); --shock III
+										unit:SetHasPromotion(69, true); --morale
+										unit:SetHasPromotion(30, true); --march
+										unit:SetHasPromotion(74, true); --nationalism
+									end
+									unitsQty = unitsQty -1;
+								end
+								if unitsQty == 5 then
+									local unit = player:InitUnit( 61, newX, newY, UNITAI_ATTACK, NO_DIRECTION); --add  SIAMI WARELEPHANT
+									if Promo_useroption == 4 or Promo_useroption == 2 then
+										unit:SetHasPromotion(4, true); --drill I
+										unit:SetHasPromotion(1, true); --shock I
+										unit:SetHasPromotion(30, true); --march
+										unit:SetHasPromotion(31, true); --bliz
+										unit:SetHasPromotion(78, true); -- +1 move
+									end
+									unitsQty = unitsQty -1;
+								end
+							end
+						end
+					end
+				end
+			end
+		end
+	end
+end
+------------------------------------------------------------------------------
+
 function AssignStartingPlots:BalanceAndAssign(args)
 	-- This function determines what level of Bonus Resource support a location
 	-- may need, identifies compatibility with civ-specific biases, and places starts.
@@ -6624,7 +6745,21 @@ function AssignStartingPlots:BalanceAndAssign(args)
 	if self.bTeamGame == true then
 		self:NormalizeTeamLocations()
 	end
-	--	
+	--
+
+	print("########## Extra Units ##########");
+	for loop = 1, self.iNumCivs do
+		local playerNum = self.player_ID_list[loop]; -- MP games can have gaps between player numbers, so we cannot assume a sequential set of IDs.
+		local player = Players[playerNum];
+		local playerStartPlot = player:GetStartingPlot();
+		plotX = playerStartPlot:GetX()+1;
+		plotY = playerStartPlot:GetY()+1;
+		if (player:GetLeaderType() ==3) then -- if city state
+			AddCSArmyXY(player, plotX, plotY);
+		else -- human player
+			AddPlayerArmyXY(player , plotX , plotY);
+		end -- end add units
+	end -- end for loop all civs
 end
 ------------------------------------------------------------------------------
 -- Start of functions tied to PlaceNaturalWonders()
